@@ -6,32 +6,26 @@ import {
   GroupTitle,
   GroupNumberOfMembers,
   TopicList,
-  TopicName,
-  NumberOfComments,
-  TopicContent,
 } from "./styles";
 
-const GroupCard = () => {
+interface IGrupoCardProps {
+  groupName: string;
+  numberOfMbembers: number;
+  children?: React.ReactNode;
+}
+
+const GroupCard = ({
+  children,
+  groupName,
+  numberOfMbembers,
+}: IGrupoCardProps) => {
   return (
     <Container>
       <GroupCardHeader>
-        <GroupTitle>Nome do Grupo</GroupTitle>
-        <GroupNumberOfMembers> membros: 35</GroupNumberOfMembers>
+        <GroupTitle>{groupName}</GroupTitle>
+        <GroupNumberOfMembers> {numberOfMbembers}</GroupNumberOfMembers>
       </GroupCardHeader>
-      <TopicList>
-        <TopicContent>
-          <TopicName>nome do tópico</TopicName>
-          <NumberOfComments>comentários: 40</NumberOfComments>
-        </TopicContent>
-        <TopicContent>
-          <TopicName>nome do tópico</TopicName>
-          <NumberOfComments>comentários: 40</NumberOfComments>
-        </TopicContent>
-        <TopicContent>
-          <TopicName>nome do tópico</TopicName>
-          <NumberOfComments>comentários: 40</NumberOfComments>
-        </TopicContent>
-      </TopicList>
+      <TopicList>{children}</TopicList>
     </Container>
   );
 };
