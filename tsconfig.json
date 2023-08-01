@@ -7,6 +7,6 @@
     "esModuleInterop": true,
     "allowJs": true,
     "strict": true,
+    "lib": ["es5", "es6", "dom", "dom.iterable"]
   }
-
 }

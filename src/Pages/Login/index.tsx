@@ -1,4 +1,8 @@
-import React from "react";
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
+/* eslint-disable @typescript-eslint/space-before-function-paren */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+import React, { useContext } from "react";
+import { AuthContext } from "../../Contexts/descartar";
 import CustomInput from "../../Components/Input";
 import CustomButton from "../../Components/Button";
 import { Formik, Form } from "formik";
@@ -7,7 +11,9 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from "@mui/icons-material/Google";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { useNavigate } from "react-router-dom";
+import useCart from "../../hooks/useCart";
 import * as Yup from "yup";
+
 import {
   Container,
   StyledLink,
@@ -28,10 +34,29 @@ const loginSchema = Yup.object().shape({
 });
 
 const Login: React.FC = () => {
+  const { dispatch, REDUCER_ACTIONS, totalItems, totalPrice, cart } = useCart();
+
+  const onSubmitOrder = () => {
+    dispatch({ type: REDUCER_ACTIONS.SUBMIT });
+  };
+
+  const context = useContext(AuthContext);
+  const [...[actions]] = context;
+
+  const HandleLogin = async (email: string, password: string) => {
+    return await Promise.resolve(actions.LOGIN(email, password));
+  };
+
   const navigate = useNavigate();
 
-  const navigateToSignUp = () => {
-    navigate("/sign-up");
+  const navigateToDashboard = () => {
+    navigate("/dashboard");
+  };
+
+  const HandleSigin = async (email: string, password: string) => {
+    await HandleLogin(email, password);
+
+    return navigateToDashboard();
   };
 
   return (
@@ -39,12 +64,11 @@ const Login: React.FC = () => {
       <Formik
         validationSchema={loginSchema}
         initialValues={{ email: "", password: "" }}
-        onSubmit={() => {
-          alert("login realizado com sucesso");
-          navigate("/dashboard");
+        onSubmit={async ({ email, password }) => {
+          return await HandleSigin(email, password);
         }}
       >
-        {({ values, errors, touched, handleChange, handleSubmit }) => (
+        {({ values, errors, touched, handleSubmit, handleChange }) => (
           <Form noValidate onSubmit={handleSubmit}>
             <Title>Bem Vindo</Title>
             <Resume>Por-favor forneça seu email e senha</Resume>
@@ -90,7 +114,7 @@ const Login: React.FC = () => {
                 type="button"
                 marginTop="4px"
                 opacity={0.8}
-                onClick={navigateToSignUp}
+                onClick={handleSubmit}
               >
                 Cadastrar-se
               </CustomButton>
