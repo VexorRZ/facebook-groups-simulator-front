@@ -9,19 +9,20 @@ import React, {
 import { REDUCER_ACTION_TYPE } from "./action-types";
 import { updateUserStorage } from "./middlewares";
 
-import { type UserType, type ChildrenType } from "./Interfaces";
-import { reducer } from "./reducer";
+import { type UserType, type ChildrenType } from "./interfaces";
+import { reducer } from "./reducers";
 
 const initialUserState: UserType = {
   password: "",
   email: "",
   token: "",
   name: "",
+  signed: false,
 };
 
 export type ReducerActionType = typeof REDUCER_ACTION_TYPE;
 
-const useCartContext = (initialUserState: UserType) => {
+const useAuthContext = (initialUserState: UserType) => {
   const [state, dispatch] = useReducer(reducer, initialUserState);
 
   const REDUCER_ACTIONS = useMemo(() => {
@@ -32,29 +33,31 @@ const useCartContext = (initialUserState: UserType) => {
   const password = state.password;
   const token = state.token;
   const name = state.name;
+  const signed = state.signed;
 
-  return { dispatch, REDUCER_ACTIONS, email, password, token, name };
+  return { dispatch, REDUCER_ACTIONS, email, password, token, name, signed };
 };
 
-export type UseCartContextType = ReturnType<typeof useCartContext>;
+export type UseAuthContextType = ReturnType<typeof useAuthContext>;
 
-const initialUserContextState: UseCartContextType = {
+const initialUserContextState: UseAuthContextType = {
   dispatch: () => {},
   REDUCER_ACTIONS: REDUCER_ACTION_TYPE,
   email: "",
   password: "",
   token: "",
   name: "",
+  signed: false,
 };
 
-const AuthContext = createContext<UseCartContextType>(initialUserContextState);
+const AuthContext = createContext<UseAuthContextType>(initialUserContextState);
 
-export const CartProvider = ({ children }: ChildrenType): ReactElement => {
+export const AuthProvider = ({ children }: ChildrenType): ReactElement => {
   useEffect(() => {
     updateUserStorage();
   }, []);
   return (
-    <AuthContext.Provider value={useCartContext(initialUserState)}>
+    <AuthContext.Provider value={useAuthContext(initialUserState)}>
       {children}
     </AuthContext.Provider>
   );

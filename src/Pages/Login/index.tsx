@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/space-before-function-paren */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import React, { useContext } from "react";
-import { AuthContext } from "../../Contexts/descartar";
 import CustomInput from "../../Components/Input";
 import CustomButton from "../../Components/Button";
 import { Formik, Form } from "formik";
@@ -11,7 +10,6 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from "@mui/icons-material/Google";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { useNavigate } from "react-router-dom";
-import useCart from "../../hooks/useCart";
 import * as Yup from "yup";
 
 import {
@@ -34,14 +32,7 @@ const loginSchema = Yup.object().shape({
 });
 
 const Login: React.FC = () => {
-  const { dispatch, REDUCER_ACTIONS, totalItems, totalPrice, cart } = useCart();
-
-  const onSubmitOrder = () => {
-    dispatch({ type: REDUCER_ACTIONS.SUBMIT });
-  };
-
-  const context = useContext(AuthContext);
-  const [...[actions]] = context;
+  const onSubmitOrder = () => {};
 
   const HandleLogin = async (email: string, password: string) => {
     return await Promise.resolve(actions.LOGIN(email, password));

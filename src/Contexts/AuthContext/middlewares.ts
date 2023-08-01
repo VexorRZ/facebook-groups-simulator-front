@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/space-before-function-paren */
 import api from "../../services/api";
 import { REDUCER_ACTION_TYPE } from "./action-types";
-import { type DispatchType } from "./Interfaces";
+import { type DispatchType } from "./interfaces";
 
 export const asyncLoginFn = async (
   userData: object,
@@ -19,7 +19,7 @@ export const asyncLoginFn = async (
     sessionStorage.setItem("@App:token", response.data.token);
     return dispatch({
       type: REDUCER_ACTION_TYPE.LOGIN,
-      payload: response.data,
+      payload: { signed: true, state: response.data },
     });
   } catch (err) {
     return err;
