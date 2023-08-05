@@ -1,25 +1,25 @@
 /* eslint-disable @typescript-eslint/space-before-function-paren */
 import api from "../../services/api";
 import { REDUCER_ACTION_TYPE } from "./action-types";
-import { type DispatchType } from "./interfaces";
 
 export const asyncLoginFn = async (
-  userData: object,
-  { dispatch }: DispatchType
+  email: string,
+  password: string,
+  dispatch: any
 ) => {
   try {
-    const response = await api.post("/login", {
-      userData,
+    const response = await api.post("sessions", {
+      email,
+      password,
     });
+
     api.defaults.headers.Authorization = `Bearer ${String(
       response.data.token
     )}`;
 
-    sessionStorage.setItem("@App:user", JSON.stringify(response.data.user));
-    sessionStorage.setItem("@App:token", response.data.token);
     return dispatch({
       type: REDUCER_ACTION_TYPE.LOGIN,
-      payload: { signed: true, state: response.data },
+      payload: { signed: true, name: response.data.user.name },
     });
   } catch (err) {
     return err;

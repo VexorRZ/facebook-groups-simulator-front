@@ -1,11 +1,11 @@
 import { type ReactElement } from "react";
 
 export interface UserType {
-  password: string;
-  email: string;
-  token: string;
-  name: string;
-  signed: boolean;
+  password?: string;
+  email?: string;
+  token?: string;
+  name?: string;
+  signed?: boolean;
 }
 
 export interface ReducerAction {

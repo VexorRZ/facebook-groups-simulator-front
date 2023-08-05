@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/space-before-function-paren */
 /* eslint-disable @typescript-eslint/no-floating-promises */
-import React, { useContext } from "react";
+
+import React from "react";
+
+import { asyncLoginFn } from "../../Contexts/AuthContext/middlewares";
 import CustomInput from "../../Components/Input";
 import CustomButton from "../../Components/Button";
 import { Formik, Form } from "formik";
@@ -9,8 +12,9 @@ import IconEncapsulator from "../../Components/IconEncapsulator";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from "@mui/icons-material/Google";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import useAuth from "../../Hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 import {
   Container,
@@ -22,41 +26,36 @@ import {
   ErrorMessage,
 } from "./styles";
 
-const loginSchema = Yup.object().shape({
-  email: Yup.string()
-    .required("Email é um campo obrigatório")
-    .email("Email em formato inválido"),
-  password: Yup.string()
-    .required("Password é um campo obrigatório")
-    .min(8, "Password em formato inválido"),
-});
-
-const Login: React.FC = () => {
-  const onSubmitOrder = () => {};
-
-  const HandleLogin = async (email: string, password: string) => {
-    return await Promise.resolve(actions.LOGIN(email, password));
-  };
+const Login = () => {
+  const loginSchema = Yup.object().shape({
+    email: Yup.string()
+      .required("Email é um campo obrigatório")
+      .email("Email em formato inválido"),
+    password: Yup.string()
+      .required("Password é um campo obrigatório")
+      .min(6, "Password em formato inválido"),
+  });
 
   const navigate = useNavigate();
 
-  const navigateToDashboard = () => {
-    navigate("/dashboard");
-  };
+  const { dispatch } = useAuth();
 
-  const HandleSigin = async (email: string, password: string) => {
-    await HandleLogin(email, password);
-
-    return navigateToDashboard();
+  const HandleSigin = async (
+    email: string,
+    password: string,
+    dispatch: any
+  ) => {
+    await asyncLoginFn(email, password, dispatch);
   };
 
   return (
     <Container>
       <Formik
         validationSchema={loginSchema}
-        initialValues={{ email: "", password: "" }}
-        onSubmit={async ({ email, password }) => {
-          return await HandleSigin(email, password);
+        initialValues={{ email: "", password: "", dispatch }}
+        onSubmit={async ({ email, password, dispatch }) => {
+          await HandleSigin(email, password, dispatch);
+          return navigate("/dashboard");
         }}
       >
         {({ values, errors, touched, handleSubmit, handleChange }) => (

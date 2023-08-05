@@ -8,8 +8,11 @@ import GroupCard from "../../Components/GroupCard";
 import TopicContent from "../../Components/TopicContent";
 
 import { Content, Container, GroupCardList } from "./styles";
+import useAuth from "../../Hooks/useAuth";
 
-const Dashboard: React.FC = () => {
+const Dashboard = () => {
+  const { name } = useAuth();
+
   return (
     <Container>
       <TopBar />
@@ -17,6 +20,7 @@ const Dashboard: React.FC = () => {
         <SideMenu />
 
         <GroupCardList>
+          <h1>OLÁ {name} </h1>
           <GroupCard groupName="Nome do grupo" numberOfMbembers={10}>
             <TopicContent numberOfComments={35} topicName="nome do tópico" />
             <TopicContent numberOfComments={35} topicName="nome do tópico" />
