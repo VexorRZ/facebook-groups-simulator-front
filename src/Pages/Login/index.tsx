@@ -40,6 +40,10 @@ const Login = () => {
 
   const { dispatch } = useAuth();
 
+  const nagivateToSignUp = () => {
+    navigate("/sign-up");
+  };
+
   const HandleSigin = async (
     email: string,
     password: string,
@@ -96,6 +100,7 @@ const Login = () => {
                 type="submit"
                 marginTop="24px"
                 opacity={0.8}
+                onClick={handleSubmit}
               >
                 Login
               </CustomButton>
@@ -104,7 +109,7 @@ const Login = () => {
                 type="button"
                 marginTop="4px"
                 opacity={0.8}
-                onClick={handleSubmit}
+                onClick={nagivateToSignUp}
               >
                 Cadastrar-se
               </CustomButton>

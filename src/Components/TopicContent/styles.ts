@@ -5,9 +5,9 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #ffffff;
-  border: 1px solid #fafbff;
-  border-radius: 6px;
+  background-color: #3e4d60;
+  border: 2px solid #293544;
+  border-radius: 14px;
 
   &:hover {
     cursor: pointer;

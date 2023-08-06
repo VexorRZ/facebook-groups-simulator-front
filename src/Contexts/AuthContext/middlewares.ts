@@ -16,7 +16,7 @@ export const asyncLoginFn = async (
     api.defaults.headers.Authorization = `Bearer ${String(
       response.data.token
     )}`;
-
+    localStorage.setItem("@name:user", response.data.user.name);
     return dispatch({
       type: REDUCER_ACTION_TYPE.LOGIN,
       payload: { signed: true, name: response.data.user.name },

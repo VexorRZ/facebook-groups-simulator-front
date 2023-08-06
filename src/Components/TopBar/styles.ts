@@ -84,6 +84,11 @@ export const Container = styled.div`
       object-fit: cover;
       cursor: pointer;
     }
+    .logout {
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
 `;
 

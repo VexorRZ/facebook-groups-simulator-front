@@ -1,8 +1,15 @@
 import React from "react";
 import { Search, Chat, Notifications } from "@material-ui/icons";
 import { Container, TopbarIconBadge } from "./styles";
+import { useNavigate } from "react-router-dom";
+import image from "../../assets/images/fibonacci.jpg";
 
 const TopBar: React.FC = () => {
+  const navigate = useNavigate();
+  const Logout = () => {
+    navigate("/");
+    localStorage.removeItem("@name:user");
+  };
   return (
     <Container>
       <div className="topbarLeft">
@@ -33,7 +40,10 @@ const TopBar: React.FC = () => {
             </TopbarIconBadge>
           </div>
         </div>
-        <img src="/assets/person/1.jpeg" alt="" className="topbarImg" />
+        <img src={image} alt="" className="topbarImg" />
+        <h4 onClick={Logout} className="logout">
+          sair
+        </h4>
       </div>
     </Container>
   );

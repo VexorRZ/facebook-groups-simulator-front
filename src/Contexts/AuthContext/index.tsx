@@ -56,6 +56,7 @@ export const AuthProvider = ({ children }: ChildrenType): ReactElement => {
   useEffect(() => {
     updateUserStorage();
   }, []);
+
   return (
     <AuthContext.Provider value={useAuthContext(initialUserState)}>
       {children}
