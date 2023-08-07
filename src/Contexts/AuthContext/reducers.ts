@@ -13,6 +13,16 @@ export const reducer = (state: UserType, action: ReducerAction): UserType => {
       return { ...state, email, name, signed };
     }
 
+    case REDUCER_ACTION_TYPE.LOGOUT: {
+      if (action.payload == null) {
+        throw new Error("action.payload missing in ADD action");
+      }
+
+      const { email, name, signed } = action.payload;
+
+      return { ...state, email, name, signed };
+    }
+
     default:
       throw new Error("Unidentified reducer action type");
   }
