@@ -1,6 +1,5 @@
 /* eslint-disable multiline-ternary */
 import React from "react";
-// import useAuth from "./Hooks/useAuth";
 
 import {
   BrowserRouter as Routing,
@@ -12,15 +11,17 @@ import Login from "./Pages/Login";
 import SignUp from "./Pages/SignUp";
 import DashBoard from "./Pages/Dashboard";
 import ForgotPassword from "./Pages/ForgotPassword";
+import Group from "./Pages/Group";
+import { GroupProvider } from "./Contexts/GroupContext";
 
 interface IprivateRouteProps {
   children?: React.ReactNode;
 }
 
 const PrivateRoute = ({ children }: IprivateRouteProps) => {
-  const signed = Boolean(localStorage.getItem("@signed"));
+  const token = Boolean(localStorage.getItem("@token"));
 
-  return signed ? children : <Navigate to="/" />;
+  return token ? children : <Navigate to="/" />;
 };
 
 const Routes: React.FC = () => {
@@ -29,14 +30,29 @@ const Routes: React.FC = () => {
       <Routing>
         <Routers>
           <Route path="/" Component={Login} />
+
           <Route
             path="/dashboard"
             element={
               <PrivateRoute>
-                <DashBoard />
+                <GroupProvider>
+                  <DashBoard />
+                </GroupProvider>
               </PrivateRoute>
             }
           />
+
+          <Route
+            path="/group/:id"
+            element={
+              <PrivateRoute>
+                <GroupProvider>
+                  <Group />
+                </GroupProvider>
+              </PrivateRoute>
+            }
+          />
+
           <Route path="/sign-up" Component={SignUp} />
           <Route path="/forgot-password" Component={ForgotPassword} />
         </Routers>

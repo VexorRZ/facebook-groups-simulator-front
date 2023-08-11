@@ -9,6 +9,7 @@ import {
 } from "./styles";
 
 interface IGrupoCardProps {
+  onClick?: () => void;
   groupName: string;
   numberOfMbembers: number;
   children?: React.ReactNode;
@@ -18,9 +19,10 @@ const GroupCard = ({
   children,
   groupName,
   numberOfMbembers,
+  onClick,
 }: IGrupoCardProps) => {
   return (
-    <Container>
+    <Container onClick={onClick}>
       <GroupCardHeader>
         <GroupTitle>{groupName}</GroupTitle>
         <GroupNumberOfMembers> {numberOfMbembers}</GroupNumberOfMembers>

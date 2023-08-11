@@ -19,6 +19,8 @@ export const asyncLoginFn = async (
 
     localStorage.setItem("@name:user", response.data.user.name);
     localStorage.setItem("@signed", JSON.stringify(true));
+    localStorage.setItem("@token", response.data.token);
+    console.log(response.data.token);
     return dispatch({
       type: REDUCER_ACTION_TYPE.LOGIN,
       payload: { signed: true, name: response.data.user.name },
