@@ -25,6 +25,7 @@ import {
   IconsContainer,
   ErrorMessage,
 } from "./styles";
+import Toast from "../../Components/Toast";
 
 const Login = () => {
   const loginSchema = Yup.object().shape({
@@ -49,90 +50,106 @@ const Login = () => {
     password: string,
     dispatch: any
   ) => {
-    await asyncLoginFn(email, password, dispatch);
+    try {
+      await asyncLoginFn(email, password, dispatch);
+    } catch (err) {
+      alert(err);
+    }
   };
 
   return (
-    <Container>
-      <Formik
-        validationSchema={loginSchema}
-        initialValues={{ email: "", password: "", dispatch }}
-        onSubmit={async ({ email, password, dispatch }) => {
-          await HandleSigin(email, password, dispatch);
-          return navigate("/dashboard");
-        }}
-      >
-        {({ values, errors, touched, handleSubmit, handleChange }) => (
-          <Form noValidate onSubmit={handleSubmit}>
-            <Title>Bem Vindo</Title>
-            <Resume>Por-favor forneça seu email e senha</Resume>
-            <InputsContainer>
-              <CustomInput
-                customMarginTop="8px"
-                type="email"
-                name="email"
-                onChange={handleChange}
-                value={values.email}
-                placeHolder="Digite seu email@..."
-                id="email"
-              />
+    <>
+      <Container>
+        <Formik
+          validationSchema={loginSchema}
+          initialValues={{ email: "", password: "", dispatch }}
+          onSubmit={async ({ email, password, dispatch }) => {
+            try {
+              await HandleSigin(email, password, dispatch);
+            } catch (err) {
+              return err;
+            } finally {
+              navigate("/dashboard");
+            }
+          }}
+        >
+          {({ values, errors, touched, handleSubmit, handleChange }) => (
+            <Form noValidate onSubmit={handleSubmit}>
+              <Title>Bem Vindo</Title>
+              <Resume>Por-favor forneça seu email e senha</Resume>
+              <InputsContainer>
+                <CustomInput
+                  customMarginTop="8px"
+                  type="email"
+                  name="email"
+                  onChange={handleChange}
+                  value={values.email}
+                  placeHolder="Digite seu email@..."
+                  id="email"
+                />
 
-              <ErrorMessage>
-                {errors.email != null && touched.email != null && errors.email}
-              </ErrorMessage>
+                <ErrorMessage>
+                  {errors.email != null &&
+                    touched.email != null &&
+                    errors.email}
+                </ErrorMessage>
 
-              <CustomInput
-                customMarginTop="8px"
-                type="password"
-                name="password"
-                onChange={handleChange}
-                value={values.password}
-                placeHolder="Digite sua senha..."
-              />
+                <CustomInput
+                  customMarginTop="8px"
+                  type="password"
+                  name="password"
+                  onChange={handleChange}
+                  value={values.password}
+                  placeHolder="Digite sua senha..."
+                />
 
-              <ErrorMessage>
-                {errors.password != null &&
-                  touched.password != null &&
-                  errors.password}
-              </ErrorMessage>
-              <CustomButton
-                customBackgroundColor="#fdc886"
-                type="submit"
-                marginTop="24px"
-                opacity={0.8}
-                onClick={handleSubmit}
-              >
-                Login
-              </CustomButton>
-              <CustomButton
-                customBackgroundColor="#fdc886"
-                type="button"
-                marginTop="4px"
-                opacity={0.8}
-                onClick={nagivateToSignUp}
-              >
-                Cadastrar-se
-              </CustomButton>
+                <ErrorMessage>
+                  {errors.password != null &&
+                    touched.password != null &&
+                    errors.password}
+                </ErrorMessage>
+                <CustomButton
+                  customBackgroundColor="#fdc886"
+                  type="submit"
+                  marginTop="24px"
+                  opacity={0.8}
+                  onClick={handleSubmit}
+                >
+                  Login
+                </CustomButton>
+                <CustomButton
+                  customBackgroundColor="#fdc886"
+                  type="button"
+                  marginTop="4px"
+                  opacity={0.8}
+                  onClick={nagivateToSignUp}
+                >
+                  Cadastrar-se
+                </CustomButton>
 
-              <StyledLink to="/forgot-password">Esqueceu sua senha?</StyledLink>
-            </InputsContainer>
-          </Form>
-        )}
-      </Formik>
+                <StyledLink to="/forgot-password">
+                  Esqueceu sua senha?
+                </StyledLink>
+              </InputsContainer>
+            </Form>
+          )}
+        </Formik>
 
-      <div>-ou faça login com-</div>
-      <IconsContainer>
-        <IconEncapsulator>
-          <FacebookIcon />
-        </IconEncapsulator>
-        <IconEncapsulator>
-          <GoogleIcon />
-        </IconEncapsulator>
-        <IconEncapsulator>
-          <InstagramIcon />
-        </IconEncapsulator>
-      </IconsContainer>
-    </Container>
+        <div>-ou faça login com-</div>
+        <IconsContainer>
+          <IconEncapsulator>
+            <FacebookIcon />
+          </IconEncapsulator>
+          <IconEncapsulator>
+            <GoogleIcon />
+          </IconEncapsulator>
+          <IconEncapsulator>
+            <InstagramIcon />
+          </IconEncapsulator>
+        </IconsContainer>
+      </Container>
+      <Toast messageType="login" />
+    </>
   );
 };
 

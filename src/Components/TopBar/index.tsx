@@ -9,7 +9,7 @@ const TopBar: React.FC = () => {
   const Logout = () => {
     navigate("/");
     localStorage.removeItem("@name:user");
-    localStorage.removeItem("@signed");
+    localStorage.removeItem("@token");
   };
   return (
     <Container>

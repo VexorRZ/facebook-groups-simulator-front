@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/space-before-function-paren */
+
 import api from "../../services/api";
 import { REDUCER_ACTION_TYPE } from "./action-types";
 
@@ -12,7 +13,10 @@ export const asyncLoginFn = async (
       email,
       password,
     });
-
+    console.log(response.status);
+    if (response.status !== 200) {
+      return;
+    }
     api.defaults.headers.Authorization = `Bearer ${String(
       response.data.token
     )}`;

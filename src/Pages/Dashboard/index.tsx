@@ -12,6 +12,7 @@ import { type Groups } from "../../services/interfaces";
 import { Content, Container, GroupCardList } from "./styles";
 
 import { type AxiosResponse } from "axios";
+import ToastContainer from "../../Components/Toast";
 
 const Dashboard = () => {
   const [userName, setUserName] = useState<string>("");
@@ -61,6 +62,7 @@ const Dashboard = () => {
       <TopBar />
       <Content>
         <SideMenu />
+        <ToastContainer messageType="logout" />
 
         <GroupCardList>
           <h1>OLÁ {userName} </h1>
