@@ -17,6 +17,7 @@ const initialUserState: Groups = {
   iSprivate: false,
   id: 0,
   topics: [],
+  members: [],
 };
 
 export type ReducerActionType = typeof REDUCER_ACTION_TYPE;
@@ -34,6 +35,7 @@ const useGroupContext = (initialUserState: Groups) => {
   const iSprivate = state.iSprivate;
   const id = state.id;
   const topics = state.topics;
+  const members = state.members;
 
   return {
     dispatch,
@@ -44,6 +46,7 @@ const useGroupContext = (initialUserState: Groups) => {
     iSprivate,
     id,
     topics,
+    members,
   };
 };
 
@@ -58,6 +61,7 @@ const initialGroupContextState: UseGroupContextType = {
   iSprivate: false,
   id: 0,
   topics: [],
+  members: [],
 };
 
 const GroupContext = createContext<UseGroupContextType>(

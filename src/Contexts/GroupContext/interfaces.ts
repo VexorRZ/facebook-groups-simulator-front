@@ -4,9 +4,15 @@ export interface Groups {
   administrator: administrator;
   id: number;
   iSprivate: boolean;
+  members: members[];
   moderators: moderators[];
   name: string;
   topics: topics[];
+}
+
+interface members {
+  id: number;
+  name: string;
 }
 
 interface moderators {

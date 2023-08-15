@@ -14,5 +14,5 @@ export const Container = styled.div`
 export const GroupCardList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 40px;
 `;

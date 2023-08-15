@@ -1,17 +1,31 @@
 import React from "react";
 
-import { Container, TopicName, NumberOfComments } from "./styles";
+import {
+  Container,
+  TopicName,
+  NumberOfComments,
+  Comments,
+  CommentWrapper,
+} from "./styles";
 
 interface ITopicContentProps {
   topicName: string;
   numberOfComments: number;
+  URlGroup?: boolean;
 }
 
-const TopicContent = ({ topicName, numberOfComments }: ITopicContentProps) => {
+const TopicContent = ({
+  topicName,
+  numberOfComments,
+  URlGroup,
+}: ITopicContentProps) => {
   return (
-    <Container>
+    <Container URlGroup={URlGroup}>
       <TopicName>{topicName}</TopicName>
-      <NumberOfComments>comentários: {numberOfComments}</NumberOfComments>
+      <CommentWrapper>
+        <Comments>comentários: </Comments>
+        <NumberOfComments>{numberOfComments} </NumberOfComments>
+      </CommentWrapper>
     </Container>
   );
 };

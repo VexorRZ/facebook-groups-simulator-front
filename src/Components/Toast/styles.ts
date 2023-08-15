@@ -4,15 +4,6 @@ interface IMessagetoastProps {
   messageType: string | "login" | "logout" | "success" | "error";
 }
 
-export const ToastContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: black;
-  width: 360px;
-  height: 90px;
-  border-radius: 6px;
-`;
-
 const defaultColor = "#000100";
 
 function getMessageColor({ messageType }: IMessagetoastProps) {
@@ -36,12 +27,26 @@ function getMessageColor({ messageType }: IMessagetoastProps) {
 }
 
 const roundTime = keyframes` 
-  to {
-      
-      transform: scaleX(0);
-    }
+   0% {
+    width: 0;
+  }
+  100% {
+    width: 300px;
+  }
   
   `;
+
+export const ToastContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  width: 360px;
+  height: 90px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+`;
 
 export const ToastMessage = styled.p<IMessagetoastProps>`
   margin: 0;
@@ -51,13 +56,16 @@ export const ToastMessage = styled.p<IMessagetoastProps>`
 `;
 
 export const TimerBar = styled.div`
+  width: 300px;
   height: 5px;
-  background: linear-gradient(to bottom, red, #900);
-  --duration: 5;
-  animation: ${roundTime} calc(var(--duration) * 1s) steps(var(--duration))
-    forwards;
-  transform-origin: left center;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  background-color: green;
+  animation-name: ${roundTime};
+  animation-duration: 6s;
+  float: left;
 `;
+
 export const CloseIcon = styled.div`
   border-radius: 50%;
   background-color: transparent;

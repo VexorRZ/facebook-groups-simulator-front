@@ -5,12 +5,13 @@ export const Container = styled.div`
   flex-direction: column;
   height: 300px;
   width: 540px;
-  border-radius: 15px;
+  border-radius: 6px;
   box-shadow: 0vh;
-  background-color: #b2becc;
+  background-color: #3e4d60;
   margin-left: 40px;
-  border: 1px solid #e1e3de;
+  border: 1px solid #526173;
   padding: 10px;
+  box-shadow: 18px 19px 32px -11px rgba(0, 0, 0, 1);
 `;
 
 export const GroupCardHeader = styled.header`

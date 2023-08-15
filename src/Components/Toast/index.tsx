@@ -8,13 +8,13 @@ interface IToastProps {
 
 const Toast = ({ messageType }: IToastProps) => {
   return (
-    <ToastContainer>
-      <ToastMessage messageType={messageType}>
-        <div className="round-time-bar" />
-      </ToastMessage>
-      <CloseIcon />
+    <>
+      <ToastContainer>
+        <ToastMessage messageType={messageType}></ToastMessage>
+        <CloseIcon />
+      </ToastContainer>
       <TimerBar />
-    </ToastContainer>
+    </>
   );
 };
 
