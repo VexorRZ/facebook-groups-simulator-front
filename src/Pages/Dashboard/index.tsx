@@ -23,6 +23,10 @@ const Dashboard = () => {
     navigate(`/group/${id}`);
   }, []);
 
+  const openTopic = useCallback((groupId: number, topicId: number) => {
+    navigate(`/topics/${groupId}/${topicId}`);
+  }, []);
+
   const getGroupsByUser = useCallback(async () => {
     const token = localStorage.getItem("@token");
 
@@ -84,6 +88,9 @@ const Dashboard = () => {
                           key={index}
                           topicName={topic.name}
                           numberOfComments={1}
+                          onClick={() => {
+                            openTopic(group.id, topic.id);
+                          }}
                         />
                       </>
                     );

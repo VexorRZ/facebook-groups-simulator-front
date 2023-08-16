@@ -12,6 +12,7 @@ import SignUp from "./Pages/SignUp";
 import DashBoard from "./Pages/Dashboard";
 import ForgotPassword from "./Pages/ForgotPassword";
 import Group from "./Pages/Group";
+import Topic from "./Pages/Topic";
 import { GroupProvider } from "./Contexts/GroupContext";
 
 interface IprivateRouteProps {
@@ -48,6 +49,16 @@ const Routes: React.FC = () => {
               <PrivateRoute>
                 <GroupProvider>
                   <Group />
+                </GroupProvider>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/topics/:group_id/:topic_id"
+            element={
+              <PrivateRoute>
+                <GroupProvider>
+                  <Topic />
                 </GroupProvider>
               </PrivateRoute>
             }

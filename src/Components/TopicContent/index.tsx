@@ -12,15 +12,17 @@ interface ITopicContentProps {
   topicName: string;
   numberOfComments: number;
   URlGroup?: boolean;
+  onClick?: () => void;
 }
 
 const TopicContent = ({
   topicName,
   numberOfComments,
   URlGroup,
+  onClick,
 }: ITopicContentProps) => {
   return (
-    <Container URlGroup={URlGroup}>
+    <Container URlGroup={URlGroup} onClick={onClick}>
       <TopicName>{topicName}</TopicName>
       <CommentWrapper>
         <Comments>comentários: </Comments>
