@@ -7,40 +7,34 @@ import React, {
 
 import { REDUCER_ACTION_TYPE } from "./action-types";
 
-import { type Topics, type ChildrenType } from "./interfaces";
+import { type GroupTopic, type ChildrenType } from "./interfaces";
 import { reducer } from "./reducers";
 
-const initialTopicState: Topics = {
-  topicCreator: { id: 0, name: "" },
+const initialTopicState: GroupTopic = {
   id: 0,
-  iSclosed: false,
-  comments: [],
-  title: "",
+  name: "",
+  topics: [],
 };
 
 export type ReducerActionType = typeof REDUCER_ACTION_TYPE;
 
-const useTopicContext = (initialTopicState: Topics) => {
+const useTopicContext = (initialTopicState: GroupTopic) => {
   const [state, dispatch] = useReducer(reducer, initialTopicState);
 
   const REDUCER_ACTIONS = useMemo(() => {
     return REDUCER_ACTION_TYPE;
   }, []);
 
-  const topicCreator = state.topicCreator;
   const id = state.id;
-  const iSclosed = state.iSclosed;
-  const comments = state.comments;
-  const title = state.title;
+  const name = state.name;
+  const topics = state.topics;
 
   return {
     dispatch,
     REDUCER_ACTIONS,
-    topicCreator,
     id,
-    iSclosed,
-    comments,
-    title,
+    name,
+    topics,
   };
 };
 
@@ -49,11 +43,9 @@ export type UseTopicContextType = ReturnType<typeof useTopicContext>;
 const initialGroupContextState: UseTopicContextType = {
   dispatch: () => {},
   REDUCER_ACTIONS: REDUCER_ACTION_TYPE,
-  topicCreator: { id: 0, name: "" },
   id: 0,
-  iSclosed: false,
-  comments: [],
-  title: "",
+  name: "",
+  topics: [],
 };
 
 const TopicContext = createContext<UseTopicContextType>(

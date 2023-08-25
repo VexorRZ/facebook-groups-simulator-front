@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import React, { useEffect, useState, useCallback } from "react";
 import Topic from "../../Components/TopicContent";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { type AxiosResponse } from "axios";
 import api from "../../services/api";
 import { type Groups } from "../../services/interfaces";
@@ -12,7 +13,13 @@ const Group = () => {
   const params = useParams();
   const [group, setGroup] = useState<Partial<Groups>>({});
 
-  const { id } = params;
+  const { group_id } = params;
+
+  const navigate = useNavigate();
+
+  const openTopic = useCallback((topicId: number) => {
+    navigate(`/topics/${Number(group_id)}/${topicId}`);
+  }, []);
 
   const getGroupsByUser = useCallback(async () => {
     const token = localStorage.getItem("@token");
@@ -25,11 +32,13 @@ const Group = () => {
       const res: AxiosResponse<Groups> = await api.get<
         Groups,
         AxiosResponse<Groups>
-      >(`groups/${String(id)}`, {
+      >(`groups/${Number(group_id)}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       setGroup({ ...res.data });
+
+      console.log(group);
     } catch (err) {
       return err;
     }
@@ -47,13 +56,16 @@ const Group = () => {
           <GroupImage />
         </Header>
         <TopicList>
-          {group?.topics?.slice(0, 10).map((topic, index) => {
+          {group?.topics?.slice(0, 6).map((topic, index) => {
             return (
               <Topic
                 URlGroup={true}
                 topicName={topic.name}
                 numberOfComments={1}
                 key={index}
+                onClick={() => {
+                  openTopic(topic.id);
+                }}
               />
             );
           })}

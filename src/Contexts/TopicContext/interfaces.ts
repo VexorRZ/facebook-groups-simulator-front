@@ -1,27 +1,36 @@
 import { type ReactElement } from "react";
-
-export interface Topics {
-  topicCreator: TopicCreator;
+export interface GroupTopic {
   id: number;
-  iSclosed: boolean;
-  comments: comments[];
-  title: string;
+  name: string;
+  topics: Topics[];
 }
 
-interface comments {
+interface Topics {
   id: number;
-  author_id: number;
+  name: string;
+  author: Author;
+  comments: Comments[];
+}
+
+interface Author {
+  id: number;
+  name: string;
+}
+
+export interface Comments {
+  id: number;
   body: string;
+  author: CommentAuthor;
 }
 
-interface TopicCreator {
+interface CommentAuthor {
   id: number;
   name: string;
 }
 
 export interface ReducerAction {
   type: string;
-  payload?: Topics;
+  payload?: GroupTopic;
 }
 
 export interface ChildrenType {

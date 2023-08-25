@@ -10,6 +10,7 @@ interface IInputProps {
   name?: string;
   id?: string;
   customMarginTop?: string;
+  children?: React.ReactNode;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -21,6 +22,7 @@ const CustomInput = ({
   name,
   id,
   customMarginTop,
+  children,
   onChange,
 }: IInputProps) => {
   return (
@@ -33,7 +35,9 @@ const CustomInput = ({
       name={name}
       id={id}
       customMarginTop={customMarginTop}
-    />
+    >
+      {children}
+    </StylezedInput>
   );
 };
 

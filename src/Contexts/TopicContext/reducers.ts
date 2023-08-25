@@ -1,20 +1,24 @@
-import { type Topics, type ReducerAction } from "./interfaces";
+/* eslint-disable @typescript-eslint/naming-convention */
+import { type GroupTopic, type ReducerAction } from "./interfaces";
 
 import { REDUCER_ACTION_TYPE } from "./action-types";
-export const reducer = (state: Topics, action: ReducerAction): Topics => {
+
+export const reducer = (
+  state: GroupTopic,
+  action: ReducerAction
+): GroupTopic => {
   switch (action.type) {
     case REDUCER_ACTION_TYPE.CREATE_TOPIC: {
       if (action.payload == null) {
         throw new Error("action.payload missing in ADD action");
       }
 
-      const { iSclosed, topicCreator, id, comments } = action.payload;
+      const { id, name } = action.payload;
 
       return {
         ...state,
-        iSclosed,
-        topicCreator,
-        comments,
+
+        name,
         id,
       };
     }
@@ -24,13 +28,12 @@ export const reducer = (state: Topics, action: ReducerAction): Topics => {
         throw new Error("action.payload missing in ADD action");
       }
 
-      const { iSclosed, topicCreator, id, comments } = action.payload;
+      const { id, name } = action.payload;
 
       return {
         ...state,
-        iSclosed,
-        topicCreator,
-        comments,
+
+        name,
         id,
       };
     }

@@ -1,3 +1,4 @@
+/* eslint-disable multiline-ternary */
 import React, { useEffect, useState, useCallback } from "react";
 
 import TopBar from "../../Components/TopBar";
@@ -42,6 +43,7 @@ const Dashboard = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
+      console.log(res.data);
       // @ts-expect-error
       setGroups([...res.data]);
       console.log(groups);
@@ -87,7 +89,7 @@ const Dashboard = () => {
                         <TopicContent
                           key={index}
                           topicName={topic.name}
-                          numberOfComments={1}
+                          numberOfComments={topic.comments.length}
                           onClick={() => {
                             openTopic(group.id, topic.id);
                           }}

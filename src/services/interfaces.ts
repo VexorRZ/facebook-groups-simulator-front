@@ -20,4 +20,16 @@ interface administrator {
 interface topics {
   id: number;
   name: string;
+  comments: comments[];
+}
+
+interface comments {
+  id: number;
+  body: string;
+  author: author;
+}
+
+interface author {
+  id: number;
+  name: string;
 }

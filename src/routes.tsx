@@ -44,7 +44,7 @@ const Routes: React.FC = () => {
           />
 
           <Route
-            path="/group/:id"
+            path="/group/:group_id"
             element={
               <PrivateRoute>
                 <GroupProvider>

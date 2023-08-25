@@ -10,7 +10,7 @@ import {
 
 interface ITopicContentProps {
   topicName: string;
-  numberOfComments: number;
+  numberOfComments: number | string;
   URlGroup?: boolean;
   onClick?: () => void;
 }
