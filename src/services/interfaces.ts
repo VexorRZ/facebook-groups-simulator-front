@@ -23,10 +23,10 @@ interface topics {
   comments: comments[];
 }
 
-interface comments {
-  id: number;
-  body: string;
+export interface comments {
   author: author;
+  body: string;
+  id: number;
 }
 
 interface author {

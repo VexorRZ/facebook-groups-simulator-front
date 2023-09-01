@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { type AxiosResponse } from "axios";
 import api from "../../services/api";
 import { type GroupTopic } from "../../Contexts/TopicContext/interfaces";
+import { type comments } from "../../services/interfaces";
 import Button from "../../Components/Button";
 
 import image from "../../assets/images/fibonacci.jpg";
@@ -30,6 +31,7 @@ const TopicPage = () => {
   const [groupTopic, setTopic] = useState<Partial<GroupTopic>>({});
   const [commentBoxOpenned, setCommentBoxOppened] = useState(false);
   const [comment, setComment] = useState("");
+  const [commentList, setCommentlist] = useState<comments[]>([]);
 
   const { group_id, topic_id } = params;
 
@@ -48,26 +50,27 @@ const TopicPage = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      console.log(res.data);
+      setCommentlist(res.data.topics[0].comments);
 
       setTopic({ ...res.data });
-      console.log(groupTopic);
     } catch (err) {
       return err;
     }
-  }, []);
+  }, [groupTopic]);
+
+  const postNewComment = useCallback(() => {
+    setCommentlist([
+      ...commentList,
+      { author: { name: "zé", id: 0 }, body: comment, id: 55 },
+    ]);
+    console.log(commentList);
+  }, [commentList]);
 
   const addNewComment = useCallback(() => {
     setCommentBoxOppened(!commentBoxOpenned);
   }, [commentBoxOpenned]);
 
   const postComment = useCallback(async () => {
-    // const myArray = groupTopic.topics?.map((topics) => {
-    //   return topics.comments.map((comment) => {
-    //     return comment.body;
-    //   });
-    // });
-
     const token = localStorage.getItem("@token");
 
     if (!token) {
@@ -91,6 +94,7 @@ const TopicPage = () => {
   const changeComment = useCallback(
     (e: React.FormEvent<HTMLInputElement>) => {
       setComment(e.currentTarget.value);
+      console.log(comment);
     },
     [comment]
   );
@@ -113,7 +117,7 @@ const TopicPage = () => {
                 <div>{topic.name}</div>
                 <div>Criador do tópico {topic.author.name}</div>
                 <CommentsLists>
-                  {topic.comments.map((comment, index) => {
+                  {commentList.map((comment, index) => {
                     return (
                       <Comment key={comment.id}>
                         <UserInfoArea>
@@ -132,7 +136,7 @@ const TopicPage = () => {
                       <Button
                         width="150px"
                         onClick={() => {
-                          void postComment();
+                          postNewComment();
                         }}
                       >
                         Postar

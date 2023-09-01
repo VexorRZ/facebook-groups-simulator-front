@@ -8,7 +8,7 @@ interface ITopbarIconBadgeProps {
 export const Container = styled.div`
   height: 64px;
   width: 100%;
-  background-color: #1877f2;
+  background-color: #47658c;
   display: flex;
   align-items: center;
   top: 0;

@@ -6,17 +6,27 @@ export const Container = styled.div`
   margin-left: 18px;
   width: 300px;
   height: calc(100vh - 50px);
-  overflow-y: scroll;
   position: sticky;
   top: 50px;
+  scrollbar-width: 10px;
+  scrollbar-color: red green;
   ::-webkit-scrollbar {
-    width: 1px;
+    width: 30px;
   }
+
+  /* Track */
   ::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
+    background: #f1f1f1;
   }
+
+  /* Handle */
   ::-webkit-scrollbar-thumb {
-    background-color: rgb(179, 179, 179);
+    background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
   }
 `;
 

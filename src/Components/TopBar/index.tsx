@@ -14,7 +14,7 @@ const TopBar: React.FC = () => {
   return (
     <Container>
       <div className="topbarLeft">
-        <span className="logo">Facebook Groups Simulator</span>
+        <span className="logo">Onyx</span>
       </div>
       <div className="topbarCenter">
         <div className="searchbar">

@@ -1,6 +1,8 @@
 import React from "react";
-import { Notifications } from "@material-ui/icons";
-import GroupIcon from "@mui/icons-material/Group";
+
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import GroupsIcon from "@mui/icons-material/Groups";
+import PersonIcon from "@mui/icons-material/Person";
 
 import { Container, ElementArea } from "./styles";
 
@@ -8,28 +10,16 @@ const SideMenu: React.FC = () => {
   return (
     <Container>
       <ElementArea>
-        <GroupIcon />
-        <h6>item </h6>
+        <AccountCircleIcon />
+        <h6>Perfil </h6>
       </ElementArea>
       <ElementArea>
-        <Notifications />
-        <h6>item </h6>
+        <PersonIcon />
+        <h6>usuários </h6>
       </ElementArea>
       <ElementArea>
-        <Notifications />
-        <h6>item </h6>
-      </ElementArea>
-      <ElementArea>
-        <Notifications />
-        <h6>item </h6>
-      </ElementArea>
-      <ElementArea>
-        <Notifications />
-        <h6>item </h6>
-      </ElementArea>
-      <ElementArea>
-        <Notifications />
-        <h6>item </h6>
+        <GroupsIcon />
+        <h6>grupos </h6>
       </ElementArea>
     </Container>
   );

@@ -8,10 +8,14 @@ import api from "../../services/api";
 import { type Groups } from "../../services/interfaces";
 import { Container, GroupImage, GroupTitle, Header, TopicList } from "./styles";
 import TopBar from "../../Components/TopBar";
+import Pagination from "../../Components/Pagination";
 
 const Group = () => {
+  const LIMIT = 12;
+
   const params = useParams();
   const [group, setGroup] = useState<Partial<Groups>>({});
+  const [offset, setOffset] = useState(0);
 
   const { group_id } = params;
 
@@ -46,7 +50,7 @@ const Group = () => {
 
   useEffect(() => {
     void getGroupsByUser();
-  }, []);
+  }, [offset]);
   return (
     <>
       <TopBar />
@@ -61,7 +65,7 @@ const Group = () => {
               <Topic
                 URlGroup={true}
                 topicName={topic.name}
-                numberOfComments={1}
+                numberOfComments={topic.comments.length}
                 key={index}
                 onClick={() => {
                   openTopic(topic.id);
@@ -69,6 +73,14 @@ const Group = () => {
               />
             );
           })}
+          {group.topics?.length && (
+            <Pagination
+              limit={LIMIT}
+              total={group.topics?.length}
+              offset={offset}
+              setOffset={setOffset}
+            />
+          )}
         </TopicList>
       </Container>
     </>

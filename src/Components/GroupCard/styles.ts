@@ -12,6 +12,9 @@ export const Container = styled.div`
   border: 1px solid #526173;
   padding: 10px;
   box-shadow: 18px 19px 32px -11px rgba(0, 0, 0, 1);
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const GroupCardHeader = styled.header`
