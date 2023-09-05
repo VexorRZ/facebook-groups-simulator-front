@@ -9,6 +9,7 @@ import { type comments } from "../../services/interfaces";
 import Button from "../../Components/Button";
 
 import image from "../../assets/images/fibonacci.jpg";
+import TopBar from "../../Components/TopBar";
 import {
   Container,
   GroupImage,
@@ -23,16 +24,22 @@ import {
   UserInfoArea,
   CommentBox,
   Comment,
+  Pagination,
+  PaginationButton,
+  PaginationItem,
 } from "./styles";
-import TopBar from "../../Components/TopBar";
 
 const TopicPage = () => {
-  const params = useParams();
   const [groupTopic, setTopic] = useState<Partial<GroupTopic>>({});
   const [commentBoxOpenned, setCommentBoxOppened] = useState(false);
   const [comment, setComment] = useState("");
   const [commentList, setCommentlist] = useState<comments[]>([]);
+  const [total, setTotal] = useState(5);
+  const [limit, setLimit] = useState(1);
+  const [pages, setPages] = useState<number[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
+  const params = useParams();
   const { group_id, topic_id } = params;
 
   const getTopicByCredentials = useCallback(async () => {
@@ -46,25 +53,37 @@ const TopicPage = () => {
       const res: AxiosResponse<GroupTopic> = await api.get<
         GroupTopic,
         AxiosResponse<GroupTopic>
-      >(`/topics/${Number(group_id)}/${Number(topic_id)}`, {
+      >(`/topics/${Number(group_id)}/${Number(topic_id)}?page=${0}&size=${1}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
+      const totalPages = Math.ceil(total / limit);
+      const arrayPages = [];
+
+      for (let i = 1; i <= totalPages; i++) {
+        arrayPages.push(i);
+      }
+
+      setPages(arrayPages);
       setCommentlist(res.data.topics[0].comments);
 
       setTopic({ ...res.data });
     } catch (err) {
       return err;
     }
-  }, [groupTopic]);
+  }, [groupTopic, commentList]);
 
-  const postNewComment = useCallback(() => {
-    setCommentlist([
-      ...commentList,
-      { author: { name: "zé", id: 0 }, body: comment, id: 55 },
-    ]);
-    console.log(commentList);
-  }, [commentList]);
+  const postNewComment = () => {
+    const userName = localStorage.getItem("@name:user");
+    if (userName) {
+      setCommentlist([
+        ...commentList,
+        { author: { name: userName, id: 0 }, body: comment, id: 55 },
+      ]);
+    } else {
+      throw new Error("Erro inesperado, tente novamente");
+    }
+  };
 
   const addNewComment = useCallback(() => {
     setCommentBoxOppened(!commentBoxOpenned);
@@ -93,6 +112,7 @@ const TopicPage = () => {
 
   const changeComment = useCallback(
     (e: React.FormEvent<HTMLInputElement>) => {
+      e.preventDefault();
       setComment(e.currentTarget.value);
       console.log(comment);
     },
@@ -114,12 +134,12 @@ const TopicPage = () => {
           {groupTopic.topics?.map((topic, index) => {
             return (
               <>
-                <div>{topic.name}</div>
+                <div key={index}>{topic.name}</div>
                 <div>Criador do tópico {topic.author.name}</div>
                 <CommentsLists>
                   {commentList.map((comment, index) => {
                     return (
-                      <Comment key={comment.id}>
+                      <Comment key={index}>
                         <UserInfoArea>
                           <CommentAuthor className="author">
                             {comment.author.name}:
@@ -158,6 +178,27 @@ const TopicPage = () => {
             );
           })}
         </CommentList>
+        <>
+          <Pagination>
+            <div>{commentList.length}</div>
+            <PaginationButton>
+              <PaginationItem>Previous</PaginationItem>
+              {pages.map((page) => (
+                <>
+                  <PaginationItem
+                    key={page}
+                    onClick={() => {
+                      setCurrentPage(page);
+                    }}
+                  >
+                    {page}
+                  </PaginationItem>
+                </>
+              ))}
+              <PaginationItem>Next</PaginationItem>
+            </PaginationButton>
+          </Pagination>
+        </>
       </Container>
     </>
   );

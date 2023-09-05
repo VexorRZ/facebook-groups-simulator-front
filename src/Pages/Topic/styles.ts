@@ -103,3 +103,17 @@ export const CommentBox = styled.input`
 `;
 
 export const TopicAuthor = styled.h6``;
+
+export const Pagination = styled.div`
+  display: flex;
+  min-width: 500px;
+  justify-content: space-between;
+`;
+
+export const PaginationButton = styled.div`
+  display: flex;
+`;
+
+export const PaginationItem = styled.div`
+  margin: 0 10px;
+`;
