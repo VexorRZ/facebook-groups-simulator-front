@@ -108,12 +108,19 @@ export const Pagination = styled.div`
   display: flex;
   min-width: 500px;
   justify-content: space-between;
+  margin-top: 20px;
 `;
 
 export const PaginationButton = styled.div`
   display: flex;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const PaginationItem = styled.div`
   margin: 0 10px;
+  &:hover {
+    cursor: pointer;
+  }
 `;

@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { type GroupTopic, type ReducerAction } from "./interfaces";
+import { type TopicData, type ReducerAction } from "./interfaces";
 
 import { REDUCER_ACTION_TYPE } from "./action-types";
 
-export const reducer = (
-  state: GroupTopic,
-  action: ReducerAction
-): GroupTopic => {
+export const reducer = (state: TopicData, action: ReducerAction): TopicData => {
   switch (action.type) {
     case REDUCER_ACTION_TYPE.CREATE_TOPIC: {
       if (action.payload == null) {

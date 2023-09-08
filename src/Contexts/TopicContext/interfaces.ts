@@ -1,5 +1,10 @@
 import { type ReactElement } from "react";
 export interface GroupTopic {
+  groupTopics: TopicData;
+  totalCount?: number;
+}
+
+export interface TopicData {
   id: number;
   name: string;
   topics: Topics[];
@@ -30,7 +35,7 @@ interface CommentAuthor {
 
 export interface ReducerAction {
   type: string;
-  payload?: GroupTopic;
+  payload?: TopicData;
 }
 
 export interface ChildrenType {

@@ -4,7 +4,10 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { type AxiosResponse } from "axios";
 import api from "../../services/api";
-import { type GroupTopic } from "../../Contexts/TopicContext/interfaces";
+import {
+  type GroupTopic,
+  type TopicData,
+} from "../../Contexts/TopicContext/interfaces";
 import { type comments } from "../../services/interfaces";
 import Button from "../../Components/Button";
 
@@ -30,19 +33,19 @@ import {
 } from "./styles";
 
 const TopicPage = () => {
-  const [groupTopic, setTopic] = useState<Partial<GroupTopic>>({});
+  const [groupTopic, setTopic] = useState<Partial<TopicData>>({});
   const [commentBoxOpenned, setCommentBoxOppened] = useState(false);
   const [comment, setComment] = useState("");
   const [commentList, setCommentlist] = useState<comments[]>([]);
-  const [total, setTotal] = useState(5);
-  const [limit, setLimit] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [limit] = useState(8);
   const [pages, setPages] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
   const params = useParams();
   const { group_id, topic_id } = params;
 
-  const getTopicByCredentials = useCallback(async () => {
+  const getTopicByCredentials = async () => {
     const token = localStorage.getItem("@token");
 
     if (!token) {
@@ -53,9 +56,21 @@ const TopicPage = () => {
       const res: AxiosResponse<GroupTopic> = await api.get<
         GroupTopic,
         AxiosResponse<GroupTopic>
-      >(`/topics/${Number(group_id)}/${Number(topic_id)}?page=${0}&size=${1}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      >(
+        `/topics/${Number(group_id)}/${Number(
+          topic_id
+        )}?page=${currentPage}&size=${limit}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const { totalCount } = res.data;
+      console.log(res.data.groupTopics);
+
+      if (totalCount) {
+        setTotal(totalCount);
+      }
 
       const totalPages = Math.ceil(total / limit);
       const arrayPages = [];
@@ -64,14 +79,16 @@ const TopicPage = () => {
         arrayPages.push(i);
       }
 
+      console.log("arraypages", arrayPages);
       setPages(arrayPages);
-      setCommentlist(res.data.topics[0].comments);
 
-      setTopic({ ...res.data });
+      setCommentlist(res.data.groupTopics.topics[0].comments);
+
+      setTopic({ ...res.data.groupTopics });
     } catch (err) {
       return err;
     }
-  }, [groupTopic, commentList]);
+  };
 
   const postNewComment = () => {
     const userName = localStorage.getItem("@name:user");
@@ -89,26 +106,26 @@ const TopicPage = () => {
     setCommentBoxOppened(!commentBoxOpenned);
   }, [commentBoxOpenned]);
 
-  const postComment = useCallback(async () => {
-    const token = localStorage.getItem("@token");
+  // const postComment = useCallback(async () => {
+  //   const token = localStorage.getItem("@token");
 
-    if (!token) {
-      return;
-    }
+  //   if (!token) {
+  //     return;
+  //   }
 
-    try {
-      const res: AxiosResponse<GroupTopic> = await api.post<
-        GroupTopic,
-        AxiosResponse<GroupTopic>
-      >(`/comments/:group_id/:topic_id`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+  //   try {
+  //     const res: AxiosResponse<GroupTopic> = await api.post<
+  //       GroupTopic,
+  //       AxiosResponse<GroupTopic>
+  //     >(`/comments/:group_id/:topic_id`, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
 
-      return res.status;
-    } catch (err) {
-      return err;
-    }
-  }, []);
+  //     return res.status;
+  //   } catch (err) {
+  //     return err;
+  //   }
+  // }, []);
 
   const changeComment = useCallback(
     (e: React.FormEvent<HTMLInputElement>) => {
@@ -121,7 +138,7 @@ const TopicPage = () => {
 
   useEffect(() => {
     void getTopicByCredentials();
-  }, []);
+  }, [currentPage, limit, total]);
   return (
     <>
       <TopBar />
@@ -180,22 +197,39 @@ const TopicPage = () => {
         </CommentList>
         <>
           <Pagination>
-            <div>{commentList.length}</div>
+            <div>{total}</div>
             <PaginationButton>
-              <PaginationItem>Previous</PaginationItem>
+              {currentPage > 1 && (
+                <PaginationItem
+                  onClick={() => {
+                    setCurrentPage(currentPage - 1);
+                  }}
+                >
+                  Previous
+                </PaginationItem>
+              )}
               {pages.map((page) => (
                 <>
                   <PaginationItem
                     key={page}
                     onClick={() => {
-                      setCurrentPage(page);
+                      setCurrentPage(Number(page));
+                      console.log(currentPage);
                     }}
                   >
                     {page}
                   </PaginationItem>
                 </>
               ))}
-              <PaginationItem>Next</PaginationItem>
+              {currentPage < pages.length && (
+                <PaginationItem
+                  onClick={() => {
+                    setCurrentPage(currentPage + 1);
+                  }}
+                >
+                  Next
+                </PaginationItem>
+              )}
             </PaginationButton>
           </Pagination>
         </>

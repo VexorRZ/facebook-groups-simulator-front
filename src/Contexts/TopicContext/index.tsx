@@ -7,10 +7,10 @@ import React, {
 
 import { REDUCER_ACTION_TYPE } from "./action-types";
 
-import { type GroupTopic, type ChildrenType } from "./interfaces";
+import { type TopicData, type ChildrenType } from "./interfaces";
 import { reducer } from "./reducers";
 
-const initialTopicState: GroupTopic = {
+const initialTopicState: TopicData = {
   id: 0,
   name: "",
   topics: [],
@@ -18,7 +18,7 @@ const initialTopicState: GroupTopic = {
 
 export type ReducerActionType = typeof REDUCER_ACTION_TYPE;
 
-const useTopicContext = (initialTopicState: GroupTopic) => {
+const useTopicContext = (initialTopicState: TopicData) => {
   const [state, dispatch] = useReducer(reducer, initialTopicState);
 
   const REDUCER_ACTIONS = useMemo(() => {

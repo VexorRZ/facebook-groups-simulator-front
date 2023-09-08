@@ -5,17 +5,26 @@ import Topic from "../../Components/TopicContent";
 import { useParams, useNavigate } from "react-router-dom";
 import { type AxiosResponse } from "axios";
 import api from "../../services/api";
-import { type Groups } from "../../services/interfaces";
-import { Container, GroupImage, GroupTitle, Header, TopicList } from "./styles";
+import { type Groups, type Response } from "../../services/interfaces";
+import {
+  Container,
+  GroupImage,
+  GroupTitle,
+  Header,
+  TopicList,
+  Pagination,
+  PaginationButton,
+  PaginationItem,
+} from "./styles";
 import TopBar from "../../Components/TopBar";
-import Pagination from "../../Components/Pagination";
 
 const Group = () => {
-  const LIMIT = 12;
-
   const params = useParams();
   const [group, setGroup] = useState<Partial<Groups>>({});
-  const [offset, setOffset] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [limit] = useState(8);
+  const [pages, setPages] = useState<number[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { group_id } = params;
 
@@ -33,16 +42,31 @@ const Group = () => {
     }
 
     try {
-      const res: AxiosResponse<Groups> = await api.get<
-        Groups,
-        AxiosResponse<Groups>
-      >(`groups/${Number(group_id)}`, {
+      const res: AxiosResponse<Response> = await api.get<
+        Response,
+        AxiosResponse<Response>
+      >(`groups/${Number(group_id)}?page=${currentPage}&size=${limit}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setGroup({ ...res.data });
+      const { group, numberOfTopics } = res.data;
 
-      console.log(group);
+      console.log(res.data);
+
+      setGroup({ ...group });
+
+      if (numberOfTopics) {
+        setTotal(numberOfTopics);
+      }
+
+      const totalPages = Math.ceil(total / limit);
+      const arrayPages = [];
+
+      for (let i = 1; i <= totalPages; i++) {
+        arrayPages.push(i);
+      }
+
+      setPages(arrayPages);
     } catch (err) {
       return err;
     }
@@ -50,7 +74,7 @@ const Group = () => {
 
   useEffect(() => {
     void getGroupsByUser();
-  }, [offset]);
+  }, [currentPage, limit, total]);
   return (
     <>
       <TopBar />
@@ -73,15 +97,42 @@ const Group = () => {
               />
             );
           })}
-          {group.topics?.length && (
-            <Pagination
-              limit={LIMIT}
-              total={group.topics?.length}
-              offset={offset}
-              setOffset={setOffset}
-            />
-          )}
         </TopicList>
+        <Pagination>
+          <div>{total}</div>
+          <PaginationButton>
+            {currentPage > 1 && (
+              <PaginationItem
+                onClick={() => {
+                  setCurrentPage(currentPage - 1);
+                }}
+              >
+                Previous
+              </PaginationItem>
+            )}
+            {pages.map((page) => (
+              <>
+                <PaginationItem
+                  key={page}
+                  onClick={() => {
+                    setCurrentPage(Number(page));
+                  }}
+                >
+                  {page}
+                </PaginationItem>
+              </>
+            ))}
+            {currentPage < pages.length && (
+              <PaginationItem
+                onClick={() => {
+                  setCurrentPage(currentPage + 1);
+                }}
+              >
+                Next
+              </PaginationItem>
+            )}
+          </PaginationButton>
+        </Pagination>
       </Container>
     </>
   );

@@ -1,3 +1,8 @@
+export interface Response {
+  numberOfTopics?: number;
+  group?: Groups;
+}
+
 export interface Groups {
   administrator: administrator;
   id: number;
@@ -6,7 +11,6 @@ export interface Groups {
   name: string;
   topics: topics[];
 }
-
 interface moderators {
   id: number;
   name: string;
