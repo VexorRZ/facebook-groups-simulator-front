@@ -22,9 +22,9 @@ const Group = () => {
   const params = useParams();
   const [group, setGroup] = useState<Partial<Groups>>({});
   const [total, setTotal] = useState(0);
-  const [limit] = useState(8);
+  const [limit] = useState(5);
   const [pages, setPages] = useState<number[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
 
   const { group_id } = params;
 
@@ -34,7 +34,7 @@ const Group = () => {
     navigate(`/topics/${Number(group_id)}/${topicId}`);
   }, []);
 
-  const getGroupsByUser = useCallback(async () => {
+  const getGroupsByUser = async () => {
     const token = localStorage.getItem("@token");
 
     if (!token) {
@@ -51,7 +51,7 @@ const Group = () => {
 
       const { group, numberOfTopics } = res.data;
 
-      console.log(res.data);
+      console.log(res.data.group?.topics);
 
       setGroup({ ...group });
 
@@ -70,7 +70,7 @@ const Group = () => {
     } catch (err) {
       return err;
     }
-  }, []);
+  };
 
   useEffect(() => {
     void getGroupsByUser();
@@ -98,41 +98,44 @@ const Group = () => {
             );
           })}
         </TopicList>
-        <Pagination>
-          <div>{total}</div>
-          <PaginationButton>
-            {currentPage > 1 && (
-              <PaginationItem
-                onClick={() => {
-                  setCurrentPage(currentPage - 1);
-                }}
-              >
-                Previous
-              </PaginationItem>
-            )}
-            {pages.map((page) => (
-              <>
+        <>
+          <Pagination>
+            <div>{total}</div>
+            <PaginationButton>
+              {currentPage > 1 && (
                 <PaginationItem
-                  key={page}
                   onClick={() => {
-                    setCurrentPage(Number(page));
+                    setCurrentPage(currentPage - 1);
                   }}
                 >
-                  {page}
+                  Previous
                 </PaginationItem>
-              </>
-            ))}
-            {currentPage < pages.length && (
-              <PaginationItem
-                onClick={() => {
-                  setCurrentPage(currentPage + 1);
-                }}
-              >
-                Next
-              </PaginationItem>
-            )}
-          </PaginationButton>
-        </Pagination>
+              )}
+              {pages.map((page) => (
+                <>
+                  <PaginationItem
+                    isSelect={page === currentPage}
+                    key={page}
+                    onClick={() => {
+                      setCurrentPage(Number(page));
+                    }}
+                  >
+                    {page}
+                  </PaginationItem>
+                </>
+              ))}
+              {currentPage < pages.length && (
+                <PaginationItem
+                  onClick={() => {
+                    setCurrentPage(currentPage + 1);
+                  }}
+                >
+                  Next
+                </PaginationItem>
+              )}
+            </PaginationButton>
+          </Pagination>
+        </>
       </Container>
     </>
   );
