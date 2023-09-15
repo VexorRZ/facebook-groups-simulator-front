@@ -1,4 +1,8 @@
 import styled from "styled-components";
+import { Chat } from "@material-ui/icons";
+interface ITopbarIconBadgeProps {
+  isRingBell?: boolean;
+}
 
 interface ItopicContent {
   URlGroup?: boolean;
@@ -7,9 +11,9 @@ interface ItopicContent {
 export const Container = styled.div<ItopicContent>`
   transition: transform 250ms;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  background-color: #b2becc;
+  background-color: #303640;
   border: 1px solid #293544;
   border-radius: 6px;
   max-height: 62px;
@@ -20,17 +24,15 @@ export const Container = styled.div<ItopicContent>`
     transition: ${(props) =>
       props.URlGroup ? " all 0.3s ease-in" : "all 0.2s ease-in"};
     transform: ${(props) =>
-      props.URlGroup ? "translateX(4px)" : "translateY(-10px)"};
-    background-color: #d6e0eb;
+      props.URlGroup ? "translateX(4px)" : "translateY(-3px)"};
+    background-color: #373e4a;
   }
 `;
 
 export const TopicName = styled.h4`
   width: 60%;
-`;
-
-export const Comments = styled.span`
-  width: 20%;
+  margin-left: 10px;
+  color: #ebeff5;
 `;
 
 export const NumberOfComments = styled.div`
@@ -53,4 +55,37 @@ export const CommentWrapper = styled.div`
   flex-direction: row;
   justify-content: space-between;
   gap: 8px;
+`;
+
+export const TopbarIconteItem = styled.div`
+  margin-right: 17px;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+export const TopbarIconBadge = styled.span<ITopbarIconBadgeProps>`
+  width: 15px;
+  height: 15px;
+  background-color: red;
+  opacity: 0.8;
+  border-radius: 50%;
+  color: black;
+  position: absolute;
+  top: -5px;
+  right: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+`;
+
+export const ChatItem = styled(Chat)`
+  color: #ebeff5;
+  opacity: 0.8;
+`;
+
+export const Comments = styled.div`
+  color: #ebeff5;
 `;

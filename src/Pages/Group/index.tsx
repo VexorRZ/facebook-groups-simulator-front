@@ -22,7 +22,7 @@ const Group = () => {
   const params = useParams();
   const [group, setGroup] = useState<Partial<Groups>>({});
   const [total, setTotal] = useState(0);
-  const [limit] = useState(5);
+  const [limit] = useState(1);
   const [pages, setPages] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -45,9 +45,14 @@ const Group = () => {
       const res: AxiosResponse<Response> = await api.get<
         Response,
         AxiosResponse<Response>
-      >(`groups/${Number(group_id)}?page=${currentPage}&size=${limit}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      >(
+        `groups/${Number(group_id)}?page=${Number(currentPage)}&size=${Number(
+          limit
+        )}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       const { group, numberOfTopics } = res.data;
 

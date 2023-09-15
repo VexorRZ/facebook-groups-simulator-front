@@ -38,7 +38,7 @@ const TopicPage = () => {
   const [comment, setComment] = useState("");
   const [commentList, setCommentlist] = useState<comments[]>([]);
   const [total, setTotal] = useState(0);
-  const [limit] = useState(8);
+  const [limit] = useState(5);
   const [pages, setPages] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -66,7 +66,7 @@ const TopicPage = () => {
       );
 
       const { totalCount } = res.data;
-      console.log(res.data.groupTopics);
+      console.log(res.data);
 
       if (totalCount) {
         setTotal(totalCount);
@@ -90,13 +90,33 @@ const TopicPage = () => {
     }
   };
 
-  const postNewComment = () => {
+  const postNewComment = async () => {
     const userName = localStorage.getItem("@name:user");
+    const token = localStorage.getItem("@token");
     if (userName) {
       setCommentlist([
         ...commentList,
         { author: { name: userName, id: 0 }, body: comment, id: 55 },
       ]);
+
+      if (!token) {
+        throw new Error("Erro inesperado, token não fornecido");
+      }
+
+      setCommentBoxOppened(false);
+      try {
+        const res: AxiosResponse = await api.post<AxiosResponse>(
+          `/comments/${Number(group_id)}/${Number(topic_id)}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            body: comment,
+          }
+        );
+
+        return res.status;
+      } catch (err) {
+        return err;
+      }
     } else {
       throw new Error("Erro inesperado, tente novamente");
     }
@@ -106,32 +126,10 @@ const TopicPage = () => {
     setCommentBoxOppened(!commentBoxOpenned);
   }, [commentBoxOpenned]);
 
-  // const postComment = useCallback(async () => {
-  //   const token = localStorage.getItem("@token");
-
-  //   if (!token) {
-  //     return;
-  //   }
-
-  //   try {
-  //     const res: AxiosResponse<GroupTopic> = await api.post<
-  //       GroupTopic,
-  //       AxiosResponse<GroupTopic>
-  //     >(`/comments/:group_id/:topic_id`, {
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     });
-
-  //     return res.status;
-  //   } catch (err) {
-  //     return err;
-  //   }
-  // }, []);
-
   const changeComment = useCallback(
     (e: React.FormEvent<HTMLInputElement>) => {
       e.preventDefault();
       setComment(e.currentTarget.value);
-      console.log(comment);
     },
     [comment]
   );
@@ -173,7 +171,7 @@ const TopicPage = () => {
                       <Button
                         width="150px"
                         onClick={() => {
-                          postNewComment();
+                          void postNewComment();
                         }}
                       >
                         Postar
@@ -211,6 +209,7 @@ const TopicPage = () => {
               {pages.map((page) => (
                 <>
                   <PaginationItem
+                    isSelect={page === currentPage}
                     key={page}
                     onClick={() => {
                       setCurrentPage(Number(page));

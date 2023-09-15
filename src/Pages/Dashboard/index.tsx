@@ -43,7 +43,7 @@ const Dashboard = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      console.log(res.data);
+      console.log("data:", res.data);
       // @ts-expect-error
       setGroups([...res.data]);
       console.log(groups);
@@ -79,6 +79,7 @@ const Dashboard = () => {
                   key={index}
                   groupName={group.name}
                   numberOfMbembers={1}
+                  numberOfTopics={1}
                   onClick={() => {
                     openGroup(group.id);
                   }}

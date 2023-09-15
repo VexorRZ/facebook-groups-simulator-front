@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+interface IPaginationProps {
+  isSelect?: boolean;
+}
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -118,8 +122,14 @@ export const PaginationButton = styled.div`
   }
 `;
 
-export const PaginationItem = styled.div`
+export const PaginationItem = styled.div<IPaginationProps>`
   margin: 0 10px;
+
+  ${(props) =>
+    props.isSelect && {
+      background: "#6d6d6d",
+    }}
+
   &:hover {
     cursor: pointer;
   }

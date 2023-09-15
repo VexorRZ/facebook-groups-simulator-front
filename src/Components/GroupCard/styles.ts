@@ -1,13 +1,17 @@
 import styled from "styled-components";
 
+interface IinfoWraperProps {
+  gap?: string;
+}
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 300px;
+  height: 480px;
   width: 540px;
   border-radius: 6px;
   box-shadow: 0vh;
-  background-color: #3e4d60;
+  background-color: #25282e;
   margin-left: 40px;
   border: 1px solid #526173;
   padding: 10px;
@@ -19,16 +23,17 @@ export const Container = styled.div`
 
 export const GroupCardHeader = styled.header`
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
 `;
 
-export const GroupTitle = styled.h2`
-  width: 60%;
-`;
-
-export const GroupNumberOfMembers = styled.span`
-  width: 20%;
+export const GroupTitle = styled.h3`
+  width: 100%;
+  color: #ebeff5;
+  background-color: #303640;
+  border-radius: 16px;
+  font-family: sans-serif;
 `;
 
 export const TopicList = styled.div`
@@ -58,4 +63,86 @@ export const TopicName = styled.h4`
 
 export const NumberOfComments = styled.span`
   width: 20%;
+`;
+
+export const GroupAvatar = styled.img`
+  border-radius: 50%;
+  width: 170px;
+  height: 170px;
+  border: 1px solid;
+`;
+
+export const GroupInfoArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+`;
+
+export const InfoWrapper = styled.div<IinfoWraperProps>`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 16px;
+  gap: ${(props) => (props.gap ? props.gap : "0px")};
+  margin-bottom: 10px;
+`;
+
+export const JoiningButton = styled.button`
+  background-color: #373e4a;
+  opacity: 0.7;
+  border: none;
+  white-space: nowrap;
+  color: hsla(150, 14%, 97%, 1);
+  cursor: pointer;
+  outline: none;
+  font-size: 1rem;
+  text-shadow: 0.1rem 0.1rem 0.5rem hsla(0, 0%, 0%, 0.5);
+  letter-spacing: 0.1rem;
+  border-radius: 0.5rem;
+  user-select: none;
+  padding: 1.5rem 2rem;
+  transition: all 0.1s ease-in;
+
+  ::-moz-focus-inner {
+    border: 0;
+  }
+
+  &:hover {
+    background-color: #556073;
+  }
+
+  &:active {
+    background-color: hsla(40, 72%, 35%, 1);
+  }
+`;
+
+export const ButtonArea = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+`;
+
+export const AmountWrapper = styled.div`
+  background-color: #06b81e;
+  width: 19px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50px;
+  border: solid 1px #3e4d60;
+
+  &:hover {
+    transition: all 0.2s ease-in;
+    background-color: #fc4e4e;
+  }
+`;
+
+export const InfoText = styled.h5`
+  margin: 0;
+  width: 100%;
+  color: #ebeff5;
+  font-family: sans-serif;
 `;
