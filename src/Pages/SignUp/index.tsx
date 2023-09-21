@@ -101,7 +101,7 @@ const SignUp: React.FC = () => {
               </ErrorMessage>
 
               <CustomButton
-                customBackgroundColor="#fdc886"
+                customBackgroundColor="#04D361"
                 type="submit"
                 marginTop="16px"
                 opacity={0.8}

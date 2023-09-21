@@ -5,12 +5,18 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   margin: auto;
+  margin-top: 20px;
   justify-content: center;
   align-items: center;
-  border: 1px solid black;
-  border-radius: 12px;
+  border: 1px solid #526173;
   width: 500px;
   height: 500px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 6px;
+  box-shadow: 0vh;
+  background-color: #25282e;
+  box-shadow: 18px 19px 32px -11px rgba(0, 0, 0, 1);
 `;
 
 export const ErrorMessage = styled.h4`
@@ -22,13 +28,13 @@ export const ErrorMessage = styled.h4`
 export const Title = styled.h2`
   margin: 0;
   text-align: center;
-  color: #000;
+  color: #ebeff5;
 `;
 
 export const Resume = styled.h5`
   margin: 0;
   margin-top: 64px;
-  color: #000;
+  color: #ebeff5;
 `;
 
 export const InputsContainer = styled.div`

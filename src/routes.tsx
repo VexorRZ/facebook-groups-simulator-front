@@ -14,6 +14,8 @@ import ForgotPassword from "./Pages/ForgotPassword";
 import Group from "./Pages/Group";
 import Topic from "./Pages/Topic";
 import { GroupProvider } from "./Contexts/GroupContext";
+import { AuthProvider } from "./Contexts/AuthContext";
+import Profile from "./Pages/Profile/";
 
 interface IprivateRouteProps {
   children?: React.ReactNode;
@@ -60,6 +62,16 @@ const Routes: React.FC = () => {
                 <GroupProvider>
                   <Topic />
                 </GroupProvider>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <AuthProvider>
+                  <Profile />
+                </AuthProvider>
               </PrivateRoute>
             }
           />

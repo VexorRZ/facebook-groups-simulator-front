@@ -8,12 +8,13 @@ interface ITopbarIconBadgeProps {
 export const Container = styled.div`
   height: 64px;
   width: 100%;
-  background-color: #47658c;
+  background-color: #373e4a;
   display: flex;
   align-items: center;
   top: 0;
   z-index: 999;
   border-radius: 6px;
+  position: sticky;
 
   .topbarLeft {
     flex: 3;
@@ -59,6 +60,12 @@ export const Container = styled.div`
     justify-content: space-around;
     color: white;
 
+    h4 {
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
     .topbarLink {
       margin-right: 10px;
       font-size: 14px;
@@ -78,8 +85,8 @@ export const Container = styled.div`
       }
     }
     .topbarImg {
-      width: 32px;
-      height: 32px;
+      width: 55px;
+      height: 55px;
       border-radius: 50%;
       object-fit: cover;
       cursor: pointer;

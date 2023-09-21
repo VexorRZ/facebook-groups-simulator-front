@@ -25,7 +25,6 @@ import {
   IconsContainer,
   ErrorMessage,
 } from "./styles";
-import Toast from "../../Components/Toast";
 
 const Login = () => {
   const loginSchema = Yup.object().shape({
@@ -109,7 +108,7 @@ const Login = () => {
                     errors.password}
                 </ErrorMessage>
                 <CustomButton
-                  customBackgroundColor="#fdc886"
+                  customBackgroundColor="#04D361"
                   type="submit"
                   marginTop="24px"
                   opacity={0.8}
@@ -118,7 +117,7 @@ const Login = () => {
                   Login
                 </CustomButton>
                 <CustomButton
-                  customBackgroundColor="#fdc886"
+                  customBackgroundColor="#4863F7"
                   type="button"
                   marginTop="4px"
                   opacity={0.8}
@@ -138,17 +137,28 @@ const Login = () => {
         <div>-ou faça login com-</div>
         <IconsContainer>
           <IconEncapsulator>
-            <FacebookIcon />
+            <FacebookIcon
+              style={{
+                color: "#3A559F",
+              }}
+            />
           </IconEncapsulator>
           <IconEncapsulator>
-            <GoogleIcon />
+            <GoogleIcon
+              style={{
+                color: "#FF3A00",
+              }}
+            />
           </IconEncapsulator>
           <IconEncapsulator>
-            <InstagramIcon />
+            <InstagramIcon
+              style={{
+                color: "#DC4460",
+              }}
+            />
           </IconEncapsulator>
         </IconsContainer>
       </Container>
-      <Toast messageType="login" />
     </>
   );
 };

@@ -6,11 +6,17 @@ import image from "../../assets/images/fibonacci.jpg";
 
 const TopBar: React.FC = () => {
   const navigate = useNavigate();
+
   const Logout = () => {
     navigate("/");
     localStorage.removeItem("@name:user");
     localStorage.removeItem("@token");
   };
+
+  const openProfilePage = () => {
+    navigate("/profile");
+  };
+
   return (
     <Container>
       <div className="topbarLeft">
@@ -41,7 +47,12 @@ const TopBar: React.FC = () => {
             </TopbarIconBadge>
           </div>
         </div>
-        <img src={image} alt="" className="topbarImg" />
+        <img
+          src={image}
+          alt=""
+          className="topbarImg"
+          onClick={openProfilePage}
+        />
         <h4 onClick={Logout} className="logout">
           sair
         </h4>

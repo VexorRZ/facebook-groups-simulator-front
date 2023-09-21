@@ -7,8 +7,7 @@ interface IinfoWraperProps {
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 480px;
-  width: 540px;
+  width: 600px;
   border-radius: 6px;
   box-shadow: 0vh;
   background-color: #25282e;
@@ -16,9 +15,6 @@ export const Container = styled.div`
   border: 1px solid #526173;
   padding: 10px;
   box-shadow: 18px 19px 32px -11px rgba(0, 0, 0, 1);
-  &:hover {
-    cursor: pointer;
-  }
 `;
 
 export const GroupCardHeader = styled.header`
@@ -127,17 +123,13 @@ export const ButtonArea = styled.div`
 
 export const AmountWrapper = styled.div`
   background-color: #06b81e;
-  width: 19px;
+  width: 43px;
+  height: 27px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50px;
+  border-radius: 50%;
   border: solid 1px #3e4d60;
-
-  &:hover {
-    transition: all 0.2s ease-in;
-    background-color: #fc4e4e;
-  }
 `;
 
 export const InfoText = styled.h5`
@@ -145,4 +137,13 @@ export const InfoText = styled.h5`
   width: 100%;
   color: #ebeff5;
   font-family: sans-serif;
+`;
+
+export const LastTopics = styled.h4`
+  font-family: sans-serif;
+  text-decoration: underline;
+  font-weight: 900;
+  background-color: #25282e;
+  text-align: center;
+  color: #ebeff5;
 `;

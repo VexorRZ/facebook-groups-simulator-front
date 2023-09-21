@@ -35,7 +35,8 @@ const ForgotPassword: React.FC = () => {
 
       <Button
         onClick={ClickedButton}
-        customBackgroundColor="#FDC886"
+        marginTop="3px"
+        customBackgroundColor="#04D361"
         width="355px"
       >
         Esqueci minha senha

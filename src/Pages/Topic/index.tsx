@@ -4,6 +4,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { type AxiosResponse } from "axios";
 import api from "../../services/api";
+import { format, parse, Locale } from "date-fns";
 import {
   type GroupTopic,
   type TopicData,
@@ -30,6 +31,7 @@ import {
   Pagination,
   PaginationButton,
   PaginationItem,
+  CommentDate,
 } from "./styles";
 
 const TopicPage = () => {
@@ -44,6 +46,8 @@ const TopicPage = () => {
 
   const params = useParams();
   const { group_id, topic_id } = params;
+
+  const date = new Date();
 
   const getTopicByCredentials = async () => {
     const token = localStorage.getItem("@token");
@@ -66,21 +70,18 @@ const TopicPage = () => {
       );
 
       const { totalCount } = res.data;
-      console.log(res.data);
 
       if (totalCount) {
+        const totalPages = Math.ceil(totalCount / limit);
+        const arrayPages = [];
+
+        for (let i = 1; i <= totalPages; i++) {
+          arrayPages.push(i);
+        }
+
+        setPages(arrayPages);
         setTotal(totalCount);
       }
-
-      const totalPages = Math.ceil(total / limit);
-      const arrayPages = [];
-
-      for (let i = 1; i <= totalPages; i++) {
-        arrayPages.push(i);
-      }
-
-      console.log("arraypages", arrayPages);
-      setPages(arrayPages);
 
       setCommentlist(res.data.groupTopics.topics[0].comments);
 
@@ -162,6 +163,10 @@ const TopicPage = () => {
                           <AuthorAvatar src={image} />
                         </UserInfoArea>
                         <CommentContent>{comment.body}</CommentContent>
+                        <CommentDate>
+                          Postado há:
+                          {comment.createdAt && comment.createdAt.toString()}
+                        </CommentDate>
                       </Comment>
                     );
                   })}

@@ -3,20 +3,24 @@ import styled from "styled-components";
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
+  margin: auto;
+  margin-top: 20px;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  border: 1px solid #526173;
   width: 400px;
   height: 350px;
-  border: 1px solid #f2f2f2;
-  margin: auto;
+  display: flex;
+  flex-direction: column;
   border-radius: 6px;
-  background-color: #f0f0f0;
+  box-shadow: 0vh;
+  background-color: #25282e;
+  box-shadow: 18px 19px 32px -11px rgba(0, 0, 0, 1);
 `;
 
 export const Title = styled.h1`
   font-weight: bold;
-  color: black;
+  color: #ebeff5;
 `;
 
 export const InputContainer = styled.div`
@@ -39,5 +43,8 @@ export const LabelContainer = styled.div`
   p {
     color: red;
     margin: 0;
+  }
+  h5 {
+    color: #ebeff5;
   }
 `;

@@ -31,6 +31,7 @@ export interface comments {
   author: author;
   body: string;
   id: number;
+  createdAt?: Date;
 }
 
 interface author {

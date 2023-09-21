@@ -13,6 +13,7 @@ import {
   ButtonArea,
   AmountWrapper,
   InfoText,
+  LastTopics,
 } from "./styles";
 
 interface IGrupoCardProps {
@@ -46,7 +47,7 @@ const GroupCard = ({
         </GroupInfoArea>
         <GroupAvatar src={image} />
       </GroupCardHeader>
-
+      <LastTopics>Últimos tópicos</LastTopics>
       <TopicList>{children}</TopicList>
       <ButtonArea>
         <JoiningButton>Entrar</JoiningButton>

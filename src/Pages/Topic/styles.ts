@@ -134,3 +134,5 @@ export const PaginationItem = styled.div<IPaginationProps>`
     cursor: pointer;
   }
 `;
+
+export const CommentDate = styled.time``;

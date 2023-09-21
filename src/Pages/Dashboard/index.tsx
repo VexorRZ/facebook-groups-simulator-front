@@ -10,7 +10,7 @@ import api from "../../services/api";
 
 import { type Groups } from "../../services/interfaces";
 
-import { Content, Container, GroupCardList } from "./styles";
+import { Content, Container, GroupCardList, NoTopicsCard } from "./styles";
 
 import { type AxiosResponse } from "axios";
 
@@ -70,7 +70,7 @@ const Dashboard = () => {
         <SideMenu />
 
         <GroupCardList>
-          <h1>OLÁ {userName} </h1>
+          <h1>Olá {userName} </h1>
 
           {groups?.map((group, index) => {
             return (
@@ -79,25 +79,31 @@ const Dashboard = () => {
                   key={index}
                   groupName={group.name}
                   numberOfMbembers={1}
-                  numberOfTopics={1}
+                  numberOfTopics={group.topics.length}
                   onClick={() => {
                     openGroup(group.id);
                   }}
                 >
-                  {group.topics?.slice(0, 3).map((topic, index) => {
-                    return (
-                      <>
-                        <TopicContent
-                          key={index}
-                          topicName={topic.name}
-                          numberOfComments={topic.comments.length}
-                          onClick={() => {
-                            openTopic(group.id, topic.id);
-                          }}
-                        />
-                      </>
-                    );
-                  })}
+                  {group.topics.length !== 0 ? (
+                    group.topics?.slice(0, 3).map((topic, index) => {
+                      return (
+                        <>
+                          <TopicContent
+                            key={index}
+                            topicName={topic.name}
+                            numberOfComments={topic.comments.length}
+                            onClick={() => {
+                              openTopic(group.id, topic.id);
+                            }}
+                          />
+                        </>
+                      );
+                    })
+                  ) : (
+                    <NoTopicsCard>
+                      Esse grupo ainda não possui nenhum tópico
+                    </NoTopicsCard>
+                  )}
                 </GroupCard>
               </>
             );
