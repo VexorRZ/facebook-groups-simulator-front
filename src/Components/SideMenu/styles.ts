@@ -12,7 +12,7 @@ export const Container = styled.div`
   background: #25282e;
   position: sticky;
   top: 85px;
-  height: 199px;
+  height: 100%;
   border: 1px solid #526173;
   ::-webkit-scrollbar {
     width: 30px;

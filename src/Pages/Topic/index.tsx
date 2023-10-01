@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/prefer-optional-chain */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { type AxiosResponse } from "axios";
 import api from "../../services/api";
-import { format, parse, Locale } from "date-fns";
+// import { format, parse, Locale } from "date-fns";
 import {
   type GroupTopic,
   type TopicData,
@@ -47,7 +48,7 @@ const TopicPage = () => {
   const params = useParams();
   const { group_id, topic_id } = params;
 
-  const date = new Date();
+  // const date = new Date();
 
   const getTopicByCredentials = async () => {
     const token = localStorage.getItem("@token");

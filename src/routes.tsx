@@ -13,9 +13,11 @@ import DashBoard from "./Pages/Dashboard";
 import ForgotPassword from "./Pages/ForgotPassword";
 import Group from "./Pages/Group";
 import Topic from "./Pages/Topic";
+import Profile from "./Pages/Profile/";
+import CreateGroup from "./Pages/CreateGroup";
 import { GroupProvider } from "./Contexts/GroupContext";
 import { AuthProvider } from "./Contexts/AuthContext";
-import Profile from "./Pages/Profile/";
+import Image from "./Components/DropZone";
 
 interface IprivateRouteProps {
   children?: React.ReactNode;
@@ -72,6 +74,16 @@ const Routes: React.FC = () => {
                 <AuthProvider>
                   <Profile />
                 </AuthProvider>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/create-group"
+            element={
+              <PrivateRoute>
+                <GroupProvider>
+                  <CreateGroup />
+                </GroupProvider>
               </PrivateRoute>
             }
           />

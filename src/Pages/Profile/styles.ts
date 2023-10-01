@@ -32,15 +32,17 @@ export const Title = styled.h3`
 
 export const ProfiletextWrapper = styled.div``;
 
-export const ProfileStatistics = styled.div`
+export const ProfileStatisticsColumn = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   gap: 6px;
 
   hr {
-    border-top: 2px solid #bbb;
-    width: 100px;
+    border-top: 1px solid #bbb;
+    width: 1px;
+    margin-left: 10px;
   }
 `;
 
@@ -50,11 +52,19 @@ export const StatisticProfileItem = styled.p`
   font-family: sans-serif;
   font-weight: 900;
   font-size: 13px;
+  margin-left: 10px;
 `;
 
 export const StatisticsItemWrapper = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
+`;
+
+export const ProfileStatisticsWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 110px;
 `;

@@ -14,9 +14,10 @@ import {
   UserAvatar,
   Title,
   ProfiletextWrapper,
-  ProfileStatistics,
+  ProfileStatisticsColumn,
   StatisticProfileItem,
   StatisticsItemWrapper,
+  ProfileStatisticsWrapper,
 } from "./styles";
 interface IProfileProps {
   userName?: string;
@@ -61,105 +62,108 @@ const Profile = ({
         </ProfileText>
       </ProfiletextWrapper>
 
-      <ProfileStatistics>
-        <StatisticsItemWrapper>
-          <GroupsIcon
-            style={{
-              color: "#ebeff5",
-            }}
-          />
+      <ProfileStatisticsWrapper>
+        <ProfileStatisticsColumn>
+          <StatisticsItemWrapper>
+            <GroupsIcon
+              style={{
+                color: "#ebeff5",
+              }}
+            />
 
-          <hr />
+            <hr />
 
-          <StatisticProfileItem>
-            Total de grupos: {totalNumberOfGroups}
-          </StatisticProfileItem>
-        </StatisticsItemWrapper>
+            <StatisticProfileItem>
+              Total de grupos: {totalNumberOfGroups}
+            </StatisticProfileItem>
+          </StatisticsItemWrapper>
 
-        <StatisticsItemWrapper>
-          <AdminPanelSettingsIcon
-            style={{
-              color: "#ebeff5",
-            }}
-          />
-          <hr />
-          <StatisticProfileItem>
-            Qtd que você é dono: {groupsAsOwner}
-          </StatisticProfileItem>
-        </StatisticsItemWrapper>
+          <StatisticsItemWrapper>
+            <AdminPanelSettingsIcon
+              style={{
+                color: "#ebeff5",
+              }}
+            />
+            <hr />
+            <StatisticProfileItem>
+              Qtd que você é dono: {groupsAsOwner}
+            </StatisticProfileItem>
+          </StatisticsItemWrapper>
 
-        <StatisticsItemWrapper>
-          <AdminPanelSettingsIcon
-            style={{
-              color: "#ebeff5",
-            }}
-          />
-          <hr />
-          <StatisticProfileItem>
-            Qtd de grupos que você é moderador: {groupsAsModerator}
-          </StatisticProfileItem>
-        </StatisticsItemWrapper>
+          <StatisticsItemWrapper>
+            <AdminPanelSettingsIcon
+              style={{
+                color: "#ebeff5",
+              }}
+            />
+            <hr />
+            <StatisticProfileItem>
+              Qtd de grupos que você é moderador: {groupsAsModerator}
+            </StatisticProfileItem>
+          </StatisticsItemWrapper>
 
-        <StatisticsItemWrapper>
-          <GroupIcon
-            style={{
-              color: "#ebeff5",
-            }}
-          />
-          <hr />
-          <StatisticProfileItem>
-            Qtd de grupos que você é membro: {groupsAsMember}
-          </StatisticProfileItem>
-        </StatisticsItemWrapper>
+          <StatisticsItemWrapper>
+            <GroupIcon
+              style={{
+                color: "#ebeff5",
+              }}
+            />
+            <hr />
+            <StatisticProfileItem>
+              Qtd de grupos que você é membro: {groupsAsMember}
+            </StatisticProfileItem>
+          </StatisticsItemWrapper>
+        </ProfileStatisticsColumn>
 
-        <StatisticsItemWrapper>
-          <TopicIcon
-            style={{
-              color: "#ebeff5",
-            }}
-          />
-          <hr />
-          <StatisticProfileItem>
-            Qtd de tópicos que você é o autor: {topicsCreated}
-          </StatisticProfileItem>
-        </StatisticsItemWrapper>
+        <ProfileStatisticsColumn>
+          <StatisticsItemWrapper>
+            <TopicIcon
+              style={{
+                color: "#ebeff5",
+              }}
+            />
+            <hr />
+            <StatisticProfileItem>
+              Qtd de tópicos que você é o autor: {topicsCreated}
+            </StatisticProfileItem>
+          </StatisticsItemWrapper>
 
-        <StatisticsItemWrapper>
-          <CommentsDisabledIcon
-            style={{
-              color: "#ebeff5",
-            }}
-          />
-          <hr />
-          <StatisticProfileItem>
-            Qtd de comentários que você é o autor: {commentsCreated}
-          </StatisticProfileItem>
-        </StatisticsItemWrapper>
+          <StatisticsItemWrapper>
+            <CommentsDisabledIcon
+              style={{
+                color: "#ebeff5",
+              }}
+            />
+            <hr />
+            <StatisticProfileItem>
+              Qtd de comentários que você é o autor: {commentsCreated}
+            </StatisticProfileItem>
+          </StatisticsItemWrapper>
+          <StatisticsItemWrapper>
+            <NotInterestedIcon
+              style={{
+                color: "#ebeff5",
+              }}
+            />
+            <hr />
+            <StatisticProfileItem>
+              Qtd de grupos que você está banido: {GroupsBanned}
+            </StatisticProfileItem>
+          </StatisticsItemWrapper>
 
-        <StatisticsItemWrapper>
-          <NotInterestedIcon
-            style={{
-              color: "#ebeff5",
-            }}
-          />
-          <hr />
-          <StatisticProfileItem>
-            Qtd de grupos que você está banido: {GroupsBanned}
-          </StatisticProfileItem>
-        </StatisticsItemWrapper>
-
-        <StatisticsItemWrapper>
-          <GroupAddIcon
-            style={{
-              color: "#ebeff5",
-            }}
-          />
-          <hr />
-          <StatisticProfileItem>
-            Qtd de grpos que você está aguardando ser aceito: {JoinsRequested}
-          </StatisticProfileItem>
-        </StatisticsItemWrapper>
-      </ProfileStatistics>
+          <StatisticsItemWrapper>
+            <GroupAddIcon
+              style={{
+                color: "#ebeff5",
+              }}
+            />
+            <hr />
+            <StatisticProfileItem>
+              Qtd de grpos que você está aguardando ser aceito: {JoinsRequested}
+            </StatisticProfileItem>
+          </StatisticsItemWrapper>
+        </ProfileStatisticsColumn>
+      </ProfileStatisticsWrapper>
     </Container>
   );
 };
