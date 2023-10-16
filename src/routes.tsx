@@ -15,9 +15,9 @@ import Group from "./Pages/Group";
 import Topic from "./Pages/Topic";
 import Profile from "./Pages/Profile/";
 import CreateGroup from "./Pages/CreateGroup";
+
 import { GroupProvider } from "./Contexts/GroupContext";
 import { AuthProvider } from "./Contexts/AuthContext";
-import Image from "./Components/DropZone";
 
 interface IprivateRouteProps {
   children?: React.ReactNode;

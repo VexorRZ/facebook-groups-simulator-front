@@ -23,7 +23,9 @@ export const FilesPreview = styled.div`
   width: 164px;
   height: 164px;
   border-radius: 50%;
-  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 export const RegectedFiles = styled.div`
   width: 50%;
@@ -41,11 +43,14 @@ export const FilesContainer = styled.div`
   padding: 10px;
 `;
 export const DragContainer = styled.div`
-  padding: 0px 10px;
-  border: 2px dotted #aaa;
+  padding: 9px 10px;
+  border: 1px solid #aaa;
   border-radius: 10px;
-  background-color: #eee;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 
   &:hover {
     cursor: pointer;
@@ -57,5 +62,4 @@ export const UploadMessage = styled.p<IUploadMessage>`
   color: ${(props) => props.color};
   justify-content: center;
   align-items: center;
-  padding: 15px 0;
 `;

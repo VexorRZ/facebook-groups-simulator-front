@@ -1,9 +1,8 @@
 /* eslint-disable no-unneeded-ternary */
 /* eslint-disable multiline-ternary */
 /* eslint-disable react/jsx-key */
-import React, { useState } from "react";
+import React from "react";
 import { useDropzone } from "react-dropzone";
-import defaulpic from "../../assets/images/default-pic.jpg";
 
 import {
   DragContainer,
@@ -19,7 +18,6 @@ interface IDropZone {
 }
 
 const CustomDropzone = ({ files, onDrop }: IDropZone) => {
-  const [image] = useState(defaulpic);
   const { getRootProps, getInputProps, isDragActive, isDragReject } =
     useDropzone({
       maxFiles: 1,
@@ -37,7 +35,7 @@ const CustomDropzone = ({ files, onDrop }: IDropZone) => {
     if (!isDragActive) {
       return (
         <UploadMessage messageType="default" color="#999">
-          Arraste arquivos aqui...
+          Selecione a foto do seu grupo...
         </UploadMessage>
       );
     }
@@ -52,7 +50,7 @@ const CustomDropzone = ({ files, onDrop }: IDropZone) => {
 
     return (
       <UploadMessage messageType="success" color="#78e5d5">
-        Solte os arquivos aqui
+        Solte a foto aqui
       </UploadMessage>
     );
   };
@@ -65,17 +63,9 @@ const CustomDropzone = ({ files, onDrop }: IDropZone) => {
 
   return (
     <Container>
-      {files && (
-        <FilesPreview>
-          {Preview ? (
-            Preview
-          ) : (
-            <img src={image} alt="imagem" width={160} height={160} />
-          )}
-        </FilesPreview>
-      )}
-
       <DragContainer {...getRootProps({ className: "dropzone" })}>
+        <FilesPreview>{Preview}</FilesPreview>
+
         <input {...getInputProps()} />
         {renderDragMessage(isDragActive, isDragReject)}
       </DragContainer>

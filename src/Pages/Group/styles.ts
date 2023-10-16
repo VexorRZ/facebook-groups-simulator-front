@@ -64,6 +64,11 @@ export const PaginationItem = styled.div<IPaginationProps>`
   }
 `;
 
+export const ButtonArea = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
 export const GroupImage = styled.img``;
 
 export const GroupTitle = styled.h3``;

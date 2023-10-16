@@ -57,11 +57,11 @@ export const GroupName = styled.input`
   height: ${(props) => (props.height ? props.height : "40px")};
   width: 360px;
   background: black;
-  border: none;
   color: white;
   border-radius: 4px;
   text-align: center;
   font-size: 20px;
+  border: 1px solid #a0a2a6;
 `;
 export const GroupType = styled.select`
   height: 40px;
@@ -72,6 +72,7 @@ export const GroupType = styled.select`
   border-radius: 4px;
   text-align: center;
   font-size: 20px;
+  border: 1px solid #a0a2a6;
 `;
 
 export const StyledOption = styled.option``;

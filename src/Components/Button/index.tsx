@@ -11,6 +11,7 @@ interface IbuttonProps {
   type?: "submit" | "reset" | "button" | undefined;
   marginTop?: string;
   opacity?: number;
+  customColor?: string;
 }
 
 const CustomButton = ({
@@ -22,6 +23,7 @@ const CustomButton = ({
   type,
   marginTop,
   opacity,
+  customColor,
 }: IbuttonProps) => {
   return (
     <ButtonStyles
@@ -32,6 +34,7 @@ const CustomButton = ({
       type={type}
       marginTop={marginTop}
       opacity={opacity}
+      customColor={customColor}
     >
       {children}
     </ButtonStyles>

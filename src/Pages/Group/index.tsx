@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import React, { useEffect, useState, useCallback } from "react";
-import Topic from "../../Components/TopicContent";
 import { useParams, useNavigate } from "react-router-dom";
-import { type AxiosResponse } from "axios";
 import api from "../../services/api";
+import { type AxiosResponse } from "axios";
 import { type Groups, type Response } from "../../services/interfaces";
+import Topic from "../../Components/TopicContent";
+import CustomButton from "../../Components/Button";
+import CreateTopic from "../../Components/CreateTopic";
+import TopBar from "../../Components/TopBar";
 import {
   Container,
   GroupImage,
@@ -15,8 +18,8 @@ import {
   Pagination,
   PaginationButton,
   PaginationItem,
+  ButtonArea,
 } from "./styles";
-import TopBar from "../../Components/TopBar";
 
 const Group = () => {
   const params = useParams();
@@ -25,6 +28,7 @@ const Group = () => {
   const [limit] = useState(1);
   const [pages, setPages] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
+  const [createTopic, setCreateTopic] = useState<boolean>(false);
 
   const { group_id } = params;
 
@@ -32,6 +36,14 @@ const Group = () => {
 
   const openTopic = useCallback((topicId: number) => {
     navigate(`/topics/${Number(group_id)}/${topicId}`);
+  }, []);
+
+  const openTopicCreate = useCallback(() => {
+    setCreateTopic(true);
+  }, []);
+
+  const closeTopicModal = useCallback(() => {
+    setCreateTopic(false);
   }, []);
 
   const getGroupsByUser = async () => {
@@ -103,6 +115,9 @@ const Group = () => {
             );
           })}
         </TopicList>
+        <ButtonArea>
+          <CustomButton onClick={openTopicCreate}>Criar tópico</CustomButton>
+        </ButtonArea>
         <>
           <Pagination>
             <div>{total}</div>
@@ -141,6 +156,7 @@ const Group = () => {
             </PaginationButton>
           </Pagination>
         </>
+        {createTopic && <CreateTopic onClick={closeTopicModal} />}
       </Container>
     </>
   );
