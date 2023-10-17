@@ -7,7 +7,7 @@ import { type AxiosResponse } from "axios";
 import { type Groups, type Response } from "../../services/interfaces";
 import Topic from "../../Components/TopicContent";
 import CustomButton from "../../Components/Button";
-import CreateTopic from "../../Components/CreateTopic";
+import CreateTopic from "../../Containers/CreateTopic";
 import TopBar from "../../Components/TopBar";
 import {
   Container,
@@ -29,9 +29,9 @@ const Group = () => {
   const [pages, setPages] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [createTopic, setCreateTopic] = useState<boolean>(false);
+  const [groupId, setGroupId] = useState<string>("");
 
   const { group_id } = params;
-
   const navigate = useNavigate();
 
   const openTopic = useCallback((topicId: number) => {
@@ -91,6 +91,10 @@ const Group = () => {
 
   useEffect(() => {
     void getGroupsByUser();
+
+    if (group_id) {
+      setGroupId(group_id);
+    }
   }, [currentPage, limit, total]);
   return (
     <>
@@ -156,7 +160,9 @@ const Group = () => {
             </PaginationButton>
           </Pagination>
         </>
-        {createTopic && <CreateTopic onClick={closeTopicModal} />}
+        {createTopic && (
+          <CreateTopic groupId={groupId} onClick={closeTopicModal} />
+        )}
       </Container>
     </>
   );

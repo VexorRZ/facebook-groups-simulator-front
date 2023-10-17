@@ -17,10 +17,16 @@ const TopBar: React.FC = () => {
     navigate("/profile");
   };
 
+  const openDashboard = () => {
+    navigate("/dashboard");
+  };
+
   return (
     <Container>
       <div className="topbarLeft">
-        <span className="logo">Onyx</span>
+        <span className="logo" onClick={openDashboard}>
+          Onyx
+        </span>
       </div>
       <div className="topbarCenter">
         <div className="searchbar">

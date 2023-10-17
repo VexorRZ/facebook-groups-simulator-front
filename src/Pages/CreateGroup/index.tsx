@@ -21,7 +21,6 @@ import {
 const CreateGroup = () => {
   const [image, setImage] = useState<File[]>([]);
   const [option, setOption] = useState<string>("notPrivate");
-  // const [booleano, setBooleano] = useState<boolean>(false);
   const [groupName, setGroupName] = useState<string>("");
   const [status] = useState({
     type: "",
@@ -56,14 +55,6 @@ const CreateGroup = () => {
     if (!token) {
       throw new Error("Erro inesperado, token não fornecido");
     }
-    // const groupType = async () => {
-    //   if (option === "notPrivate") {
-    //     return true;
-    //   } else {
-    //     return false;
-    //   }
-    // };
-    console.log(image[0]);
 
     const formData = new FormData();
     formData.append("file", image[0]);
@@ -75,7 +66,9 @@ const CreateGroup = () => {
         AxiosResponse<Groups>
       >(`groups`, {
         headers: { Authorization: `Bearer ${token}` },
-        file: image,
+        name: groupName,
+        is_private: false,
+        file: image[0],
       });
 
       console.log(res.status, "deu certo");

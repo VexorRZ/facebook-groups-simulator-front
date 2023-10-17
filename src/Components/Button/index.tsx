@@ -4,7 +4,7 @@ import { ButtonStyles } from "./styles";
 
 interface IbuttonProps {
   children?: React.ReactNode;
-  onClick?: () => void;
+  onClick?: (param?: any) => void;
   customBackgroundColor?: string;
   width?: string;
   height?: string;

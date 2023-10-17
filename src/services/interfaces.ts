@@ -10,6 +10,8 @@ export interface Groups {
   moderators: moderators[];
   name: string;
   topics: topics[];
+  isMember?: boolean;
+  isOwner?: boolean;
 }
 interface moderators {
   id: number;
@@ -21,9 +23,10 @@ interface administrator {
   name: string;
 }
 
-interface topics {
+export interface topics {
   id: number;
   name: string;
+  is_closed?: boolean;
   comments: comments[];
 }
 
