@@ -1,3 +1,4 @@
+/* eslint-disable multiline-ternary */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import React, { useEffect, useState, useCallback } from "react";
@@ -9,6 +10,8 @@ import Topic from "../../Components/TopicContent";
 import CustomButton from "../../Components/Button";
 import CreateTopic from "../../Containers/CreateTopic";
 import TopBar from "../../Components/TopBar";
+import DialogBox from "../../Containers/DialogBox";
+
 import {
   Container,
   GroupImage,
@@ -19,6 +22,8 @@ import {
   PaginationButton,
   PaginationItem,
   ButtonArea,
+  ButtonAdminContainer,
+  ButtonAdminWrapper,
 } from "./styles";
 
 const Group = () => {
@@ -30,6 +35,8 @@ const Group = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [createTopic, setCreateTopic] = useState<boolean>(false);
   const [groupId, setGroupId] = useState<string>("");
+  const [isOwner, setIsOwner] = useState<object | null>(null);
+  const [DialogIsVisible, SetDialogIsVisible] = useState<boolean>(false);
 
   const { group_id } = params;
   const navigate = useNavigate();
@@ -40,6 +47,10 @@ const Group = () => {
 
   const openTopicCreate = useCallback(() => {
     setCreateTopic(true);
+  }, []);
+
+  const toggleDialogBOx = useCallback((value: boolean) => {
+    SetDialogIsVisible(value);
   }, []);
 
   const closeTopicModal = useCallback(() => {
@@ -66,11 +77,13 @@ const Group = () => {
         }
       );
 
-      const { group, numberOfTopics } = res.data;
-
-      console.log(res.data.group?.topics);
+      const { group, numberOfTopics, isOwner } = res.data;
 
       setGroup({ ...group });
+
+      if (isOwner) {
+        setIsOwner(isOwner);
+      }
 
       if (numberOfTopics) {
         setTotal(numberOfTopics);
@@ -89,6 +102,31 @@ const Group = () => {
     }
   };
 
+  const deleteGroup = async () => {
+    const token = localStorage.getItem("@token");
+
+    if (!token) {
+      return;
+    }
+
+    try {
+      const res: AxiosResponse<Response> = await api.delete<
+        Response,
+        AxiosResponse<Response>
+      >(`groups/${Number(group_id)}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      SetDialogIsVisible(false);
+
+      navigate(`/dashboard`);
+
+      return res.status;
+    } catch (err) {
+      return err;
+    }
+  };
+
   useEffect(() => {
     void getGroupsByUser();
 
@@ -100,27 +138,61 @@ const Group = () => {
     <>
       <TopBar />
       <Container>
+        {isOwner && (
+          <ButtonAdminContainer>
+            <ButtonAdminWrapper>
+              <CustomButton
+                width="90px"
+                height="30px"
+                onClick={() => {
+                  toggleDialogBOx(true);
+                }}
+              >
+                Deletar
+              </CustomButton>
+              <CustomButton
+                width="90px"
+                height="30px"
+                onClick={() => {
+                  toggleDialogBOx(true);
+                }}
+              >
+                Editar
+              </CustomButton>
+            </ButtonAdminWrapper>
+          </ButtonAdminContainer>
+        )}
         <Header>
           <GroupTitle>{group.name}</GroupTitle>
           <GroupImage />
         </Header>
-        <TopicList>
-          {group?.topics?.slice(0, 6).map((topic, index) => {
-            return (
-              <Topic
-                URlGroup={true}
-                topicName={topic.name}
-                numberOfComments={topic.comments.length}
-                key={index}
-                onClick={() => {
-                  openTopic(topic.id);
-                }}
-              />
-            );
-          })}
-        </TopicList>
+
+        {group?.topics?.length !== 0 ? (
+          <>
+            <TopicList>
+              {group?.topics?.slice(0, 6).map((topic, index) => {
+                return (
+                  <Topic
+                    URlGroup={true}
+                    topicName={topic.name}
+                    numberOfComments={topic.comments.length}
+                    key={index}
+                    onClick={() => {
+                      openTopic(topic.id);
+                    }}
+                  />
+                );
+              })}
+            </TopicList>
+          </>
+        ) : (
+          <div>nada aqui</div>
+        )}
+
         <ButtonArea>
-          <CustomButton onClick={openTopicCreate}>Criar tópico</CustomButton>
+          <CustomButton onClick={openTopicCreate} width="130px" height="40px">
+            Criar tópico
+          </CustomButton>
         </ButtonArea>
         <>
           <Pagination>
@@ -132,7 +204,7 @@ const Group = () => {
                     setCurrentPage(currentPage - 1);
                   }}
                 >
-                  Previous
+                  Próxima
                 </PaginationItem>
               )}
               {pages.map((page) => (
@@ -154,7 +226,7 @@ const Group = () => {
                     setCurrentPage(currentPage + 1);
                   }}
                 >
-                  Next
+                  Anterior
                 </PaginationItem>
               )}
             </PaginationButton>
@@ -162,6 +234,17 @@ const Group = () => {
         </>
         {createTopic && (
           <CreateTopic groupId={groupId} onClick={closeTopicModal} />
+        )}
+        {DialogIsVisible && (
+          <DialogBox
+            visible={DialogIsVisible}
+            onCancel={() => {
+              toggleDialogBOx(false);
+            }}
+            onConfirm={() => {
+              void deleteGroup();
+            }}
+          />
         )}
       </Container>
     </>

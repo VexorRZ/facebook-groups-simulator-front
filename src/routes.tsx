@@ -15,7 +15,6 @@ import Group from "./Pages/Group";
 import Topic from "./Pages/Topic";
 import Profile from "./Pages/Profile/";
 import CreateGroup from "./Pages/CreateGroup";
-
 import { GroupProvider } from "./Contexts/GroupContext";
 import { AuthProvider } from "./Contexts/AuthContext";
 

@@ -22,6 +22,7 @@ interface IGrupoCardProps {
   numberOfMbembers: number;
   children?: React.ReactNode;
   numberOfTopics: number;
+  joiningButtonText: string;
 }
 
 const GroupCard = ({
@@ -29,10 +30,11 @@ const GroupCard = ({
   groupName,
   numberOfMbembers,
   numberOfTopics,
+  joiningButtonText,
   onClick,
 }: IGrupoCardProps) => {
   return (
-    <Container onClick={onClick}>
+    <Container>
       <GroupCardHeader>
         <GroupInfoArea>
           <GroupTitle>Grupo: {groupName}</GroupTitle>
@@ -50,7 +52,7 @@ const GroupCard = ({
       <LastTopics>Últimos tópicos</LastTopics>
       <TopicList>{children}</TopicList>
       <ButtonArea>
-        <JoiningButton>Entrar</JoiningButton>
+        <JoiningButton onClick={onClick}>{joiningButtonText}</JoiningButton>
       </ButtonArea>
     </Container>
   );

@@ -48,8 +48,6 @@ const TopicPage = () => {
   const params = useParams();
   const { group_id, topic_id } = params;
 
-  // const date = new Date();
-
   const getTopicByCredentials = async () => {
     const token = localStorage.getItem("@token");
 

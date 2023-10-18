@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback } from "react";
 
 import TopBar from "../../Components/TopBar";
 import SideMenu from "../../Components/SideMenu";
-import GroupCard from "../../Components/GroupCard";
+import GroupCard from "../../Containers/GroupCard";
 import TopicContent from "../../Components/TopicContent";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
@@ -80,6 +80,7 @@ const Dashboard = () => {
                   groupName={group.name}
                   numberOfMbembers={1}
                   numberOfTopics={group.topics.length}
+                  joiningButtonText="Entrar"
                   onClick={() => {
                     openGroup(group.id);
                   }}

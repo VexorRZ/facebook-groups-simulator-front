@@ -69,6 +69,18 @@ export const ButtonArea = styled.div`
   justify-content: flex-end;
 `;
 
+export const ButtonAdminContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+`;
+
+export const ButtonAdminWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+`;
 export const GroupImage = styled.img``;
 
 export const GroupTitle = styled.h3``;

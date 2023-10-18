@@ -1,6 +1,7 @@
 export interface Response {
   numberOfTopics?: number;
   group?: Groups;
+  isOwner?: object;
 }
 
 export interface Groups {
@@ -11,7 +12,6 @@ export interface Groups {
   name: string;
   topics: topics[];
   isMember?: boolean;
-  isOwner?: boolean;
 }
 interface moderators {
   id: number;

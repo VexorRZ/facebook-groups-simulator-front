@@ -5,6 +5,7 @@ import { type AxiosResponse } from "axios";
 import Dropzone from "../../Components/DropZone";
 import api from "../../services/api";
 import { type Groups } from "../../services/interfaces";
+import { useNavigate } from "react-router-dom";
 import TopBar from "../../Components/TopBar";
 
 import {
@@ -26,6 +27,8 @@ const CreateGroup = () => {
     type: "",
     mensagem: "",
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     localStorage.getItem("@token");
@@ -71,11 +74,14 @@ const CreateGroup = () => {
         file: image[0],
       });
 
-      console.log(res.status, "deu certo");
+      navigateToCreatedTopic(res.data.id);
     } catch (err) {
       alert("não deu");
-      console.log("não deu");
     }
+  };
+
+  const navigateToCreatedTopic = (groupId: number) => {
+    navigate(`/group/${Number(groupId)}`);
   };
 
   return (
