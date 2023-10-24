@@ -1,9 +1,9 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/space-before-function-paren */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 
 import React from "react";
-
 import { asyncLoginFn } from "../../Contexts/AuthContext/middlewares";
 import CustomInput from "../../Components/Input";
 import CustomButton from "../../Components/Button";
@@ -13,8 +13,10 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from "@mui/icons-material/Google";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import * as Yup from "yup";
-import useAuth from "../../Hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../../Hooks/useAuth";
+import ToastContainer from "../../Components/ToastContainer";
+import { ToastSuccess } from "../../Components/ToastContainer/ToastMessages";
 
 import {
   Container,
@@ -68,6 +70,7 @@ const Login = () => {
             } catch (err) {
               return err;
             } finally {
+              ToastSuccess();
               navigate("/dashboard");
             }
           }}
@@ -116,6 +119,7 @@ const Login = () => {
                 >
                   Login
                 </CustomButton>
+                <ToastContainer />
                 <CustomButton
                   customBackgroundColor="#4863F7"
                   type="button"
