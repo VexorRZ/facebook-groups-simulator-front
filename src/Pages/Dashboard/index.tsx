@@ -7,6 +7,7 @@ import GroupCard from "../../Containers/GroupCard";
 import TopicContent from "../../Components/TopicContent";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
+import useAuth from "../../Hooks/useAuth";
 
 import { type Groups } from "../../services/interfaces";
 
@@ -15,9 +16,9 @@ import { Content, Container, GroupCardList, NoTopicsCard } from "./styles";
 import { type AxiosResponse } from "axios";
 
 const Dashboard = () => {
-  const [userName, setUserName] = useState<string>("");
   const [groups, setGroups] = useState<Groups[]>([]);
 
+  const { name } = useAuth();
   const navigate = useNavigate();
 
   const openGroup = useCallback((id: number) => {
@@ -55,12 +56,12 @@ const Dashboard = () => {
   useEffect(() => {
     void getGroupsByUser();
 
-    const userNameStorage = localStorage.getItem("@name:user");
-    if (userNameStorage !== null) {
-      setUserName(userNameStorage);
-    } else {
-      setUserName("Erro ao carregar nome");
-    }
+    // const userNameStorage = localStorage.getItem("@name:user");
+    // if (userNameStorage !== null) {
+    //   setUserName(userNameStorage);
+    // } else {
+    //   setUserName("Erro ao carregar nome");
+    // }
   }, []);
 
   return (
@@ -70,7 +71,7 @@ const Dashboard = () => {
         <SideMenu />
 
         <GroupCardList>
-          <h1>Olá {userName} </h1>
+          <h1>Olá {name} </h1>
 
           {groups?.map((group, index) => {
             return (

@@ -17,79 +17,72 @@ import Profile from "./Pages/Profile/";
 import CreateGroup from "./Pages/CreateGroup";
 import { GroupProvider } from "./Contexts/GroupContext";
 import { AuthProvider } from "./Contexts/AuthContext";
+import useAuth from "./Hooks/useAuth";
 
 interface IprivateRouteProps {
   children?: React.ReactNode;
 }
 
-const PrivateRoute = ({ children }: IprivateRouteProps) => {
-  const token = Boolean(localStorage.getItem("@token"));
-
+const PrivateRoutes = ({ children }: IprivateRouteProps) => {
+  const { token } = useAuth();
+  console.log("Token:", token);
   return token ? children : <Navigate to="/" />;
 };
 
-const Routes: React.FC = () => {
+const Routes = () => {
   return (
     <div>
       <Routing>
         <Routers>
           <Route path="/" Component={Login} />
-
-          <Route
-            path="/dashboard"
-            element={
-              <PrivateRoute>
-                <GroupProvider>
-                  <DashBoard />
-                </GroupProvider>
-              </PrivateRoute>
-            }
-          />
-
-          <Route
-            path="/group/:group_id"
-            element={
-              <PrivateRoute>
-                <GroupProvider>
-                  <Group />
-                </GroupProvider>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/topics/:group_id/:topic_id"
-            element={
-              <PrivateRoute>
-                <GroupProvider>
-                  <Topic />
-                </GroupProvider>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <PrivateRoute>
-                <AuthProvider>
-                  <Profile />
-                </AuthProvider>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/create-group"
-            element={
-              <PrivateRoute>
-                <GroupProvider>
-                  <CreateGroup />
-                </GroupProvider>
-              </PrivateRoute>
-            }
-          />
-
           <Route path="/sign-up" Component={SignUp} />
           <Route path="/forgot-password" Component={ForgotPassword} />
         </Routers>
+        <PrivateRoutes>
+          <Routers>
+            <Route
+              path="/dashboard"
+              element={
+                <GroupProvider>
+                  <DashBoard />
+                </GroupProvider>
+              }
+            />
+
+            <Route
+              path="/group/:group_id"
+              element={
+                <GroupProvider>
+                  <Group />
+                </GroupProvider>
+              }
+            />
+            <Route
+              path="/topics/:group_id/:topic_id"
+              element={
+                <GroupProvider>
+                  <Topic />
+                </GroupProvider>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <AuthProvider>
+                  <Profile />
+                </AuthProvider>
+              }
+            />
+            <Route
+              path="/create-group"
+              element={
+                <GroupProvider>
+                  <CreateGroup />
+                </GroupProvider>
+              }
+            />
+          </Routers>
+        </PrivateRoutes>
       </Routing>
     </div>
   );

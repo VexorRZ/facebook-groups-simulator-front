@@ -1,12 +1,11 @@
 import { toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export const ToastSuccess = () => {
-  const message = "Login realizado com sucesso";
+export const ToastSuccess = (message: string) => {
   toast.dismiss();
   toast.success(message, {
     position: toast.POSITION.TOP_RIGHT,
-    autoClose: 1000,
+    autoClose: 3000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
@@ -15,12 +14,11 @@ export const ToastSuccess = () => {
   });
 };
 
-export const ToastError = () => {
-  const message = "erro mano";
+export const ToastError = (message: string) => {
   toast.dismiss();
   toast.error(message, {
     position: toast.POSITION.TOP_RIGHT,
-    autoClose: 1000,
+    autoClose: 3000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,

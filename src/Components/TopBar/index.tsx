@@ -3,14 +3,16 @@ import { Search, Chat, Notifications } from "@material-ui/icons";
 import { Container, TopbarIconBadge } from "./styles";
 import { useNavigate } from "react-router-dom";
 import image from "../../assets/images/fibonacci.jpg";
+import useAuth from "../../Hooks/useAuth";
+import { AsyncLogoutFn } from "../../Contexts/AuthContext/middlewares";
 
 const TopBar: React.FC = () => {
   const navigate = useNavigate();
 
+  const { dispatch } = useAuth();
   const Logout = () => {
+    AsyncLogoutFn(dispatch);
     navigate("/");
-    localStorage.removeItem("@name:user");
-    localStorage.removeItem("@token");
   };
 
   const openProfilePage = () => {

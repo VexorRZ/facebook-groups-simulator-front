@@ -16,7 +16,7 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../Hooks/useAuth";
 import ToastContainer from "../../Components/ToastContainer";
-import { ToastSuccess } from "../../Components/ToastContainer/ToastMessages";
+import { ToastError } from "../../Components/ToastContainer/ToastMessages";
 
 import {
   Container,
@@ -54,7 +54,8 @@ const Login = () => {
     try {
       await asyncLoginFn(email, password, dispatch);
     } catch (err) {
-      alert(err);
+      ToastError("ocorreu um erro ao tentar realizar o login");
+      return err;
     }
   };
 
@@ -67,11 +68,9 @@ const Login = () => {
           onSubmit={async ({ email, password, dispatch }) => {
             try {
               await HandleSigin(email, password, dispatch);
+              navigate("/dashboard");
             } catch (err) {
               return err;
-            } finally {
-              ToastSuccess();
-              navigate("/dashboard");
             }
           }}
         >

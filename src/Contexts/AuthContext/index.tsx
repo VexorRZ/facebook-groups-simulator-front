@@ -7,7 +7,8 @@ import React, {
 } from "react";
 
 import { REDUCER_ACTION_TYPE } from "./action-types";
-import { updateUserStorage } from "./middlewares";
+// import { updateUserStorage } from "./middlewares";
+// import { useNavigate } from "react-router-dom";
 
 import { type UserType, type ChildrenType } from "./interfaces";
 import { reducer } from "./reducers";
@@ -17,7 +18,6 @@ const initialUserState: UserType = {
   email: "",
   token: "",
   name: "",
-  signed: false,
 };
 
 export type ReducerActionType = typeof REDUCER_ACTION_TYPE;
@@ -33,9 +33,8 @@ const useAuthContext = (initialUserState: UserType) => {
   const password = state.password;
   const token = state.token;
   const name = state.name;
-  const signed = state.signed;
 
-  return { dispatch, REDUCER_ACTIONS, email, password, token, name, signed };
+  return { dispatch, REDUCER_ACTIONS, email, password, token, name };
 };
 
 export type UseAuthContextType = ReturnType<typeof useAuthContext>;
@@ -47,14 +46,17 @@ const initialUserContextState: UseAuthContextType = {
   password: "",
   token: "",
   name: "",
-  signed: false,
 };
 
 const AuthContext = createContext<UseAuthContextType>(initialUserContextState);
 
 export const AuthProvider = ({ children }: ChildrenType): ReactElement => {
   useEffect(() => {
-    updateUserStorage();
+    // updateUserStorage();
+    // if (initialUserState.token) {
+    //   const navigate = useNavigate();
+    //   navigate("/dashboard");
+    // }
   }, []);
 
   return (
