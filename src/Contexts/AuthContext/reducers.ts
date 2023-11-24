@@ -23,6 +23,16 @@ export const reducer = (state: UserType, action: ReducerAction): UserType => {
       return { ...state, email, name, token };
     }
 
+    case REDUCER_ACTION_TYPE.UPDATE: {
+      if (action.payload == null) {
+        throw new Error("action.payload missing in ADD action");
+      }
+
+      const { token } = action.payload;
+
+      return { ...state, token };
+    }
+
     default:
       throw new Error("Unidentified reducer action type");
   }

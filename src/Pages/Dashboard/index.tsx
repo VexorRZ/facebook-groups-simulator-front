@@ -81,6 +81,7 @@ const Dashboard = () => {
                   groupName={group.name}
                   numberOfMbembers={1}
                   numberOfTopics={group.topics.length}
+                  groupImage={group.avatar}
                   joiningButtonText="Entrar"
                   onClick={() => {
                     openGroup(group.id);

@@ -5,6 +5,7 @@ import React, {
   useEffect,
   type ReactElement,
 } from "react";
+import api from "../../services/api";
 
 import { REDUCER_ACTION_TYPE } from "./action-types";
 // import { updateUserStorage } from "./middlewares";
@@ -24,6 +25,21 @@ export type ReducerActionType = typeof REDUCER_ACTION_TYPE;
 
 const useAuthContext = (initialUserState: UserType) => {
   const [state, dispatch] = useReducer(reducer, initialUserState);
+
+  const getCredentials = () => {
+    const user = localStorage.getItem("@name:user");
+    const token = localStorage.getItem("@token");
+
+    if (token && user) {
+      api.defaults.headers.authorization = `Bearer ${token}`;
+
+      return { token, user: JSON.parse(user) };
+    }
+  };
+
+  useEffect(() => {
+    getCredentials();
+  }, []);
 
   const REDUCER_ACTIONS = useMemo(() => {
     return REDUCER_ACTION_TYPE;
@@ -51,14 +67,6 @@ const initialUserContextState: UseAuthContextType = {
 const AuthContext = createContext<UseAuthContextType>(initialUserContextState);
 
 export const AuthProvider = ({ children }: ChildrenType): ReactElement => {
-  useEffect(() => {
-    // updateUserStorage();
-    // if (initialUserState.token) {
-    //   const navigate = useNavigate();
-    //   navigate("/dashboard");
-    // }
-  }, []);
-
   return (
     <AuthContext.Provider value={useAuthContext(initialUserState)}>
       {children}

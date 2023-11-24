@@ -2,11 +2,12 @@
 /* eslint-disable multiline-ternary */
 import React, { useState, useCallback, useEffect } from "react";
 import { type AxiosResponse } from "axios";
-import Dropzone from "../../Components/DropZone";
+// import Dropzone from "../../Components/DropZone";
 import api from "../../services/api";
 import { type Groups } from "../../services/interfaces";
 import { useNavigate } from "react-router-dom";
 import TopBar from "../../Components/TopBar";
+import Dropzone from "../../Components/DropZone";
 
 import {
   Container,
@@ -59,20 +60,16 @@ const CreateGroup = () => {
       throw new Error("Erro inesperado, token não fornecido");
     }
 
-    const formData = new FormData();
-    formData.append("file", image[0]);
-    formData.append("is_private", JSON.stringify(false));
-    formData.append("name", groupName);
+    const data = new FormData();
+    data.append("is_private", JSON.stringify(false));
+    data.append("name", groupName);
+    data.append("file", image[0]);
+
     try {
       const res: AxiosResponse<Groups> = await api.post<
         Groups,
         AxiosResponse<Groups>
-      >(`groups`, {
-        headers: { Authorization: `Bearer ${token}` },
-        name: groupName,
-        is_private: false,
-        file: image[0],
-      });
+      >(`groups`, data);
 
       navigateToCreatedTopic(res.data.id);
     } catch (err) {

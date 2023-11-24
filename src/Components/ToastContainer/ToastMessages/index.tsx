@@ -26,3 +26,16 @@ export const ToastError = (message: string) => {
     transition: Slide,
   });
 };
+
+export const ToastMessage = (message: string) => {
+  toast.dismiss();
+  toast.info(message, {
+    position: toast.POSITION.TOP_RIGHT,
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    transition: Slide,
+  });
+};

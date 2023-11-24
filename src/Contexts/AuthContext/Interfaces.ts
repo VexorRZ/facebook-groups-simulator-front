@@ -5,6 +5,7 @@ export interface UserType {
   email?: string;
   token?: string;
   name?: string;
+  avatar_id?: string;
 }
 
 export interface ReducerAction {
@@ -14,6 +15,7 @@ export interface ReducerAction {
 
 export interface ChildrenType {
   children?: ReactElement | ReactElement[];
+  dispatch?: () => void;
 }
 export interface DispatchType {
   dispatch: React.Dispatch<any> | any;

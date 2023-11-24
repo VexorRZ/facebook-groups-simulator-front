@@ -13,7 +13,7 @@ import {
 } from "./styles";
 
 interface IDropZone {
-  files: any[];
+  files?: File[];
   onDrop: (param: any[]) => void;
 }
 
@@ -22,11 +22,7 @@ const CustomDropzone = ({ files, onDrop }: IDropZone) => {
     useDropzone({
       maxFiles: 1,
 
-      accept: {
-        "image/*": [".png", "jpg", "jpeg"],
-      },
-
-      onDrop: (param) => {
+      onDrop: (param: any) => {
         onDrop(param);
       },
     });
@@ -55,7 +51,7 @@ const CustomDropzone = ({ files, onDrop }: IDropZone) => {
     );
   };
 
-  const Preview = files.map((file: any) => (
+  const Preview = files?.map((file: any) => (
     <div>
       <Image src={file.preview} />
     </div>

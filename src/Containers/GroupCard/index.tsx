@@ -1,5 +1,4 @@
 import React from "react";
-import image from "../../assets/images/csgo.jpg";
 
 import {
   Container,
@@ -13,7 +12,6 @@ import {
   ButtonArea,
   AmountWrapper,
   InfoText,
-  LastTopics,
 } from "./styles";
 
 interface IGrupoCardProps {
@@ -23,6 +21,7 @@ interface IGrupoCardProps {
   children?: React.ReactNode;
   numberOfTopics: number;
   joiningButtonText: string;
+  groupImage?: string;
 }
 
 const GroupCard = ({
@@ -31,6 +30,7 @@ const GroupCard = ({
   numberOfMbembers,
   numberOfTopics,
   joiningButtonText,
+  groupImage,
   onClick,
 }: IGrupoCardProps) => {
   return (
@@ -47,9 +47,9 @@ const GroupCard = ({
             <AmountWrapper>{numberOfTopics}</AmountWrapper>
           </InfoWrapper>
         </GroupInfoArea>
-        <GroupAvatar src={image} />
+        <GroupAvatar src={groupImage} />
       </GroupCardHeader>
-      <LastTopics>Últimos tópicos</LastTopics>
+
       <TopicList>{children}</TopicList>
       <ButtonArea>
         <JoiningButton onClick={onClick}>{joiningButtonText}</JoiningButton>
