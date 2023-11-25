@@ -22,12 +22,12 @@ export const GroupCardHeader = styled.header`
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 14px;
+  flex-direction: column;
 `;
 
 export const GroupTitle = styled.h3`
   width: 100%;
   color: #ebeff5;
-  background-color: #303640;
   border-radius: 16px;
   font-family: sans-serif;
 `;
@@ -63,8 +63,8 @@ export const NumberOfComments = styled.span`
 
 export const GroupAvatar = styled.img`
   border-radius: 50%;
-  width: 170px;
-  height: 170px;
+  width: 140px;
+  height: 140px;
   border: 1px solid;
 `;
 
@@ -117,7 +117,7 @@ export const JoiningButton = styled.button`
 
 export const ButtonArea = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin-top: 15px;
 `;
 
@@ -146,4 +146,28 @@ export const LastTopics = styled.h4`
   background-color: #25282e;
   text-align: center;
   color: #ebeff5;
+`;
+
+export const TitleAndStatus = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`;
+
+export const CenterArea = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+export const StatusWrapper = styled.div`
+  display: flex;
+  justify-items: center;
+  gap: 2px;
+`;
+
+export const StatusText = styled.h5`
+  color: ${(props) => (props.color ? props.color : "white")};
 `;

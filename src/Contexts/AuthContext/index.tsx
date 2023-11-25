@@ -2,14 +2,11 @@ import React, {
   useMemo,
   useReducer,
   createContext,
-  useEffect,
   type ReactElement,
 } from "react";
 import api from "../../services/api";
 
 import { REDUCER_ACTION_TYPE } from "./action-types";
-// import { updateUserStorage } from "./middlewares";
-// import { useNavigate } from "react-router-dom";
 
 import { type UserType, type ChildrenType } from "./interfaces";
 import { reducer } from "./reducers";
@@ -26,24 +23,24 @@ export type ReducerActionType = typeof REDUCER_ACTION_TYPE;
 const useAuthContext = (initialUserState: UserType) => {
   const [state, dispatch] = useReducer(reducer, initialUserState);
 
-  const getCredentials = () => {
-    const user = localStorage.getItem("@name:user");
-    const token = localStorage.getItem("@token");
-
-    if (token && user) {
-      api.defaults.headers.authorization = `Bearer ${token}`;
-
-      return { token, user: JSON.parse(user) };
-    }
-  };
-
-  useEffect(() => {
-    getCredentials();
-  }, []);
-
   const REDUCER_ACTIONS = useMemo(() => {
     return REDUCER_ACTION_TYPE;
   }, []);
+
+  const userName = localStorage.getItem("@name:user");
+  const bearerToken = localStorage.getItem("@token");
+
+  if (bearerToken && userName) {
+    api.defaults.headers.authorization = `Bearer ${bearerToken}`;
+
+    return {
+      dispatch,
+      ...state,
+      name: userName,
+      token: bearerToken,
+      REDUCER_ACTIONS,
+    };
+  }
 
   const email = state.email;
   const password = state.password;

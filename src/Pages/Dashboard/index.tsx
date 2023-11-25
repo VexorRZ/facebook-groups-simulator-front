@@ -17,6 +17,11 @@ import { type AxiosResponse } from "axios";
 
 const Dashboard = () => {
   const [groups, setGroups] = useState<Groups[]>([]);
+  const [DialogIsVisible, SetDialogIsVisible] = useState<boolean>(false);
+
+  const toggleDialogBOx = useCallback((value: boolean) => {
+    SetDialogIsVisible(value);
+  }, []);
 
   const { name } = useAuth();
   const navigate = useNavigate();
@@ -55,13 +60,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     void getGroupsByUser();
-
-    // const userNameStorage = localStorage.getItem("@name:user");
-    // if (userNameStorage !== null) {
-    //   setUserName(userNameStorage);
-    // } else {
-    //   setUserName("Erro ao carregar nome");
-    // }
   }, []);
 
   return (
@@ -77,14 +75,27 @@ const Dashboard = () => {
             return (
               <>
                 <GroupCard
+                  onCancel={() => {
+                    toggleDialogBOx(false);
+                  }}
+                  onConfirm={() => {
+                    openGroup(group.id);
+                  }}
+                  dialogIsVisible={DialogIsVisible}
                   key={index}
+                  groupOwner={group.administrator.name}
                   groupName={group.name}
+                  groupStatus={
+                    group.is_private ? `${`Privado`}` : `${`Público`}`
+                  }
                   numberOfMbembers={1}
+                  statusColor={group.is_private ? `${`red`}` : `${`green`}`}
                   numberOfTopics={group.topics.length}
                   groupImage={group.avatar}
+                  isPrivate={group.is_private}
                   joiningButtonText="Entrar"
                   onClick={() => {
-                    openGroup(group.id);
+                    toggleDialogBOx(true);
                   }}
                 >
                   {group.topics.length !== 0 ? (

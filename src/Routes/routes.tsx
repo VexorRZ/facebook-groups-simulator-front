@@ -16,7 +16,6 @@ import Topic from "../Pages/Topic";
 import Profile from "../Pages/Profile";
 import CreateGroup from "../Pages/CreateGroup";
 // import { GroupProvider } from "./Contexts/GroupContext";
-import { AuthProvider } from "../Contexts/AuthContext";
 
 const Routes = () => {
   return (
@@ -43,9 +42,7 @@ const Routes = () => {
             path="/"
             element={
               <PublicRoutes>
-                <AuthProvider>
-                  <Login />
-                </AuthProvider>
+                <Login />
               </PublicRoutes>
             }
           />
@@ -53,9 +50,7 @@ const Routes = () => {
             path="/dashboard"
             element={
               <PrivateRoutes>
-                <AuthProvider>
-                  <DashBoard />
-                </AuthProvider>
+                <DashBoard />
               </PrivateRoutes>
             }
           />

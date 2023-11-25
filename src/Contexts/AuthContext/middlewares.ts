@@ -31,16 +31,16 @@ export const asyncLoginFn = async (
     )}`;
 
     localStorage.setItem("@name:user", response.data.user.name);
-    localStorage.setItem("@signed", JSON.stringify(true));
     localStorage.setItem("@token", response.data.token);
-
-    console.log(response.data);
 
     ToastSuccess("Login realizado com sucesso");
 
     return dispatch({
       type: REDUCER_ACTION_TYPE.LOGIN,
-      payload: { token: response.data.token, name: response.data.user.name },
+      payload: {
+        name: response.data.user.name,
+        email: response.data.user.email,
+      },
     });
   }
 };
@@ -50,18 +50,18 @@ export function AsyncLogoutFn(dispatch: any) {
   ToastMessage("Logout realizado com sucesso");
   return dispatch({
     type: REDUCER_ACTION_TYPE.LOGOUT,
-    payload: { signed: false, name: "" },
+    payload: { name: "", email: "", token: "" },
   });
 }
 
-export function updateUserStorage(dispatch: any) {
-  const storagedUser = localStorage.getItem("@name:user");
-  const storagedToken = localStorage.getItem("@token");
+// export function updateUserStorage(dispatch: any) {
+//   const storagedUser = localStorage.getItem("@name:user");
+//   const storagedToken = localStorage.getItem("@token");
 
-  if (Boolean(storagedToken) && Boolean(storagedUser)) {
-    return dispatch({
-      type: REDUCER_ACTION_TYPE.UPDATE,
-      payload: { token: storagedToken },
-    });
-  }
-}
+//   if (Boolean(storagedToken) && Boolean(storagedUser)) {
+//     return dispatch({
+//       type: REDUCER_ACTION_TYPE.UPDATE,
+//       payload: { token: storagedToken },
+//     });
+//   }
+// }

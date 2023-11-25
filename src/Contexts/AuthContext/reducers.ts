@@ -8,9 +8,9 @@ export const reducer = (state: UserType, action: ReducerAction): UserType => {
         throw new Error("action.payload missing in ADD action");
       }
 
-      const { email, name, token } = action.payload;
+      const { email, name } = action.payload;
 
-      return { ...state, email, name, token };
+      return { ...state, email, name };
     }
 
     case REDUCER_ACTION_TYPE.LOGOUT: {
