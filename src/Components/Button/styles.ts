@@ -14,7 +14,7 @@ interface ICustomButton {
 export const ButtonStyles = styled.button<ICustomButton>`
   height: ${(props) => (props.height ? props.height : "38px")};
   width: ${(props) => (props.width ? props.width : "414px")};
-  margin-top: ${(props) => props.marginTop};
+  margin-top: ${(props) => (props.marginTop ? props.marginTop : "0px")};
   background-color: #373e4a;
   color: ${(props) => props.customColor};
   border: ${(props) => (props.customBorder ? props.customBorder : "0px none")};

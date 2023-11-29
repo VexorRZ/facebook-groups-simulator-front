@@ -1,19 +1,26 @@
 import styled from "styled-components";
+import { ReactComponent as CloseSvg } from "../../assets/icons/close-icon.svg";
 
-export const Container = styled.div`
+interface IContainerProps {
+  editProfileVisible: boolean;
+}
+
+export const Container = styled.div<IContainerProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: auto;
   margin-top: 60px;
   width: 1400px;
-  height: 70vh;
+  height: 65vh;
   border-radius: 6px;
   box-shadow: 0vh;
   background-color: #25282e;
   border: 1px solid #526173;
   padding: 10px;
   box-shadow: 18px 19px 32px -11px rgba(0, 0, 0, 1);
+  filter: ${(props) =>
+    props.editProfileVisible ? `blur(0.2rem)` : `blur(0.0rem)`};
 `;
 
 export const ProfileText = styled.p`
@@ -67,4 +74,58 @@ export const ProfileStatisticsWrapper = styled.div`
   flex-direction: row;
   justify-content: space-between;
   gap: 110px;
+`;
+
+export const ButtonWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  align-items: flex-end;
+`;
+
+export const ProfileEditorContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  background-color: #25282e;
+  border: 1px solid #526173;
+  padding: 10px;
+  box-shadow: 18px 19px 32px -11px rgba(0, 0, 0, 1);
+  width: 600px;
+  height: 600px;
+  z-index: 900;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+`;
+
+export const EditProfileFieldWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const CloseIcon = styled(CloseSvg)`
+  border-radius: 50px;
+
+  &:hover {
+    cursor: pointer;
+    background-color: black;
+  }
+`;
+
+export const CloseIconDiv = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  z-index: 9999;
+  width: 100%;
+`;
+
+export const DataArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 80px;
 `;

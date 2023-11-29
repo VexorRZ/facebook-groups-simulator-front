@@ -15,9 +15,10 @@ import {
 interface IDropZone {
   files?: File[];
   onDrop: (param: any[]) => void;
+  previewMessage: string;
 }
 
-const CustomDropzone = ({ files, onDrop }: IDropZone) => {
+const CustomDropzone = ({ files, previewMessage, onDrop }: IDropZone) => {
   const { getRootProps, getInputProps, isDragActive, isDragReject } =
     useDropzone({
       maxFiles: 1,
@@ -31,7 +32,7 @@ const CustomDropzone = ({ files, onDrop }: IDropZone) => {
     if (!isDragActive) {
       return (
         <UploadMessage messageType="default" color="#999">
-          Selecione a foto do seu grupo...
+          {previewMessage}
         </UploadMessage>
       );
     }

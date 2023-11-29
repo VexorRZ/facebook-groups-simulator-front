@@ -2,27 +2,38 @@
 /* eslint-disable multiline-ternary */
 import React, { useState, useCallback, useEffect } from "react";
 import { type AxiosResponse } from "axios";
-// import Dropzone from "../../Components/DropZone";
 import api from "../../services/api";
 import { type Groups } from "../../services/interfaces";
 import { useNavigate } from "react-router-dom";
 import TopBar from "../../Components/TopBar";
 import Dropzone from "../../Components/DropZone";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import LockIcon from "@mui/icons-material/Lock";
+import PublicIcon from "@mui/icons-material/Public";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 
 import {
   Container,
   GroupName,
   GroupType,
-  StyledOption,
   Header,
   Footer,
   Button,
   ImageContainer,
+  CardOptions,
+  Option,
+  OptionText,
 } from "./styles";
 
 const CreateGroup = () => {
   const [image, setImage] = useState<File[]>([]);
-  const [option, setOption] = useState<string>("notPrivate");
+  const [option, setOption] = useState<boolean>();
+  const [cardOptionVisibility, setcardOptionVisibility] =
+    useState<boolean>(false);
   const [groupName, setGroupName] = useState<string>("");
   const [status] = useState({
     type: "",
@@ -32,17 +43,9 @@ const CreateGroup = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("option:", option);
     localStorage.getItem("@token");
   });
-
-  const selectChange = useCallback(
-    (event: React.ChangeEvent<HTMLSelectElement>) => {
-      event.preventDefault();
-      const value = event.target.value;
-      setOption(value);
-    },
-    [option]
-  );
 
   const changeGroupname = useCallback(
     (event: React.FormEvent<HTMLInputElement>) => {
@@ -81,6 +84,31 @@ const CreateGroup = () => {
     navigate(`/group/${Number(groupId)}`);
   };
 
+  const SelectGroupPrivacy = () => {
+    if (option === undefined) {
+      return (
+        <>
+          <div>Escolher privacidade</div>
+          <ArrowDropDownIcon />
+        </>
+      );
+    } else if (option) {
+      return (
+        <>
+          <div>Escolher privacidade</div>
+          <PublicIcon />
+          <ArrowDropDownIcon />
+        </>
+      );
+    } else if (!option) {
+      <>
+        <div>Escolher privacidade</div>
+        <LockIcon />
+        <ArrowDropDownIcon />
+      </>;
+    }
+  };
+
   return (
     <>
       <TopBar />
@@ -99,6 +127,7 @@ const CreateGroup = () => {
         </ImageContainer>
         <Header>
           <Dropzone
+            previewMessage="Selecione a foto do seu grupo..."
             files={image}
             onDrop={(acceptedImage) => {
               setImage(
@@ -118,12 +147,26 @@ const CreateGroup = () => {
             onChange={changeGroupname}
           />
           <div>tipo de grupo</div>
-          <GroupType name="selectGroup" onChange={selectChange}>
-            <StyledOption selected disabled>
-              Escolha uma opção
-            </StyledOption>
-            <StyledOption value="private">privado</StyledOption>
-            <StyledOption value="notPrivate">público</StyledOption>
+          <GroupType
+            onClick={() => {
+              setcardOptionVisibility(true);
+            }}
+          >
+            {SelectGroupPrivacy()}
+            {cardOptionVisibility && (
+              <CardOptions>
+                <Option>
+                  <OptionText>
+                    <PublicIcon /> Púbblico
+                  </OptionText>
+                </Option>
+                <Option>
+                  <OptionText>
+                    <LockIcon /> Privado
+                  </OptionText>
+                </Option>
+              </CardOptions>
+            )}
           </GroupType>
           <div>Faça uma breve descrição do seu grupo</div>
           <GroupName height="100px" maxLength={100} />

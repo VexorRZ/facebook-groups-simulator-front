@@ -1,32 +1,11 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 interface IButtonProps {
   height?: string;
   width?: string;
   marginTop?: string;
 }
-
-interface IDropzone {
-  isDragActive?: boolean;
-  isDragReject?: boolean;
-}
-
-interface IPreview {
-  src: string;
-}
-
-interface IUploadMessage {
-  message?: "default" | "error" | "success";
-}
-
-const dragActive = css`
-  border-color: #78e5d5;
-`;
-
-const dragReject = css`
-  border-color: #e57878;
-`;
 
 export const Container = styled.div`
   display: flex;
@@ -63,7 +42,7 @@ export const GroupName = styled.input`
   font-size: 20px;
   border: 1px solid #a0a2a6;
 `;
-export const GroupType = styled.select`
+export const GroupType = styled.div`
   height: 40px;
   width: 360px;
   background: black;
@@ -73,9 +52,12 @@ export const GroupType = styled.select`
   text-align: center;
   font-size: 20px;
   border: 1px solid #a0a2a6;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px;
 `;
-
-export const StyledOption = styled.option``;
 
 export const GroupAvatar = styled.img`
   border-radius: 50%;
@@ -130,33 +112,21 @@ export const ImageContainer = styled.div`
   align-items: center;
 `;
 
-export const DropContainer = styled.div.attrs({
-  className: "dropzone",
-})<IDropzone>`
-  border: 1px dashed #ddd;
-  border-radius: 4px;
-  cursor: pointer;
-
-  transition: height 0.2s ease;
-
-  ${(props) => props.isDragActive && dragActive};
-  ${(props) => props.isDragReject && dragReject};
-`;
-
-export const UploadMessage = styled.p<IUploadMessage>`
+export const CardOptions = styled.div`
   display: flex;
-  color: ${(props) => props.message || "default"};
-  justify-content: center;
-  align-items: center;
-  padding: 15px 0;
+  flex-direction: column;
+  background-color: #373e4a;
+  border: solid 1px white;
 `;
 
-export const Preview = styled.div<IPreview>`
-  width: 36px;
-  height: 36px;
-  border-radius: 5px;
-  background-image: url(${(props) => props.src});
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
+export const Option = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 12px;
+`;
+
+export const OptionText = styled.strong`
+  font-size: 10px;
+  color: gray;
 `;

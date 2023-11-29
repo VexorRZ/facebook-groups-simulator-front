@@ -16,6 +16,7 @@ const initialUserState: UserType = {
   email: "",
   token: "",
   name: "",
+  avatar_id: "",
 };
 
 export type ReducerActionType = typeof REDUCER_ACTION_TYPE;
@@ -28,6 +29,7 @@ const useAuthContext = (initialUserState: UserType) => {
   }, []);
 
   const userName = localStorage.getItem("@name:user");
+  const userAvatar = localStorage.getItem("@avatar:user");
   const bearerToken = localStorage.getItem("@token");
 
   if (bearerToken && userName) {
@@ -38,6 +40,7 @@ const useAuthContext = (initialUserState: UserType) => {
       ...state,
       name: userName,
       token: bearerToken,
+      avatar: userAvatar,
       REDUCER_ACTIONS,
     };
   }
@@ -46,8 +49,9 @@ const useAuthContext = (initialUserState: UserType) => {
   const password = state.password;
   const token = state.token;
   const name = state.name;
+  const avatar = state.avatar_id;
 
-  return { dispatch, REDUCER_ACTIONS, email, password, token, name };
+  return { dispatch, REDUCER_ACTIONS, email, password, token, name, avatar };
 };
 
 export type UseAuthContextType = ReturnType<typeof useAuthContext>;
@@ -59,6 +63,7 @@ const initialUserContextState: UseAuthContextType = {
   password: "",
   token: "",
   name: "",
+  avatar: "",
 };
 
 const AuthContext = createContext<UseAuthContextType>(initialUserContextState);

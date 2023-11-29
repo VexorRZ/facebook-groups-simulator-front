@@ -12,6 +12,7 @@ interface IbuttonProps {
   marginTop?: string;
   opacity?: number;
   customColor?: string;
+  disabled?: boolean;
 }
 
 const CustomButton = ({
@@ -24,9 +25,11 @@ const CustomButton = ({
   marginTop,
   opacity,
   customColor,
+  disabled,
 }: IbuttonProps) => {
   return (
     <ButtonStyles
+      disabled={disabled}
       width={width}
       height={height}
       onClick={onClick}

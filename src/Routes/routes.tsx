@@ -26,7 +26,7 @@ const Routes = () => {
             path="/sign-up"
             element={
               <PublicRoutes>
-                <ForgotPassword />
+                <SignUp />
               </PublicRoutes>
             }
           />
@@ -34,7 +34,7 @@ const Routes = () => {
             path="/forgot-password"
             element={
               <PublicRoutes>
-                <SignUp />
+                <ForgotPassword />
               </PublicRoutes>
             }
           />
