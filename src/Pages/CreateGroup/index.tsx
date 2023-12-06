@@ -7,33 +7,55 @@ import { type Groups } from "../../services/interfaces";
 import { useNavigate } from "react-router-dom";
 import TopBar from "../../Components/TopBar";
 import Dropzone from "../../Components/DropZone";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import LockIcon from "@mui/icons-material/Lock";
 import PublicIcon from "@mui/icons-material/Public";
+import { styled } from "@mui/material/styles";
+import { useRadioGroup } from "@mui/material/RadioGroup";
+import FormControlLabel, {
+  type FormControlLabelProps,
+} from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 
 import {
   Container,
   GroupName,
-  GroupType,
   Header,
   Footer,
   Button,
   ImageContainer,
   CardOptions,
-  Option,
-  OptionText,
+  StyledRadioGroup,
+  GroupPrivacy,
 } from "./styles";
+
+interface StyledFormControlLabelProps extends FormControlLabelProps {
+  checked: boolean;
+}
+
+const StyledFormControlLabel = styled((props: StyledFormControlLabelProps) => (
+  <FormControlLabel {...props} />
+))(({ theme, checked }) => ({
+  ".MuiFormControlLabel-label": checked && {
+    color: theme.palette.primary.main,
+  },
+}));
+
+function MyFormControlLabel(props: FormControlLabelProps) {
+  const radioGroup = useRadioGroup();
+
+  let checked = false;
+
+  if (radioGroup) {
+    checked = radioGroup.value === props.value;
+  }
+
+  return <StyledFormControlLabel checked={checked} {...props} />;
+}
 
 const CreateGroup = () => {
   const [image, setImage] = useState<File[]>([]);
-  const [option, setOption] = useState<boolean>();
-  const [cardOptionVisibility, setcardOptionVisibility] =
-    useState<boolean>(false);
+  const [option, setOption] = useState<boolean>(false);
+
   const [groupName, setGroupName] = useState<string>("");
   const [status] = useState({
     type: "",
@@ -64,7 +86,7 @@ const CreateGroup = () => {
     }
 
     const data = new FormData();
-    data.append("is_private", JSON.stringify(false));
+    data.append("is_private", JSON.stringify(option));
     data.append("name", groupName);
     data.append("file", image[0]);
 
@@ -85,27 +107,18 @@ const CreateGroup = () => {
   };
 
   const SelectGroupPrivacy = () => {
-    if (option === undefined) {
+    if (!option) {
       return (
-        <>
-          <div>Escolher privacidade</div>
-          <ArrowDropDownIcon />
-        </>
+        <GroupPrivacy>
+          Grupo público <PublicIcon />
+        </GroupPrivacy>
       );
-    } else if (option) {
+    } else {
       return (
-        <>
-          <div>Escolher privacidade</div>
-          <PublicIcon />
-          <ArrowDropDownIcon />
-        </>
+        <GroupPrivacy>
+          Grupo privado <LockIcon />
+        </GroupPrivacy>
       );
-    } else if (!option) {
-      <>
-        <div>Escolher privacidade</div>
-        <LockIcon />
-        <ArrowDropDownIcon />
-      </>;
     }
   };
 
@@ -146,28 +159,53 @@ const CreateGroup = () => {
             value={groupName}
             onChange={changeGroupname}
           />
-          <div>tipo de grupo</div>
-          <GroupType
-            onClick={() => {
-              setcardOptionVisibility(true);
-            }}
-          >
-            {SelectGroupPrivacy()}
-            {cardOptionVisibility && (
-              <CardOptions>
-                <Option>
-                  <OptionText>
-                    <PublicIcon /> Púbblico
-                  </OptionText>
-                </Option>
-                <Option>
-                  <OptionText>
-                    <LockIcon /> Privado
-                  </OptionText>
-                </Option>
-              </CardOptions>
-            )}
-          </GroupType>
+
+          {SelectGroupPrivacy()}
+
+          <CardOptions>
+            <StyledRadioGroup
+              radioActive={true}
+              name="use-radio-group"
+              defaultValue="first"
+            >
+              <div className="radio-options">
+                <PublicIcon />
+                <MyFormControlLabel
+                  value="first"
+                  label="público"
+                  control={
+                    <Radio
+                      onClick={() => {
+                        setOption(false);
+                      }}
+                    />
+                  }
+                />
+                <span className="option-description">
+                  (Qualquer pessoa poderá visualizar o conteúdo do grupo)
+                </span>
+              </div>
+              <div className="radio-options">
+                <LockIcon />
+                <MyFormControlLabel
+                  value="second"
+                  label="privado"
+                  control={
+                    <Radio
+                      onClick={() => {
+                        setOption(true);
+                      }}
+                    />
+                  }
+                />
+
+                <span className="option-description">
+                  (Somente membros poderão ver o conteúdo do grupo)
+                </span>
+              </div>
+            </StyledRadioGroup>
+          </CardOptions>
+
           <div>Faça uma breve descrição do seu grupo</div>
           <GroupName height="100px" maxLength={100} />
         </Header>

@@ -2,7 +2,12 @@ import styled from "styled-components";
 import { ReactComponent as CloseSvg } from "../../assets/icons/close-icon.svg";
 
 interface IContainerProps {
-  editProfileVisible: boolean;
+  bluried: boolean;
+}
+
+interface IProfileEditorContainerProps {
+  width?: string;
+  height?: string;
 }
 
 export const Container = styled.div<IContainerProps>`
@@ -19,18 +24,43 @@ export const Container = styled.div<IContainerProps>`
   border: 1px solid #526173;
   padding: 10px;
   box-shadow: 18px 19px 32px -11px rgba(0, 0, 0, 1);
-  filter: ${(props) =>
-    props.editProfileVisible ? `blur(0.2rem)` : `blur(0.0rem)`};
+  filter: ${(props) => (props.bluried ? `blur(0.2rem)` : `blur(0.0rem)`)};
 `;
 
 export const ProfileText = styled.p`
   display: flex;
 `;
 
-export const UserAvatar = styled.img`
+export const UserAvatar = styled.div`
   width: 200px;
   height: 200px;
   border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid black;
+
+  .userAvatarHover {
+    width: 200px;
+    height: 200px;
+    border-radius: 0%;
+    background-color: gray;
+    opacity: 0.5;
+    display: none;
+    position: relative;
+    bottom: -65%;
+    gap: 6px;
+  }
+
+  &:hover {
+    cursor: pointer;
+
+    .userAvatarHover {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+    }
+  }
 `;
 
 export const Title = styled.h3`
@@ -83,7 +113,7 @@ export const ButtonWrapper = styled.div`
   align-items: flex-end;
 `;
 
-export const ProfileEditorContainer = styled.div`
+export const ProfileEditorContainer = styled.div<IProfileEditorContainerProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -92,8 +122,8 @@ export const ProfileEditorContainer = styled.div`
   border: 1px solid #526173;
   padding: 10px;
   box-shadow: 18px 19px 32px -11px rgba(0, 0, 0, 1);
-  width: 600px;
-  height: 600px;
+  width: ${(props) => props.width ?? "600px"};
+  height: ${(props) => props.height ?? "600px"};
   z-index: 900;
   position: absolute;
   left: 50%;

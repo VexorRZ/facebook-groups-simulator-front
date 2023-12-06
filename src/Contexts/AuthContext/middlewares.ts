@@ -31,7 +31,10 @@ export const asyncLoginFn = async (
     )}`;
 
     localStorage.setItem("@name:user", response.data.user.name);
+    localStorage.setItem("@id:user", response.data.user.id);
     localStorage.setItem("@token", response.data.token);
+
+    console.log("userData", response.data);
 
     ToastSuccess("Login realizado com sucesso");
 

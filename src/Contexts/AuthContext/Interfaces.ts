@@ -6,6 +6,7 @@ export interface UserType {
   token?: string;
   name?: string;
   avatar_id?: string;
+  id?: string;
 }
 
 export interface ReducerAction {

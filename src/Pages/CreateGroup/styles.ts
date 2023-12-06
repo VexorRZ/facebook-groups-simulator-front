@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
-import styled from "styled-components";
+import { styled } from "styled-components";
+import RadioGroup from "@mui/material/RadioGroup";
 
 interface IButtonProps {
   height?: string;
@@ -7,13 +8,57 @@ interface IButtonProps {
   marginTop?: string;
 }
 
+interface IStyledRadioGroupProps {
+  radioActive: boolean;
+}
+
+export const CardOptions = styled.div`
+  height: 112px;
+  width: 339px;
+  display: flex;
+  flex-direction: column;
+  background-color: #25282e;
+  border: solid 1px white;
+  padding: 10px;
+`;
+
+export const StyledRadioGroup = styled(RadioGroup)<IStyledRadioGroupProps>`
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 21px !important;
+  justify-content: flex-start !important;
+
+  .option-description {
+    font-size: 10px;
+    color: ${(props) => (props.radioActive ? "#1976d2" : "#fff")};
+  }
+  .radio-options {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 6px;
+    padding: 2px;
+    &:hover {
+      background-color: #373e4a;
+    }
+  }
+
+  .css-17yyoxz-MuiFormControlLabel-root {
+    margin-left: 0px !important;
+  }
+  .css-1yyanpp-MuiFormControlLabel-root {
+    margin-left: 0px !important;
+  }
+`;
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 6px;
   width: 600px;
-  height: 650px;
+  height: 770px;
   border-radius: 6px;
   background-color: #25282e;
   margin: auto;
@@ -112,13 +157,6 @@ export const ImageContainer = styled.div`
   align-items: center;
 `;
 
-export const CardOptions = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: #373e4a;
-  border: solid 1px white;
-`;
-
 export const Option = styled.div`
   display: flex;
   flex-direction: row;
@@ -129,4 +167,10 @@ export const Option = styled.div`
 export const OptionText = styled.strong`
   font-size: 10px;
   color: gray;
+`;
+
+export const GroupPrivacy = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
 `;

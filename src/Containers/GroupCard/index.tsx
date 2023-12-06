@@ -1,5 +1,4 @@
 import React from "react";
-import DialogBox from "../../Containers/DialogBox";
 
 import {
   Container,
@@ -8,7 +7,7 @@ import {
   TopicList,
   GroupAvatar,
   GroupInfoArea,
-  JoiningButton,
+  CardButton,
   InfoWrapper,
   ButtonArea,
   AmountWrapper,
@@ -20,20 +19,20 @@ import {
 } from "./styles";
 
 interface IGrupoCardProps {
-  onClick?: () => void;
-  onCancel?: () => void;
-  onConfirm?: () => void;
+  onClickView: () => void;
+  onClickEnter: () => void;
   groupName: string;
   numberOfMbembers: number;
   children?: React.ReactNode;
   numberOfTopics: number;
-  joiningButtonText: string;
   groupImage?: string;
   isPrivate?: boolean;
   dialogIsVisible?: boolean;
   groupOwner: string;
   groupStatus: string;
   statusColor: string;
+  CardButtonTextEnter: string;
+  CardButtonTextView: string;
 }
 
 const GroupCard = ({
@@ -41,16 +40,15 @@ const GroupCard = ({
   groupName,
   numberOfMbembers,
   numberOfTopics,
-  joiningButtonText,
+  CardButtonTextEnter,
+  CardButtonTextView,
   groupImage,
   isPrivate,
-  dialogIsVisible,
   groupOwner,
   groupStatus,
   statusColor,
-  onClick,
-  onCancel,
-  onConfirm,
+  onClickView,
+  onClickEnter,
 }: IGrupoCardProps) => {
   return (
     <Container>
@@ -83,26 +81,11 @@ const GroupCard = ({
 
       <TopicList>{children}</TopicList>
       <ButtonArea>
-        <JoiningButton onClick={onClick} disabled={isPrivate}>
-          Ver Grupo
-        </JoiningButton>
-        <JoiningButton onClick={onClick}>{joiningButtonText}</JoiningButton>
+        <CardButton onClick={onClickEnter} disabled={isPrivate}>
+          {CardButtonTextEnter}
+        </CardButton>
+        <CardButton onClick={onClickView}>{CardButtonTextView}</CardButton>
       </ButtonArea>
-      {dialogIsVisible && (
-        <DialogBox
-          visible={dialogIsVisible}
-          onCancel={() => {
-            if (onCancel) {
-              onCancel();
-            }
-          }}
-          onConfirm={() => {
-            if (onConfirm) {
-              onConfirm();
-            }
-          }}
-        />
-      )}
     </Container>
   );
 };

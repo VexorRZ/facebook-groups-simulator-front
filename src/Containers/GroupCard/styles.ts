@@ -86,7 +86,7 @@ export const InfoWrapper = styled.div<IinfoWraperProps>`
   margin-bottom: 10px;
 `;
 
-export const JoiningButton = styled.button`
+export const CardButton = styled.button`
   background-color: #373e4a;
   opacity: 0.7;
   border: none;

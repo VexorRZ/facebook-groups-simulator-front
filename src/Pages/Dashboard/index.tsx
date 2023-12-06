@@ -17,11 +17,6 @@ import { type AxiosResponse } from "axios";
 
 const Dashboard = () => {
   const [groups, setGroups] = useState<Groups[]>([]);
-  const [DialogIsVisible, SetDialogIsVisible] = useState<boolean>(false);
-
-  const toggleDialogBOx = useCallback((value: boolean) => {
-    SetDialogIsVisible(value);
-  }, []);
 
   const { name } = useAuth();
   const navigate = useNavigate();
@@ -75,13 +70,10 @@ const Dashboard = () => {
             return (
               <>
                 <GroupCard
-                  onCancel={() => {
-                    toggleDialogBOx(false);
-                  }}
-                  onConfirm={() => {
+                  onClickView={() => {
                     openGroup(group.id);
                   }}
-                  dialogIsVisible={DialogIsVisible}
+                  onClickEnter={() => {}}
                   key={index}
                   groupOwner={group.administrator.name}
                   groupName={group.name}
@@ -93,10 +85,8 @@ const Dashboard = () => {
                   numberOfTopics={group.topics.length}
                   groupImage={group.avatar}
                   isPrivate={group.is_private}
-                  joiningButtonText="Entrar"
-                  onClick={() => {
-                    toggleDialogBOx(true);
-                  }}
+                  CardButtonTextEnter="Entrar"
+                  CardButtonTextView="Ver Grupo"
                 >
                   {group.topics.length !== 0 ? (
                     group.topics?.slice(0, 3).map((topic, index) => {

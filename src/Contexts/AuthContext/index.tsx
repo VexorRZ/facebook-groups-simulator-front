@@ -17,6 +17,7 @@ const initialUserState: UserType = {
   token: "",
   name: "",
   avatar_id: "",
+  id: "",
 };
 
 export type ReducerActionType = typeof REDUCER_ACTION_TYPE;
@@ -31,6 +32,7 @@ const useAuthContext = (initialUserState: UserType) => {
   const userName = localStorage.getItem("@name:user");
   const userAvatar = localStorage.getItem("@avatar:user");
   const bearerToken = localStorage.getItem("@token");
+  const userId = localStorage.getItem("@id:user");
 
   if (bearerToken && userName) {
     api.defaults.headers.authorization = `Bearer ${bearerToken}`;
@@ -41,6 +43,7 @@ const useAuthContext = (initialUserState: UserType) => {
       name: userName,
       token: bearerToken,
       avatar: userAvatar,
+      id: userId,
       REDUCER_ACTIONS,
     };
   }
@@ -50,8 +53,18 @@ const useAuthContext = (initialUserState: UserType) => {
   const token = state.token;
   const name = state.name;
   const avatar = state.avatar_id;
+  const id = state.id;
 
-  return { dispatch, REDUCER_ACTIONS, email, password, token, name, avatar };
+  return {
+    dispatch,
+    REDUCER_ACTIONS,
+    email,
+    password,
+    token,
+    name,
+    avatar,
+    id,
+  };
 };
 
 export type UseAuthContextType = ReturnType<typeof useAuthContext>;
@@ -64,6 +77,7 @@ const initialUserContextState: UseAuthContextType = {
   token: "",
   name: "",
   avatar: "",
+  id: "",
 };
 
 const AuthContext = createContext<UseAuthContextType>(initialUserContextState);

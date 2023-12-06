@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import React, { useState, useCallback } from "react";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import GroupIcon from "@mui/icons-material/Group";
@@ -10,6 +11,10 @@ import CustomButton from "../../Components/Button";
 import useAuth from "../../Hooks/useAuth";
 import Dropzone from "../../Components/DropZone";
 import CustomInput from "../../Components/Input";
+import CameraswitchIcon from "@mui/icons-material/Cameraswitch";
+import api from "../../services/api";
+import { type UserType } from "../../Contexts/AuthContext/interfaces";
+import { type AxiosResponse } from "axios";
 
 import {
   Container,
@@ -57,10 +62,11 @@ const Profile = ({
   JoinsRequested,
 }: IProfileProps) => {
   const [editProfileVisible, setEditProfileVisible] = useState<boolean>(false);
+  const [editAvatarVisible, setEditAvatarVisible] = useState<boolean>(false);
   const [profileImage, setProfileImage] = useState<File[]>([]);
   const [newUserName, setNewUserName] = useState<string>("");
   const [newUserMail, setNewUserMail] = useState<string>("");
-  const { avatar } = useAuth();
+  const { avatar, id } = useAuth();
 
   const changeUserName = useCallback(
     (event: React.FormEvent<HTMLInputElement>) => {
@@ -82,6 +88,30 @@ const Profile = ({
     setEditProfileVisible(value);
   }, []);
 
+  const updateAvatar = async (event: any) => {
+    event.preventDefault();
+    const token = localStorage.getItem("@token");
+
+    if (!token) {
+      throw new Error("Erro inesperado, token não fornecido");
+    }
+
+    const data = new FormData();
+
+    data.append("file", profileImage[0]);
+
+    try {
+      const res: AxiosResponse<UserType> = await api.patch<
+        UserType,
+        AxiosResponse<UserType>
+      >(`/users/${Number(id)}`, data);
+
+      return res.data;
+    } catch (err) {
+      alert("não deu");
+    }
+  };
+
   return (
     <>
       {editProfileVisible && (
@@ -95,19 +125,6 @@ const Profile = ({
               />
             </CloseIconDiv>
             <DataArea>
-              <Dropzone
-                previewMessage="Selecione a foto do seu grupo..."
-                files={profileImage}
-                onDrop={(acceptedImage) => {
-                  setProfileImage(
-                    acceptedImage.map((file) =>
-                      Object.assign(file, {
-                        preview: URL.createObjectURL(file),
-                      })
-                    )
-                  );
-                }}
-              />
               <EditProfileFieldWrapper>
                 <CustomInput
                   type="text"
@@ -128,8 +145,60 @@ const Profile = ({
           </ProfileEditorContainer>
         </>
       )}
-      <Container editProfileVisible={editProfileVisible}>
-        <UserAvatar src={avatar as string} />
+      {editAvatarVisible && (
+        <ProfileEditorContainer height="330px" width="340px">
+          <CloseIconDiv>
+            <CloseIcon
+              onClick={() => {
+                setEditAvatarVisible(false);
+              }}
+            />
+          </CloseIconDiv>
+          <Dropzone
+            previewMessage="Selecione a sua nova foto de perfil.."
+            files={profileImage}
+            onDrop={(acceptedImage) => {
+              setProfileImage(
+                acceptedImage.map((file) =>
+                  Object.assign(file, {
+                    preview: URL.createObjectURL(file),
+                  })
+                )
+              );
+            }}
+          />
+
+          <CustomButton height="118px" width="121px" onClick={updateAvatar}>
+            Alterar
+          </CustomButton>
+        </ProfileEditorContainer>
+      )}
+
+      <Container bluried={editProfileVisible || editAvatarVisible}>
+        <UserAvatar
+          style={{
+            background: `url(${avatar} ) no-repeat center`,
+            backgroundSize: "cover",
+          }}
+        >
+          <div
+            className="userAvatarHover"
+            onClick={() => {
+              setEditAvatarVisible(!editAvatarVisible);
+            }}
+          >
+            <CameraswitchIcon
+              style={{
+                width: 25,
+                height: 25,
+                marginTop: 10,
+              }}
+            />
+
+            <strong>alterar foto</strong>
+          </div>
+        </UserAvatar>
+
         <Title>Informações do perfil </Title>
         <ProfiletextWrapper>
           <ProfileText>Nome do usuário {userName}</ProfileText>
