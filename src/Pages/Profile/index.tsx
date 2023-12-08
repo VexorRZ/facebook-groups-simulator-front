@@ -101,11 +101,14 @@ const Profile = ({
     data.append("file", profileImage[0]);
 
     try {
-      const res: AxiosResponse<UserType> = await api.patch<
+      const res: AxiosResponse<UserType> = await api.put<
         UserType,
         AxiosResponse<UserType>
       >(`/users/${Number(id)}`, data);
 
+      console.log(res);
+      alert("deu certo");
+      setEditAvatarVisible(false);
       return res.data;
     } catch (err) {
       alert("não deu");

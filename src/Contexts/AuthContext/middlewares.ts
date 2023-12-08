@@ -48,6 +48,29 @@ export const asyncLoginFn = async (
   }
 };
 
+export const ContextSignUp = async (
+  name: string,
+  surname: string,
+  email: string,
+  password: string
+) => {
+  const response: AxiosResponse = await api.post<AxiosResponse>("users", {
+    name,
+    surname,
+    email,
+    password,
+  });
+
+  if (response.data.error) {
+    ToastError("Erro ao criar conta, tente novamente");
+
+    console.log(response.data.error);
+    return;
+  } else {
+    ToastSuccess("Conta criada com sucesso.");
+  }
+};
+
 export function AsyncLogoutFn(dispatch: any) {
   localStorage.clear();
   ToastMessage("Logout realizado com sucesso");

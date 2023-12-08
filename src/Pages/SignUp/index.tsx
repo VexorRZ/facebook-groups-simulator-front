@@ -4,6 +4,7 @@ import CustomButton from "../../Components/Button";
 import { Formik, Form } from "formik";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import { ContextSignUp } from "../../Contexts/AuthContext/middlewares";
 import {
   Container,
   InputsContainer,
@@ -13,14 +14,12 @@ import {
 } from "./styles";
 
 const loginSchema = Yup.object().shape({
-  firstName: Yup.string().required("Nome é um campo obrigatório"),
-  surname: Yup.string().required("Email é um campo obrigatório"),
-  email: Yup.string()
-    .required("Email é um campo obrigatório")
-    .email("Email em formato inválido"),
+  name: Yup.string().required("Nome é um campo obrigatório"),
+  surname: Yup.string().required("Sobrenome é um campo obrigatório"),
+  email: Yup.string().required("Email é um campo obrigatório").email(),
   password: Yup.string()
     .required("Password é um campo obrigatório")
-    .min(8, "Password em formato inválido"),
+    .min(6, "Password em formato inválido"),
 });
 
 const SignUp: React.FC = () => {
@@ -30,13 +29,19 @@ const SignUp: React.FC = () => {
     <Container>
       <Formik
         validationSchema={loginSchema}
-        initialValues={{ firstName: "", surname: "", email: "", password: "" }}
-        onSubmit={() => {
-          alert("login realizado com sucesso");
-          navigate("/dashboard");
+        initialValues={{ name: "", surname: "", email: "", password: "" }}
+        onSubmit={async ({ name, surname, email, password }) => {
+          try {
+            await ContextSignUp(name, surname, email, password);
+            setTimeout(() => {
+              navigate("/dashboard");
+            }, 2000);
+          } catch (err) {
+            return err;
+          }
         }}
       >
-        {({ values, errors, touched, handleChange, handleSubmit }) => (
+        {({ values, errors, touched, handleSubmit, handleChange }) => (
           <Form noValidate onSubmit={handleSubmit}>
             <Title>Crie uma Conta</Title>
             <Resume>Por-favor forneça seus dados</Resume>
@@ -46,20 +51,18 @@ const SignUp: React.FC = () => {
                 type="name"
                 name="name"
                 onChange={handleChange}
-                value={values.firstName}
+                value={values.name}
                 placeHolder="Digite seu nome"
                 id="name"
               />
 
               <ErrorMessage>
-                {errors.firstName != null &&
-                  touched.email != null &&
-                  errors.email}
+                {errors.name != null && touched.name != null && errors.name}
               </ErrorMessage>
               <CustomInput
                 customMarginTop="4px"
-                type="email"
-                name="email"
+                type="surname"
+                name="surname"
                 onChange={handleChange}
                 value={values.surname}
                 placeHolder="Digite seu sobrenome"
@@ -68,8 +71,8 @@ const SignUp: React.FC = () => {
 
               <ErrorMessage>
                 {errors.surname != null &&
-                  touched.email != null &&
-                  errors.email}
+                  touched.surname != null &&
+                  errors.surname}
               </ErrorMessage>
 
               <CustomInput
@@ -92,6 +95,7 @@ const SignUp: React.FC = () => {
                 onChange={handleChange}
                 value={values.password}
                 placeHolder="Digite sua senha..."
+                id="password"
               />
 
               <ErrorMessage>
@@ -105,7 +109,7 @@ const SignUp: React.FC = () => {
                 type="submit"
                 marginTop="16px"
                 opacity={0.8}
-                onClick={() => {}}
+                onClick={handleSubmit}
               >
                 Criar conta
               </CustomButton>
