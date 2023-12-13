@@ -66,7 +66,7 @@ const Profile = ({
   const [profileImage, setProfileImage] = useState<File[]>([]);
   const [newUserName, setNewUserName] = useState<string>("");
   const [newUserMail, setNewUserMail] = useState<string>("");
-  const { avatar, id } = useAuth();
+  const { avatar } = useAuth();
 
   const changeUserName = useCallback(
     (event: React.FormEvent<HTMLInputElement>) => {
@@ -101,10 +101,10 @@ const Profile = ({
     data.append("file", profileImage[0]);
 
     try {
-      const res: AxiosResponse<UserType> = await api.put<
+      const res: AxiosResponse<UserType> = await api.patch<
         UserType,
         AxiosResponse<UserType>
-      >(`/users/${Number(id)}`, data);
+      >(`files`, data);
 
       console.log(res);
       alert("deu certo");
@@ -180,7 +180,7 @@ const Profile = ({
       <Container bluried={editProfileVisible || editAvatarVisible}>
         <UserAvatar
           style={{
-            background: `url(${avatar} ) no-repeat center`,
+            background: `url(${avatar.path} ) no-repeat center`,
             backgroundSize: "cover",
           }}
         >

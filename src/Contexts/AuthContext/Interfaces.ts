@@ -5,10 +5,14 @@ export interface UserType {
   email?: string;
   token?: string;
   name?: string;
-  avatar_id?: string;
+  avatar: avatar;
   id?: string;
 }
 
+interface avatar {
+  id: string;
+  path: string;
+}
 export interface ReducerAction {
   type: string;
   payload?: UserType;

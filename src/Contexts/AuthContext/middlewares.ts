@@ -4,6 +4,7 @@
 import { type AxiosResponse } from "axios";
 import api from "../../services/api";
 import { REDUCER_ACTION_TYPE } from "./action-types";
+
 import {
   ToastError,
   ToastSuccess,
@@ -33,8 +34,10 @@ export const asyncLoginFn = async (
     localStorage.setItem("@name:user", response.data.user.name);
     localStorage.setItem("@id:user", response.data.user.id);
     localStorage.setItem("@token", response.data.token);
+    localStorage.setItem("@avatarId:user", response.data.user.avatar.id);
+    localStorage.setItem("@avatarPath:user", response.data.user.avatar.path);
 
-    console.log("userData", response.data);
+    console.log("userData", response.data.user.avatar);
 
     ToastSuccess("Login realizado com sucesso");
 
@@ -43,6 +46,7 @@ export const asyncLoginFn = async (
       payload: {
         name: response.data.user.name,
         email: response.data.user.email,
+        avatar: response.data.user.avatar,
       },
     });
   }

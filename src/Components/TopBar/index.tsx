@@ -2,14 +2,16 @@ import React from "react";
 import { Search, Chat, Notifications } from "@material-ui/icons";
 import { Container, TopbarIconBadge } from "./styles";
 import { useNavigate } from "react-router-dom";
-import image from "../../assets/images/fibonacci.jpg";
+// import image from "../../assets/images/fibonacci.jpg";
 import useAuth from "../../Hooks/useAuth";
+
 import { AsyncLogoutFn } from "../../Contexts/AuthContext/middlewares";
 
 const TopBar: React.FC = () => {
   const navigate = useNavigate();
 
-  const { dispatch } = useAuth();
+  const { dispatch, avatar } = useAuth();
+
   const Logout = () => {
     AsyncLogoutFn(dispatch);
     navigate("/");
@@ -56,8 +58,8 @@ const TopBar: React.FC = () => {
           </div>
         </div>
         <img
-          src={image}
-          alt=""
+          src={avatar.path as string}
+          alt="avatar"
           className="topbarImg"
           onClick={openProfilePage}
         />

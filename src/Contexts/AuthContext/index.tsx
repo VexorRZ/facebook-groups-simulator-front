@@ -16,7 +16,10 @@ const initialUserState: UserType = {
   email: "",
   token: "",
   name: "",
-  avatar_id: "",
+  avatar: {
+    id: "",
+    path: "",
+  },
   id: "",
 };
 
@@ -30,10 +33,10 @@ const useAuthContext = (initialUserState: UserType) => {
   }, []);
 
   const userName = localStorage.getItem("@name:user");
-  const userAvatar = localStorage.getItem("@avatar:user");
   const bearerToken = localStorage.getItem("@token");
   const userId = localStorage.getItem("@id:user");
-
+  const avatarId = localStorage.getItem("@avatarId:user");
+  const avatarPath = localStorage.getItem("@avatarPath:user");
   if (bearerToken && userName) {
     api.defaults.headers.authorization = `Bearer ${bearerToken}`;
 
@@ -42,7 +45,10 @@ const useAuthContext = (initialUserState: UserType) => {
       ...state,
       name: userName,
       token: bearerToken,
-      avatar: userAvatar,
+      avatar: {
+        id: avatarId,
+        path: avatarPath,
+      },
       id: userId,
       REDUCER_ACTIONS,
     };
@@ -52,7 +58,7 @@ const useAuthContext = (initialUserState: UserType) => {
   const password = state.password;
   const token = state.token;
   const name = state.name;
-  const avatar = state.avatar_id;
+  const avatar = state.avatar;
   const id = state.id;
 
   return {
@@ -76,7 +82,10 @@ const initialUserContextState: UseAuthContextType = {
   password: "",
   token: "",
   name: "",
-  avatar: "",
+  avatar: {
+    id: "",
+    path: "",
+  },
   id: "",
 };
 
