@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import GroupIcon from "@mui/icons-material/Group";
 import TopicIcon from "@mui/icons-material/Topic";
@@ -12,9 +12,12 @@ import useAuth from "../../Hooks/useAuth";
 import Dropzone from "../../Components/DropZone";
 import CustomInput from "../../Components/Input";
 import CameraswitchIcon from "@mui/icons-material/Cameraswitch";
-import api from "../../services/api";
-import { type UserType } from "../../Contexts/AuthContext/interfaces";
-import { type AxiosResponse } from "axios";
+import TopBar from "../../Components/TopBar";
+import { ToastError } from "../../Components/ToastContainer/ToastMessages";
+// import api from "../../services/api";
+
+// import { type UserType } from "../../Contexts/AuthContext/interfaces";
+// import { type AxiosResponse } from "axios";
 
 import {
   Container,
@@ -35,8 +38,6 @@ import {
 } from "./styles";
 
 interface IProfileProps {
-  userName?: string;
-  userEmail?: string;
   userBirthDate?: Date;
   totalNumberOfGroups?: number;
   groupsAsOwner?: number;
@@ -49,8 +50,6 @@ interface IProfileProps {
 }
 
 const Profile = ({
-  userName,
-  userEmail,
   userBirthDate,
   totalNumberOfGroups,
   groupsAsOwner,
@@ -66,7 +65,7 @@ const Profile = ({
   const [profileImage, setProfileImage] = useState<File[]>([]);
   const [newUserName, setNewUserName] = useState<string>("");
   const [newUserMail, setNewUserMail] = useState<string>("");
-  const { avatar } = useAuth();
+  const { avatar, token, name, email, dispatch, asyncChangeAvatar } = useAuth();
 
   const changeUserName = useCallback(
     (event: React.FormEvent<HTMLInputElement>) => {
@@ -90,10 +89,10 @@ const Profile = ({
 
   const updateAvatar = async (event: any) => {
     event.preventDefault();
-    const token = localStorage.getItem("@token");
 
     if (!token) {
-      throw new Error("Erro inesperado, token não fornecido");
+      ToastError("Sua sessão foi expirada, faça login novamente");
+      return;
     }
 
     const data = new FormData();
@@ -101,22 +100,19 @@ const Profile = ({
     data.append("file", profileImage[0]);
 
     try {
-      const res: AxiosResponse<UserType> = await api.patch<
-        UserType,
-        AxiosResponse<UserType>
-      >(`files`, data);
+      void asyncChangeAvatar(dispatch, data);
 
-      console.log(res);
-      alert("deu certo");
-      setEditAvatarVisible(false);
-      return res.data;
+      setEditAvatarVisible(!editAvatarVisible);
     } catch (err) {
-      alert("não deu");
+      setEditAvatarVisible(!editAvatarVisible);
     }
   };
 
+  useEffect(() => {}, [editAvatarVisible]);
+
   return (
     <>
+      <TopBar />
       {editProfileVisible && (
         <>
           <ProfileEditorContainer>
@@ -204,10 +200,10 @@ const Profile = ({
 
         <Title>Informações do perfil </Title>
         <ProfiletextWrapper>
-          <ProfileText>Nome do usuário {userName}</ProfileText>
+          <ProfileText>Nome do usuário: {name}</ProfileText>
         </ProfiletextWrapper>
         <ProfiletextWrapper>
-          <ProfileText>Email {userEmail}</ProfileText>
+          <ProfileText>Email: {email}</ProfileText>
         </ProfiletextWrapper>
         <ProfiletextWrapper>
           <ProfileText>
@@ -312,7 +308,7 @@ const Profile = ({
               />
               <hr />
               <StatisticProfileItem>
-                Qtd de grpos que você está aguardando ser aceito:{" "}
+                Qtd de grpos que você está aguardando ser aceito:
                 {JoinsRequested}
               </StatisticProfileItem>
             </StatisticsItemWrapper>

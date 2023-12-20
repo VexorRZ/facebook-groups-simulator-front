@@ -1,15 +1,15 @@
 import { type ReactElement } from "react";
 
 export interface UserType {
-  password?: string;
-  email?: string;
-  token?: string;
-  name?: string;
+  password: string;
+  email: string;
+  token: string;
+  name: string;
   avatar: avatar;
-  id?: string;
+  id: string;
 }
 
-interface avatar {
+export interface avatar {
   id: string;
   path: string;
 }

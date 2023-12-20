@@ -4,6 +4,7 @@
 import { type AxiosResponse } from "axios";
 import api from "../../services/api";
 import { REDUCER_ACTION_TYPE } from "./action-types";
+import { type avatar } from "../../Contexts/AuthContext/interfaces";
 
 import {
   ToastError,
@@ -31,14 +32,16 @@ export const asyncLoginFn = async (
       response.data.token
     )}`;
 
+    console.log("data", response.data);
     localStorage.setItem("@name:user", response.data.user.name);
+    localStorage.setItem("@email:user", response.data.user.email);
     localStorage.setItem("@id:user", response.data.user.id);
     localStorage.setItem("@token", response.data.token);
-    localStorage.setItem("@avatarId:user", response.data.user.avatar.id);
-    localStorage.setItem("@avatarPath:user", response.data.user.avatar.path);
 
-    console.log("userData", response.data.user.avatar);
-
+    if (response.data.user.avatar) {
+      localStorage.setItem("@avatarId:user", response.data.user.avatar.id);
+      localStorage.setItem("@avatarPath:user", response.data.user.avatar.path);
+    }
     ToastSuccess("Login realizado com sucesso");
 
     return dispatch({
@@ -46,7 +49,11 @@ export const asyncLoginFn = async (
       payload: {
         name: response.data.user.name,
         email: response.data.user.email,
-        avatar: response.data.user.avatar,
+        token: response.data.token,
+        avatar: {
+          id: response.data.user.avatar ? response.data.user.avatar.id : "",
+          path: response.data.user.avatar ? response.data.user.avatar.path : "",
+        },
       },
     });
   }
@@ -82,6 +89,31 @@ export function AsyncLogoutFn(dispatch: any) {
     type: REDUCER_ACTION_TYPE.LOGOUT,
     payload: { name: "", email: "", token: "" },
   });
+}
+
+export async function asyncChangeAvatar(dispatch: any, data: FormData) {
+  try {
+    const response: AxiosResponse<avatar> = await api.patch<
+      avatar,
+      AxiosResponse<avatar>
+    >(`files`, data);
+
+    localStorage.setItem("@avatarId:user", response.data.id);
+    localStorage.setItem("@avatarPath:user", response.data.path);
+    ToastSuccess("Deu certo");
+
+    return dispatch({
+      type: REDUCER_ACTION_TYPE.CHANGEAVATAR,
+      payload: {
+        avatar: {
+          id: response.data.id,
+          path: response.data.path,
+        },
+      },
+    });
+  } catch (err) {
+    ToastError("Erro ao atualizar avatar");
+  }
 }
 
 // export function updateUserStorage(dispatch: any) {

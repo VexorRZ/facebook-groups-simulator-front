@@ -6,6 +6,8 @@ import React, {
 } from "react";
 import api from "../../services/api";
 
+import { asyncLoginFn, asyncChangeAvatar } from "./middlewares";
+
 import { REDUCER_ACTION_TYPE } from "./action-types";
 
 import { type UserType, type ChildrenType } from "./interfaces";
@@ -33,6 +35,7 @@ const useAuthContext = (initialUserState: UserType) => {
   }, []);
 
   const userName = localStorage.getItem("@name:user");
+  const userEmail = localStorage.getItem("@email:user");
   const bearerToken = localStorage.getItem("@token");
   const userId = localStorage.getItem("@id:user");
   const avatarId = localStorage.getItem("@avatarId:user");
@@ -42,8 +45,11 @@ const useAuthContext = (initialUserState: UserType) => {
 
     return {
       dispatch,
+      asyncLoginFn,
+      asyncChangeAvatar,
       ...state,
       name: userName,
+      email: userEmail,
       token: bearerToken,
       avatar: {
         id: avatarId,
@@ -63,6 +69,8 @@ const useAuthContext = (initialUserState: UserType) => {
 
   return {
     dispatch,
+    asyncLoginFn,
+    asyncChangeAvatar,
     REDUCER_ACTIONS,
     email,
     password,
@@ -77,6 +85,8 @@ export type UseAuthContextType = ReturnType<typeof useAuthContext>;
 
 const initialUserContextState: UseAuthContextType = {
   dispatch: () => {},
+  asyncLoginFn,
+  asyncChangeAvatar,
   REDUCER_ACTIONS: REDUCER_ACTION_TYPE,
   email: "",
   password: "",

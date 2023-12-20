@@ -4,7 +4,6 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 
 import React from "react";
-import { asyncLoginFn } from "../../Contexts/AuthContext/middlewares";
 import CustomInput from "../../Components/Input";
 import CustomButton from "../../Components/Button";
 import { Formik, Form } from "formik";
@@ -40,7 +39,7 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const { dispatch } = useAuth();
+  const { dispatch, asyncLoginFn } = useAuth();
 
   const nagivateToSignUp = () => {
     navigate("/sign-up");

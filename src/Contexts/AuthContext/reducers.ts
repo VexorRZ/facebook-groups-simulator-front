@@ -8,9 +8,15 @@ export const reducer = (state: UserType, action: ReducerAction): UserType => {
         throw new Error("action.payload missing in ADD action");
       }
 
-      const { email, name, avatar } = action.payload;
+      const { email, name, token, avatar } = action.payload;
 
-      return { ...state, email, name, avatar };
+      return {
+        ...state,
+        email,
+        name,
+        token,
+        avatar,
+      };
     }
 
     case REDUCER_ACTION_TYPE.LOGOUT: {
@@ -31,6 +37,16 @@ export const reducer = (state: UserType, action: ReducerAction): UserType => {
       const { token } = action.payload;
 
       return { ...state, token };
+    }
+
+    case REDUCER_ACTION_TYPE.CHANGEAVATAR: {
+      if (action.payload == null) {
+        throw new Error("action.payload missing in ADD action");
+      }
+
+      const { avatar } = action.payload;
+
+      return { ...state, avatar };
     }
 
     default:

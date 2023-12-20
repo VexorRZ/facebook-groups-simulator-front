@@ -91,12 +91,12 @@ const CreateGroup = () => {
     data.append("file", image[0]);
 
     try {
-      const res: AxiosResponse<Groups> = await api.post<
+      const groupRes: AxiosResponse<Groups> = await api.post<
         Groups,
         AxiosResponse<Groups>
       >(`groups`, data);
 
-      navigateToCreatedTopic(res.data.id);
+      navigateToCreatedTopic(groupRes.data.id);
     } catch (err) {
       alert("não deu");
     }
