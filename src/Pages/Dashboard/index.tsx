@@ -9,7 +9,8 @@ import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import useAuth from "../../Hooks/useAuth";
 
-import { type Groups } from "../../services/interfaces";
+// import { type Groups } from "../../services/interfaces";
+import { type Groups } from "../../Contexts/GroupContext/interfaces";
 
 import { Content, Container, GroupCardList, NoTopicsCard } from "./styles";
 
@@ -53,6 +54,10 @@ const Dashboard = () => {
     }
   }, []);
 
+  // const getGroupAvatar = async () => {
+
+  // };
+
   useEffect(() => {
     void getGroupsByUser();
   }, []);
@@ -78,13 +83,13 @@ const Dashboard = () => {
                   groupOwner={group.administrator.name}
                   groupName={group.name}
                   groupStatus={
-                    group.is_private ? `${`Privado`}` : `${`Público`}`
+                    group.iSprivate ? `${`Privado`}` : `${`Público`}`
                   }
                   numberOfMbembers={1}
-                  statusColor={group.is_private ? `${`red`}` : `${`green`}`}
+                  statusColor={group.iSprivate ? `${`red`}` : `${`green`}`}
                   numberOfTopics={group.topics.length}
-                  groupImage={group.avatar}
-                  isPrivate={group.is_private}
+                  groupImage={group.avatar.path}
+                  isPrivate={group.iSprivate}
                   CardButtonTextEnter="Entrar"
                   CardButtonTextView="Ver Grupo"
                 >

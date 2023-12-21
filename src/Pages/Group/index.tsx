@@ -69,7 +69,7 @@ const Group = () => {
         Response,
         AxiosResponse<Response>
       >(
-        `groups/${Number(group_id)}?page=${Number(currentPage)}&size=${Number(
+        `groups/${String(group_id)}?page=${Number(currentPage)}&size=${Number(
           limit
         )}`,
         {
@@ -113,7 +113,7 @@ const Group = () => {
       const res: AxiosResponse<Response> = await api.delete<
         Response,
         AxiosResponse<Response>
-      >(`groups/${Number(group_id)}`, {
+      >(`groups/${String(group_id)}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

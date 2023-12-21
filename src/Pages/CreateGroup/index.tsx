@@ -1,9 +1,8 @@
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable multiline-ternary */
 import React, { useState, useCallback, useEffect } from "react";
-import { type AxiosResponse } from "axios";
-import api from "../../services/api";
-import { type Groups } from "../../services/interfaces";
+import useGroups from "../../Hooks/useGroups";
+// import { type Groups } from "../../services/interfaces";
 import { useNavigate } from "react-router-dom";
 import TopBar from "../../Components/TopBar";
 import Dropzone from "../../Components/DropZone";
@@ -55,12 +54,14 @@ function MyFormControlLabel(props: FormControlLabelProps) {
 const CreateGroup = () => {
   const [image, setImage] = useState<File[]>([]);
   const [option, setOption] = useState<boolean>(false);
-
   const [groupName, setGroupName] = useState<string>("");
+  const [groupDescription, setGroupDescription] = useState<string>("");
   const [status] = useState({
     type: "",
     mensagem: "",
   });
+
+  const { asyncCreateGroup } = useGroups();
 
   const navigate = useNavigate();
 
@@ -77,6 +78,14 @@ const CreateGroup = () => {
     [groupName]
   );
 
+  const changeDescription = useCallback(
+    (event: React.FormEvent<HTMLInputElement>) => {
+      event.preventDefault();
+      setGroupDescription(event.currentTarget.value);
+    },
+    [groupName]
+  );
+
   const createGroup = async (event: any) => {
     event.preventDefault();
     const token = localStorage.getItem("@token");
@@ -88,22 +97,19 @@ const CreateGroup = () => {
     const data = new FormData();
     data.append("is_private", JSON.stringify(option));
     data.append("name", groupName);
+    data.append("description", groupDescription);
     data.append("file", image[0]);
 
     try {
-      const groupRes: AxiosResponse<Groups> = await api.post<
-        Groups,
-        AxiosResponse<Groups>
-      >(`groups`, data);
-
-      navigateToCreatedTopic(groupRes.data.id);
+      const res = await asyncCreateGroup(data);
+      navigateToCreatedTopic(res.id);
     } catch (err) {
       alert("não deu");
     }
   };
 
-  const navigateToCreatedTopic = (groupId: number) => {
-    navigate(`/group/${Number(groupId)}`);
+  const navigateToCreatedTopic = (groupId: string) => {
+    navigate(`/group/${groupId}`);
   };
 
   const SelectGroupPrivacy = () => {
@@ -207,7 +213,12 @@ const CreateGroup = () => {
           </CardOptions>
 
           <div>Faça uma breve descrição do seu grupo</div>
-          <GroupName height="100px" maxLength={100} />
+          <GroupName
+            height="100px"
+            maxLength={100}
+            value={groupDescription}
+            onChange={changeDescription}
+          />
         </Header>
         <Footer>
           <Button

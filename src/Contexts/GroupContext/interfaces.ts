@@ -8,8 +8,13 @@ export interface Groups {
   moderators: moderators[];
   name: string;
   topics: topics[];
+  avatar: avatar;
 }
 
+interface avatar {
+  id: string;
+  path: string;
+}
 interface members {
   id: number;
   name: string;
@@ -25,11 +30,23 @@ interface administrator {
   name: string;
 }
 
-interface topics {
+export interface topics {
+  id: number;
+  name: string;
+  is_closed?: boolean;
+  comments: comments[];
+}
+export interface comments {
+  author: author;
+  body: string;
+  id: number;
+  createdAt?: Date;
+}
+
+interface author {
   id: number;
   name: string;
 }
-
 export interface ReducerAction {
   type: string;
   payload?: Groups;
