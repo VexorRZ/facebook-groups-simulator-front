@@ -11,6 +11,7 @@ import CustomButton from "../../Components/Button";
 import CreateTopic from "../../Containers/CreateTopic";
 import TopBar from "../../Components/TopBar";
 import DialogBox from "../../Containers/DialogBox";
+import PublicIcon from "@mui/icons-material/Public";
 
 import {
   Container,
@@ -24,6 +25,7 @@ import {
   ButtonArea,
   ButtonAdminContainer,
   ButtonAdminWrapper,
+  GroupInfo,
 } from "./styles";
 
 const Group = () => {
@@ -78,6 +80,8 @@ const Group = () => {
       );
 
       const { group, numberOfTopics, isOwner } = res.data;
+
+      console.log(group);
 
       setGroup({ ...group });
 
@@ -164,6 +168,13 @@ const Group = () => {
         )}
         <Header>
           <GroupTitle>{group.name}</GroupTitle>
+          <GroupInfo>
+            <PublicIcon />
+            <GroupTitle> grupo público</GroupTitle>
+            <div />
+            <GroupTitle>{group.members?.length} membros</GroupTitle>
+          </GroupInfo>
+
           <GroupImage />
         </Header>
 
@@ -186,7 +197,7 @@ const Group = () => {
             </TopicList>
           </>
         ) : (
-          <div>nada aqui</div>
+          <div>Nenhum tópico criado ainda</div>
         )}
 
         <ButtonArea>

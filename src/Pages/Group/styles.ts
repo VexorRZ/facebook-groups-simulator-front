@@ -24,9 +24,22 @@ export const Container = styled.div`
 
 export const Header = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: flex-start;
   flex: 2;
+  width: 100%;
+`;
+
+export const GroupInfo = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 6px;
+  div {
+    width: 2px;
+    height: 16px;
+    background-color: black;
+  }
 `;
 
 export const TopicList = styled.div`

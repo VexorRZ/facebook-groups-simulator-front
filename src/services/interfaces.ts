@@ -13,6 +13,12 @@ export interface Groups {
   topics: topics[];
   isMember?: boolean;
   avatar: string;
+  members: members[];
+}
+
+interface members {
+  id: string;
+  name: string;
 }
 interface moderators {
   id: number;

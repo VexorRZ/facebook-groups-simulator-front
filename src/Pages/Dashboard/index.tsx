@@ -85,7 +85,7 @@ const Dashboard = () => {
                   groupStatus={
                     group.iSprivate ? `${`Privado`}` : `${`Público`}`
                   }
-                  numberOfMbembers={1}
+                  numberOfMbembers={group.members.length}
                   statusColor={group.iSprivate ? `${`red`}` : `${`green`}`}
                   numberOfTopics={group.topics.length}
                   groupImage={group.avatar.path}
