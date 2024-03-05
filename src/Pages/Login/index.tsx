@@ -120,7 +120,7 @@ const Login = () => {
                 <ToastContainer />
                 <CustomButton
                   customBackgroundColor="#4863F7"
-                  type="button"
+                  type="submit"
                   marginTop="4px"
                   opacity={0.8}
                   onClick={nagivateToSignUp}

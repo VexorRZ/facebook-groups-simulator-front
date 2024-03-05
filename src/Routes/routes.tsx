@@ -15,6 +15,7 @@ import Group from "../Pages/Group";
 import Topic from "../Pages/Topic";
 import Profile from "../Pages/Profile";
 import CreateGroup from "../Pages/CreateGroup";
+import ResetPassword from "../Pages/ResetPassword";
 // import { GroupProvider } from "./Contexts/GroupContext";
 
 const Routes = () => {
@@ -35,6 +36,14 @@ const Routes = () => {
             element={
               <PublicRoutes>
                 <ForgotPassword />
+              </PublicRoutes>
+            }
+          />
+          <Route
+            path="/reset_password/:token"
+            element={
+              <PublicRoutes>
+                <ResetPassword />
               </PublicRoutes>
             }
           />

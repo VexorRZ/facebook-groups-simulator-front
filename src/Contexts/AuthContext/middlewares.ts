@@ -116,6 +116,41 @@ export async function asyncChangeAvatar(dispatch: any, data: FormData) {
   }
 }
 
+export async function forgotPassword(token: string) {
+  try {
+    const response: AxiosResponse = await api.get<AxiosResponse>(
+      `reset_password/${token}`
+    );
+
+    return response;
+  } catch (err) {
+    ToastError("Erro ao atualizar avatar");
+  }
+}
+
+export async function resetPassword(newPassword: string, token: string) {
+  try {
+    console.log(newPassword);
+    const response: AxiosResponse = await api.post<AxiosResponse>(
+      `reset_password_confirm`,
+      {
+        newPassword,
+        token,
+      }
+    );
+    if (response.data.error) {
+      ToastError("Erro ao tentar executar o login");
+
+      console.log(response.data.error);
+      return;
+    }
+
+    return response;
+  } catch (err) {
+    ToastError(`${err}`);
+  }
+}
+
 // export function updateUserStorage(dispatch: any) {
 //   const storagedUser = localStorage.getItem("@name:user");
 //   const storagedToken = localStorage.getItem("@token");

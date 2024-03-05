@@ -6,7 +6,12 @@ import React, {
 } from "react";
 import api from "../../services/api";
 
-import { asyncLoginFn, asyncChangeAvatar } from "./middlewares";
+import {
+  asyncLoginFn,
+  asyncChangeAvatar,
+  forgotPassword,
+  resetPassword,
+} from "./middlewares";
 
 import { REDUCER_ACTION_TYPE } from "./action-types";
 
@@ -47,6 +52,8 @@ const useAuthContext = (initialUserState: UserType) => {
       dispatch,
       asyncLoginFn,
       asyncChangeAvatar,
+      forgotPassword,
+      resetPassword,
       ...state,
       name: userName,
       email: userEmail,
@@ -71,6 +78,8 @@ const useAuthContext = (initialUserState: UserType) => {
     dispatch,
     asyncLoginFn,
     asyncChangeAvatar,
+    forgotPassword,
+    resetPassword,
     REDUCER_ACTIONS,
     email,
     password,
@@ -87,6 +96,8 @@ const initialUserContextState: UseAuthContextType = {
   dispatch: () => {},
   asyncLoginFn,
   asyncChangeAvatar,
+  forgotPassword,
+  resetPassword,
   REDUCER_ACTIONS: REDUCER_ACTION_TYPE,
   email: "",
   password: "",
