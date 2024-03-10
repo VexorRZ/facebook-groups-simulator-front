@@ -1,20 +1,36 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import React, { useState } from "react";
-
+import React, { useState, useCallback } from "react";
+import useAuth from "../../Hooks/useAuth";
 import { Container, Title, InputContainer, LabelContainer } from "./styles";
 import Input from "../../Components/Input";
 import Button from "../../Components/Button";
+import { useNavigate } from "react-router-dom";
 
 const ForgotPassword: React.FC = () => {
-  const [mailValue, setMailValue] = useState("");
+  const [email, setMail] = useState("");
 
-  const onChangeMail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMailValue(e.target.value);
-  };
+  const navigate = useNavigate();
 
-  const ClickedButton = async () => {
-    return true;
-  };
+  const changeMail = useCallback(
+    (e: React.FormEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      setMail(e.currentTarget.value);
+    },
+    [email]
+  );
+
+  const { recoverPassword } = useAuth();
+
+  async function tryToRecoverPassword() {
+    try {
+      recoverPassword(email);
+      setTimeout(() => {
+        return navigate("/");
+      }, 2000);
+    } catch (err) {
+      return err;
+    }
+  }
   return (
     <Container>
       <Title>Esqueci a Senha</Title>
@@ -28,13 +44,13 @@ const ForgotPassword: React.FC = () => {
           width="349px"
           placeHolder="Digite o seu email"
           type="email"
-          onChange={onChangeMail}
-          value={mailValue}
+          onChange={changeMail}
+          value={email}
         />
       </InputContainer>
 
       <Button
-        onClick={ClickedButton}
+        onClick={tryToRecoverPassword}
         marginTop="3px"
         customBackgroundColor="#04D361"
         width="355px"

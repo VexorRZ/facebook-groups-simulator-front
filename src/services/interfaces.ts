@@ -40,11 +40,16 @@ export interface topics {
 export interface comments {
   author: author;
   body: string;
-  id: number;
-  createdAt?: Date;
+  id?: number;
+  createdAt?: Date | number;
 }
 
 interface author {
   id: number;
   name: string;
+  user_avatar_id?: string;
+  avatar?: avatar;
+}
+interface avatar {
+  path: string | null;
 }

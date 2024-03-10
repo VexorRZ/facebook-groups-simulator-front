@@ -5,6 +5,7 @@ import CustomButton from "../../Components/Button";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { Container, ErrorMessage } from "./styles";
 
@@ -12,6 +13,8 @@ const ResetPassword = () => {
   const { forgotPassword, resetPassword } = useAuth();
   const params = useParams();
   const { token } = params;
+
+  const navigate = useNavigate();
 
   const NewpasswordSchema = Yup.object().shape({
     newPassword: Yup.string().required("Password is required"),
@@ -28,6 +31,9 @@ const ResetPassword = () => {
   const HandleResetPassword = async (password: string, token: string) => {
     try {
       await resetPassword(password, token);
+      setTimeout(() => {
+        return navigate("/");
+      }, 2000);
     } catch (err) {
       return err;
     }

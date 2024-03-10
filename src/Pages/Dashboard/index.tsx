@@ -27,7 +27,7 @@ const Dashboard = () => {
   }, []);
 
   const openTopic = useCallback((groupId: number, topicId: number) => {
-    navigate(`/topics/${groupId}/${topicId}`);
+    navigate(`/topics/${Number(groupId)}/${Number(topicId)}`);
   }, []);
 
   const getGroupsByUser = useCallback(async () => {
@@ -59,6 +59,7 @@ const Dashboard = () => {
   // };
 
   useEffect(() => {
+    console.log(groups);
     void getGroupsByUser();
   }, []);
 

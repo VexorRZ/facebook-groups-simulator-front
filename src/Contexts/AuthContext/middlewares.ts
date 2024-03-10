@@ -100,7 +100,7 @@ export async function asyncChangeAvatar(dispatch: any, data: FormData) {
 
     localStorage.setItem("@avatarId:user", response.data.id);
     localStorage.setItem("@avatarPath:user", response.data.path);
-    ToastSuccess("Deu certo");
+    ToastSuccess("Avatar atualizado");
 
     return dispatch({
       type: REDUCER_ACTION_TYPE.CHANGEAVATAR,
@@ -124,7 +124,22 @@ export async function forgotPassword(token: string) {
 
     return response;
   } catch (err) {
-    ToastError("Erro ao atualizar avatar");
+    return err;
+  }
+}
+
+export async function recoverPassword(email: string) {
+  try {
+    const response: AxiosResponse = await api.post<AxiosResponse>(
+      `forgot_password`,
+      {
+        email,
+      }
+    );
+    ToastSuccess("requisição enviada com sucesso, cheque seu e-mail.");
+    return response;
+  } catch (err) {
+    ToastError("Erro ao fazer a requisição");
   }
 }
 
@@ -139,13 +154,13 @@ export async function resetPassword(newPassword: string, token: string) {
       }
     );
     if (response.data.error) {
-      ToastError("Erro ao tentar executar o login");
+      ToastError("Erro ao tentar atualizar a senha, tente novamente");
 
       console.log(response.data.error);
       return;
     }
 
-    return response;
+    return ToastSuccess("Senha atualizada com sucesso");
   } catch (err) {
     ToastError(`${err}`);
   }

@@ -5,16 +5,16 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { type AxiosResponse } from "axios";
 import api from "../../services/api";
-// import { format, parse, Locale } from "date-fns";
+import { format, parse, Locale, parseISO } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import {
   type GroupTopic,
   type TopicData,
 } from "../../Contexts/TopicContext/interfaces";
 import { type comments } from "../../services/interfaces";
 import Button from "../../Components/Button";
-
-import image from "../../assets/images/fibonacci.jpg";
 import TopBar from "../../Components/TopBar";
+
 import {
   Container,
   GroupImage,
@@ -93,10 +93,19 @@ const TopicPage = () => {
   const postNewComment = async () => {
     const userName = localStorage.getItem("@name:user");
     const token = localStorage.getItem("@token");
+    const userId = localStorage.getItem("@id:user");
+    const avatarPath = localStorage.getItem("@avatarPath:user");
     if (userName) {
       setCommentlist([
         ...commentList,
-        { author: { name: userName, id: 0 }, body: comment, id: 55 },
+        {
+          author: {
+            name: userName,
+            id: Number(userId),
+            avatar: { path: avatarPath },
+          },
+          body: comment,
+        },
       ]);
 
       if (!token) {
@@ -136,6 +145,7 @@ const TopicPage = () => {
 
   useEffect(() => {
     void getTopicByCredentials();
+    console.log(commentList);
   }, [currentPage, limit, total]);
   return (
     <>
@@ -159,12 +169,24 @@ const TopicPage = () => {
                           <CommentAuthor className="author">
                             {comment.author.name}:
                           </CommentAuthor>
-                          <AuthorAvatar src={image} />
+                          <AuthorAvatar
+                            src={
+                              comment.author.avatar?.path
+                                ? comment.author.avatar.path
+                                : ""
+                            }
+                          />
                         </UserInfoArea>
                         <CommentContent>{comment.body}</CommentContent>
                         <CommentDate>
                           Postado há:
-                          {comment.createdAt && comment.createdAt.toString()}
+                          {format(
+                            new Date(
+                              comment.createdAt ? comment.createdAt : new Date()
+                            ),
+                            "'Dia' dd 'de' MMMM', às ' HH:mm'h'",
+                            { locale: ptBR }
+                          )}
                         </CommentDate>
                       </Comment>
                     );
