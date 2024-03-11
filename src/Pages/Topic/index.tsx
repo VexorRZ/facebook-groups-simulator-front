@@ -179,12 +179,12 @@ const TopicPage = () => {
                         </UserInfoArea>
                         <CommentContent>{comment.body}</CommentContent>
                         <CommentDate>
-                          Postado há:
+                          Postado:
                           {format(
                             new Date(
                               comment.createdAt ? comment.createdAt : new Date()
                             ),
-                            "'Dia' dd 'de' MMMM', às ' HH:mm'h'",
+                            "'dia' dd 'de' MMMM', às ' HH:mm'h'",
                             { locale: ptBR }
                           )}
                         </CommentDate>

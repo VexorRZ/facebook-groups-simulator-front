@@ -16,7 +16,7 @@ import Topic from "../Pages/Topic";
 import Profile from "../Pages/Profile";
 import CreateGroup from "../Pages/CreateGroup";
 import ResetPassword from "../Pages/ResetPassword";
-// import { GroupProvider } from "./Contexts/GroupContext";
+import { GroupProvider } from "../Contexts/GroupContext";
 
 const Routes = () => {
   return (
@@ -58,26 +58,32 @@ const Routes = () => {
           <Route
             path="/dashboard"
             element={
-              <PrivateRoutes>
-                <DashBoard />
-              </PrivateRoutes>
+              <GroupProvider>
+                <PrivateRoutes>
+                  <DashBoard />
+                </PrivateRoutes>
+              </GroupProvider>
             }
           />
 
           <Route
             path="/group/:group_id"
             element={
-              <PrivateRoutes>
-                <Group />
-              </PrivateRoutes>
+              <GroupProvider>
+                <PrivateRoutes>
+                  <Group />
+                </PrivateRoutes>
+              </GroupProvider>
             }
           />
           <Route
             path="/topics/:group_id/:topic_id"
             element={
-              <PrivateRoutes>
-                <Topic />
-              </PrivateRoutes>
+              <GroupProvider>
+                <PrivateRoutes>
+                  <Topic />
+                </PrivateRoutes>
+              </GroupProvider>
             }
           />
           <Route
@@ -91,9 +97,11 @@ const Routes = () => {
           <Route
             path="/create-group"
             element={
-              <PrivateRoutes>
-                <CreateGroup />
-              </PrivateRoutes>
+              <GroupProvider>
+                <PrivateRoutes>
+                  <CreateGroup />
+                </PrivateRoutes>
+              </GroupProvider>
             }
           />
         </Routers>

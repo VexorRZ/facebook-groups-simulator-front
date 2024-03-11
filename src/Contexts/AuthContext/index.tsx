@@ -12,6 +12,7 @@ import {
   forgotPassword,
   resetPassword,
   recoverPassword,
+  asyncRequestDeleteAccount,
 } from "./middlewares";
 
 import { REDUCER_ACTION_TYPE } from "./action-types";
@@ -56,6 +57,7 @@ const useAuthContext = (initialUserState: UserType) => {
       forgotPassword,
       resetPassword,
       recoverPassword,
+      asyncRequestDeleteAccount,
       ...state,
       name: userName,
       email: userEmail,
@@ -83,6 +85,7 @@ const useAuthContext = (initialUserState: UserType) => {
     forgotPassword,
     resetPassword,
     recoverPassword,
+    asyncRequestDeleteAccount,
     REDUCER_ACTIONS,
     email,
     password,
@@ -102,6 +105,7 @@ const initialUserContextState: UseAuthContextType = {
   forgotPassword,
   resetPassword,
   recoverPassword,
+  asyncRequestDeleteAccount,
   REDUCER_ACTIONS: REDUCER_ACTION_TYPE,
   email: "",
   password: "",

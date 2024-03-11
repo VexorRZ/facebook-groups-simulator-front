@@ -6,7 +6,7 @@ import React, {
 } from "react";
 
 import { REDUCER_ACTION_TYPE } from "./action-types";
-import { asyncCreateGroup } from "./middlewares";
+import { asyncCreateGroup, asyncCreateRequest } from "./middlewares";
 
 import { type Groups, type ChildrenType } from "./interfaces";
 import { reducer } from "./reducers";
@@ -46,6 +46,7 @@ const useGroupContext = (initialUserState: Groups) => {
   return {
     dispatch,
     asyncCreateGroup,
+    asyncCreateRequest,
     REDUCER_ACTIONS,
     name,
     administrator,
@@ -63,6 +64,7 @@ export type UseGroupContextType = ReturnType<typeof useGroupContext>;
 const initialGroupContextState: UseGroupContextType = {
   dispatch: () => {},
   asyncCreateGroup,
+  asyncCreateRequest,
   REDUCER_ACTIONS: REDUCER_ACTION_TYPE,
   name: "",
   administrator: { id: 0, name: "" },

@@ -21,6 +21,24 @@ export const asyncCreateGroup = async (data: FormData) => {
   }
 };
 
+export const asyncCreateRequest = async (group_id: number) => {
+  try {
+    const response: AxiosResponse = await api.post<AxiosResponse>(
+      `request_entry/${group_id}`
+    );
+
+    if (response.data.error) {
+      ToastError("Erro ao tentar criar o grupo");
+    } else {
+      ToastSuccess("Acesso realizado com sucesso");
+
+      return response.data;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 // export async function asyncAddAvatar(dispatch: any, data: FormData) {
 //   try {
 //     const response: AxiosResponse<avatar> = await api.patch<

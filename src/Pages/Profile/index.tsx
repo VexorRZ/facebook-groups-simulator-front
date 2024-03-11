@@ -14,6 +14,9 @@ import CustomInput from "../../Components/Input";
 import CameraswitchIcon from "@mui/icons-material/Cameraswitch";
 import TopBar from "../../Components/TopBar";
 import { ToastError } from "../../Components/ToastContainer/ToastMessages";
+import DialogBox from "../../Containers/DialogBox";
+import { useNavigate } from "react-router-dom";
+
 // import api from "../../services/api";
 
 // import { type UserType } from "../../Contexts/AuthContext/interfaces";
@@ -65,7 +68,20 @@ const Profile = ({
   const [profileImage, setProfileImage] = useState<File[]>([]);
   const [newUserName, setNewUserName] = useState<string>("");
   const [newUserMail, setNewUserMail] = useState<string>("");
-  const { avatar, token, name, email, dispatch, asyncChangeAvatar } = useAuth();
+  const [DialogIsVisible, SetDialogIsVisible] = useState<boolean>(false);
+
+  const navigate = useNavigate();
+
+  const {
+    avatar,
+    token,
+    name,
+    email,
+    id,
+    dispatch,
+    asyncChangeAvatar,
+    asyncRequestDeleteAccount,
+  } = useAuth();
 
   const changeUserName = useCallback(
     (event: React.FormEvent<HTMLInputElement>) => {
@@ -86,6 +102,21 @@ const Profile = ({
   const toggleProfileEdit = useCallback((value: boolean) => {
     setEditProfileVisible(value);
   }, []);
+
+  const toggleDialogBOx = useCallback((value: boolean) => {
+    SetDialogIsVisible(value);
+  }, []);
+
+  const deleteAccount = async () => {
+    try {
+      asyncRequestDeleteAccount(Number(id), token);
+      setTimeout(() => {
+        navigate("/");
+      }, 3000);
+    } catch (err) {
+      return err;
+    }
+  };
 
   const updateAvatar = async (event: any) => {
     event.preventDefault();
@@ -141,6 +172,13 @@ const Profile = ({
                 />
               </EditProfileFieldWrapper>
             </DataArea>
+            <CustomButton
+              onClick={() => {
+                toggleDialogBOx(true);
+              }}
+            >
+              Deletar perfil?
+            </CustomButton>
           </ProfileEditorContainer>
         </>
       )}
@@ -327,6 +365,17 @@ const Profile = ({
           </CustomButton>
         </ButtonWrapper>
       </Container>
+      {DialogIsVisible && (
+        <DialogBox
+          visible={DialogIsVisible}
+          onCancel={() => {
+            toggleDialogBOx(false);
+          }}
+          onConfirm={() => {
+            void deleteAccount();
+          }}
+        />
+      )}
     </>
   );
 };

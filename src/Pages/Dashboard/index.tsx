@@ -8,6 +8,7 @@ import TopicContent from "../../Components/TopicContent";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import useAuth from "../../Hooks/useAuth";
+import useGroups from "../../Hooks/useGroups";
 
 // import { type Groups } from "../../services/interfaces";
 import { type Groups } from "../../Contexts/GroupContext/interfaces";
@@ -20,6 +21,7 @@ const Dashboard = () => {
   const [groups, setGroups] = useState<Groups[]>([]);
 
   const { name } = useAuth();
+  const { asyncCreateRequest } = useGroups();
   const navigate = useNavigate();
 
   const openGroup = useCallback((id: number) => {
@@ -54,9 +56,14 @@ const Dashboard = () => {
     }
   }, []);
 
-  // const getGroupAvatar = async () => {
-
-  // };
+  const requestEnterInGroup = (groupId: number) => {
+    try {
+      asyncCreateRequest(groupId);
+      navigate(`/group/${String(groupId)}`);
+    } catch (err) {
+      return err;
+    }
+  };
 
   useEffect(() => {
     console.log(groups);
@@ -79,7 +86,9 @@ const Dashboard = () => {
                   onClickView={() => {
                     openGroup(group.id);
                   }}
-                  onClickEnter={() => {}}
+                  onClickEnter={() => {
+                    requestEnterInGroup(group.id);
+                  }}
                   key={index}
                   groupOwner={group.administrator.name}
                   groupName={group.name}

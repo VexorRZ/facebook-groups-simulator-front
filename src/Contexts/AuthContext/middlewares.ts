@@ -11,6 +11,7 @@ import {
   ToastSuccess,
   ToastMessage,
 } from "../../Components/ToastContainer/ToastMessages";
+import { toast } from "react-toastify";
 
 export const asyncLoginFn = async (
   email: string,
@@ -112,6 +113,7 @@ export async function asyncChangeAvatar(dispatch: any, data: FormData) {
       },
     });
   } catch (err) {
+    console.log(err);
     ToastError("Erro ao atualizar avatar");
   }
 }
@@ -165,6 +167,31 @@ export async function resetPassword(newPassword: string, token: string) {
     ToastError(`${err}`);
   }
 }
+
+export const asyncRequestDeleteAccount = async (
+  user_id: number,
+  token: string
+) => {
+  if (!token) {
+    ToastError("Ação não permitida");
+    return;
+  }
+
+  try {
+    const res: AxiosResponse<Response> = await api.delete<
+      Response,
+      AxiosResponse<Response>
+    >(`users/${String(user_id)}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    ToastMessage("Perfil deletado com sucesso, deslogando da aplicação");
+    localStorage.clear();
+    return res.status;
+  } catch (err) {
+    ToastError("Ocorreu um erro ao tentar deletar seu perfil");
+    return err;
+  }
+};
 
 // export function updateUserStorage(dispatch: any) {
 //   const storagedUser = localStorage.getItem("@name:user");
