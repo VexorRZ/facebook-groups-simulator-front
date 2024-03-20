@@ -1,4 +1,5 @@
 import React from "react";
+import CustomButton from "../../Components/Button";
 
 import {
   Container,
@@ -32,6 +33,8 @@ interface IGrupoCardProps {
   groupStatus: string;
   statusColor: string;
   CardButtonTextEnter: string;
+  cardButtonTextEnterVisible: boolean;
+  ButtonViewGroupVisible: boolean;
   CardButtonTextView: string;
 }
 
@@ -41,6 +44,8 @@ const GroupCard = ({
   numberOfMbembers,
   numberOfTopics,
   CardButtonTextEnter,
+  cardButtonTextEnterVisible,
+  ButtonViewGroupVisible,
   CardButtonTextView,
   groupImage,
   isPrivate,
@@ -81,10 +86,16 @@ const GroupCard = ({
 
       <TopicList>{children}</TopicList>
       <ButtonArea>
-        <CardButton onClick={onClickEnter} disabled={isPrivate}>
+        <CardButton
+          onClick={onClickEnter}
+          disabled={isPrivate}
+          visible={cardButtonTextEnterVisible}
+        >
           {CardButtonTextEnter}
         </CardButton>
-        <CardButton onClick={onClickView}>{CardButtonTextView}</CardButton>
+        <CardButton onClick={onClickView} visible={ButtonViewGroupVisible}>
+          {CardButtonTextView}
+        </CardButton>
       </ButtonArea>
     </Container>
   );

@@ -8,7 +8,7 @@ export const reducer = (state: Groups, action: ReducerAction): Groups => {
         throw new Error("action.payload missing in ADD action");
       }
 
-      const { name, administrator, moderators, iSprivate, id, topics } =
+      const { name, administrator, moderators, is_private, id, topics } =
         action.payload;
 
       return {
@@ -16,7 +16,7 @@ export const reducer = (state: Groups, action: ReducerAction): Groups => {
         name,
         administrator,
         moderators,
-        iSprivate,
+        is_private,
         id,
         topics,
       };
@@ -27,7 +27,7 @@ export const reducer = (state: Groups, action: ReducerAction): Groups => {
         throw new Error("action.payload missing in ADD action");
       }
 
-      const { name, administrator, moderators, iSprivate, id, topics } =
+      const { name, administrator, moderators, is_private, id, topics } =
         action.payload;
 
       return {
@@ -35,9 +35,22 @@ export const reducer = (state: Groups, action: ReducerAction): Groups => {
         name,
         administrator,
         moderators,
-        iSprivate,
+        is_private,
         id,
         topics,
+      };
+    }
+
+    case REDUCER_ACTION_TYPE.REQUEST_ENTER_GROUP: {
+      if (action.payload == null) {
+        throw new Error("action.payload missing in ADD action");
+      }
+
+      const { navigateAvailable } = action.payload;
+
+      return {
+        ...state,
+        navigateAvailable,
       };
     }
 

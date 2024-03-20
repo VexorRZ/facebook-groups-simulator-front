@@ -95,7 +95,7 @@ const CreateGroup = () => {
     }
 
     const data = new FormData();
-    data.append("is_private", JSON.stringify(option));
+    data.append("is_private", JSON.stringify(Boolean(option)));
     data.append("name", groupName);
     data.append("description", groupDescription);
     data.append("file", image[0]);
@@ -104,7 +104,8 @@ const CreateGroup = () => {
       const res = await asyncCreateGroup(data);
       navigateToCreatedTopic(res.id);
     } catch (err) {
-      alert("não deu");
+      console.log(err);
+      alert(err);
     }
   };
 
@@ -183,6 +184,7 @@ const CreateGroup = () => {
                     <Radio
                       onClick={() => {
                         setOption(false);
+                        console.log(option);
                       }}
                     />
                   }
@@ -200,6 +202,7 @@ const CreateGroup = () => {
                     <Radio
                       onClick={() => {
                         setOption(true);
+                        console.log(option);
                       }}
                     />
                   }

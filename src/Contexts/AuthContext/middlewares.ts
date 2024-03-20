@@ -11,7 +11,6 @@ import {
   ToastSuccess,
   ToastMessage,
 } from "../../Components/ToastContainer/ToastMessages";
-import { toast } from "react-toastify";
 
 export const asyncLoginFn = async (
   email: string,
@@ -24,8 +23,6 @@ export const asyncLoginFn = async (
   });
 
   if (response.data.error) {
-    ToastError("Erro ao tentar executar o login");
-
     console.log(response.data.error);
     return;
   } else {

@@ -12,9 +12,10 @@ import CreateTopic from "../../Containers/CreateTopic";
 import TopBar from "../../Components/TopBar";
 import DialogBox from "../../Containers/DialogBox";
 import PublicIcon from "@mui/icons-material/Public";
+import GroupNavBar from "../../Components/GroupNavBar";
+import GroupContainer from "../../Containers/GroupContainer";
 
 import {
-  Container,
   GroupImage,
   GroupTitle,
   Header,
@@ -31,14 +32,15 @@ import {
 const Group = () => {
   const params = useParams();
   const [group, setGroup] = useState<Partial<Groups>>({});
-  const [total, setTotal] = useState(0);
-  const [limit] = useState(1);
-  const [pages, setPages] = useState<number[]>([]);
-  const [currentPage, setCurrentPage] = useState(0);
+
   const [createTopic, setCreateTopic] = useState<boolean>(false);
   const [groupId, setGroupId] = useState<string>("");
   const [isOwner, setIsOwner] = useState<object | null>(null);
   const [DialogIsVisible, SetDialogIsVisible] = useState<boolean>(false);
+  const [limit] = useState(5);
+  const [pages, setPages] = useState<number[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(0);
 
   const { group_id } = params;
   const navigate = useNavigate();
@@ -71,7 +73,7 @@ const Group = () => {
         Response,
         AxiosResponse<Response>
       >(
-        `groups/${String(group_id)}?page=${Number(currentPage)}&size=${Number(
+        `groups/${Number(group_id)}?page=${Number(currentPage)}&size=${Number(
           limit
         )}`,
         {
@@ -81,7 +83,7 @@ const Group = () => {
 
       const { group, numberOfTopics, isOwner } = res.data;
 
-      console.log(group);
+      console.log(res.data);
 
       setGroup({ ...group });
 
@@ -90,17 +92,16 @@ const Group = () => {
       }
 
       if (numberOfTopics) {
+        const totalPages = Math.ceil(total / limit);
+        const arrayPages = [];
+
+        for (let i = 1; i <= totalPages; i++) {
+          arrayPages.push(i);
+        }
+
+        setPages(arrayPages);
         setTotal(numberOfTopics);
       }
-
-      const totalPages = Math.ceil(total / limit);
-      const arrayPages = [];
-
-      for (let i = 1; i <= totalPages; i++) {
-        arrayPages.push(i);
-      }
-
-      setPages(arrayPages);
     } catch (err) {
       return err;
     }
@@ -141,7 +142,8 @@ const Group = () => {
   return (
     <>
       <TopBar />
-      <Container>
+      <GroupContainer>
+        <GroupNavBar groupId={Number(group_id)} />
         {isOwner && (
           <ButtonAdminContainer>
             <ButtonAdminWrapper>
@@ -215,7 +217,7 @@ const Group = () => {
                     setCurrentPage(currentPage - 1);
                   }}
                 >
-                  Próxima
+                  Anterior
                 </PaginationItem>
               )}
               {pages.map((page) => (
@@ -225,6 +227,7 @@ const Group = () => {
                     key={page}
                     onClick={() => {
                       setCurrentPage(Number(page));
+                      console.log(currentPage);
                     }}
                   >
                     {page}
@@ -237,7 +240,7 @@ const Group = () => {
                     setCurrentPage(currentPage + 1);
                   }}
                 >
-                  Anterior
+                  Próxima
                 </PaginationItem>
               )}
             </PaginationButton>
@@ -257,7 +260,7 @@ const Group = () => {
             }}
           />
         )}
-      </Container>
+      </GroupContainer>
     </>
   );
 };

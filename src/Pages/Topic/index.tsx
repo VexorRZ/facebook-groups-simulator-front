@@ -5,7 +5,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { type AxiosResponse } from "axios";
 import api from "../../services/api";
-import { format, parse, Locale, parseISO } from "date-fns";
+import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import {
   type GroupTopic,
@@ -40,10 +40,10 @@ const TopicPage = () => {
   const [commentBoxOpenned, setCommentBoxOppened] = useState(false);
   const [comment, setComment] = useState("");
   const [commentList, setCommentlist] = useState<comments[]>([]);
-  const [total, setTotal] = useState(0);
   const [limit] = useState(5);
   const [pages, setPages] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(0);
 
   const params = useParams();
   const { group_id, topic_id } = params;
@@ -229,7 +229,7 @@ const TopicPage = () => {
                     setCurrentPage(currentPage - 1);
                   }}
                 >
-                  Previous
+                  Anterior
                 </PaginationItem>
               )}
               {pages.map((page) => (
@@ -252,7 +252,7 @@ const TopicPage = () => {
                     setCurrentPage(currentPage + 1);
                   }}
                 >
-                  Next
+                  Próxima
                 </PaginationItem>
               )}
             </PaginationButton>

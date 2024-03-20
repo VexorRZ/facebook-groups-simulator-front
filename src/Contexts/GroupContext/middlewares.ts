@@ -2,7 +2,7 @@
 
 import { type AxiosResponse } from "axios";
 import api from "../../services/api";
-// import { REDUCER_ACTION_TYPE } from "./action-types";
+import { REDUCER_ACTION_TYPE } from "./action-types";
 
 import {
   ToastError,
@@ -21,21 +21,27 @@ export const asyncCreateGroup = async (data: FormData) => {
   }
 };
 
-export const asyncCreateRequest = async (group_id: number) => {
+export const asyncCreateRequest = async (group_id: number, dispatch: any) => {
   try {
     const response: AxiosResponse = await api.post<AxiosResponse>(
       `request_entry/${group_id}`
     );
 
-    if (response.data.error) {
-      ToastError("Erro ao tentar criar o grupo");
-    } else {
-      ToastSuccess("Acesso realizado com sucesso");
-
-      return response.data;
-    }
+    return response;
   } catch (err) {
-    console.log(err);
+    return err;
+  }
+};
+
+export const asyncGetGroupMembers = async (group_id: number) => {
+  try {
+    const response: AxiosResponse = await api.get<AxiosResponse>(
+      `groupsmembers/${group_id}`
+    );
+
+    return response;
+  } catch (err) {
+    return err;
   }
 };
 

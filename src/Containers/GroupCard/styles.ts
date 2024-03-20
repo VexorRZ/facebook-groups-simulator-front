@@ -4,6 +4,10 @@ interface IinfoWraperProps {
   gap?: string;
 }
 
+interface cardButtonProps {
+  visible?: boolean;
+}
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -86,7 +90,8 @@ export const InfoWrapper = styled.div<IinfoWraperProps>`
   margin-bottom: 10px;
 `;
 
-export const CardButton = styled.button`
+export const CardButton = styled.button<cardButtonProps>`
+  display: ${(props) => (props.visible ? "block" : "none")};
   background-color: #373e4a;
   opacity: 0.7;
   border: none;

@@ -77,6 +77,36 @@ const Routes = () => {
             }
           />
           <Route
+            path="/group/:group_id/members"
+            element={
+              <GroupProvider>
+                <PrivateRoutes>
+                  <Group />
+                </PrivateRoutes>
+              </GroupProvider>
+            }
+          />
+          <Route
+            path="/group/:group_id/adms"
+            element={
+              <GroupProvider>
+                <PrivateRoutes>
+                  <Group />
+                </PrivateRoutes>
+              </GroupProvider>
+            }
+          />
+          <Route
+            path="/group/:group_id/info"
+            element={
+              <GroupProvider>
+                <PrivateRoutes>
+                  <Group />
+                </PrivateRoutes>
+              </GroupProvider>
+            }
+          />
+          <Route
             path="/topics/:group_id/:topic_id"
             element={
               <GroupProvider>

@@ -3,12 +3,15 @@ import { type ReactElement } from "react";
 export interface Groups {
   administrator: administrator;
   id: number;
-  iSprivate: boolean;
+  is_private: boolean;
   members: members[];
   moderators: moderators[];
   name: string;
   topics: topics[];
   avatar: avatar;
+  navigateAvailable?: boolean;
+  bans?: bans[];
+  requesters?: requesters[];
 }
 
 interface avatar {
@@ -28,6 +31,16 @@ interface moderators {
 interface administrator {
   id: number;
   name: string;
+}
+
+interface bans {
+  id: number;
+  banned_id: number;
+}
+
+interface requesters {
+  id: number;
+  requester_id: number;
 }
 
 export interface topics {

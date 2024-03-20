@@ -6,7 +6,11 @@ import React, {
 } from "react";
 
 import { REDUCER_ACTION_TYPE } from "./action-types";
-import { asyncCreateGroup, asyncCreateRequest } from "./middlewares";
+import {
+  asyncCreateGroup,
+  asyncCreateRequest,
+  asyncGetGroupMembers,
+} from "./middlewares";
 
 import { type Groups, type ChildrenType } from "./interfaces";
 import { reducer } from "./reducers";
@@ -15,10 +19,11 @@ const initialUserState: Groups = {
   name: "",
   administrator: { id: 0, name: "" },
   moderators: [],
-  iSprivate: false,
+  is_private: false,
   id: 0,
   topics: [],
   members: [],
+  navigateAvailable: false,
   avatar: {
     id: "",
     path: "",
@@ -37,25 +42,28 @@ const useGroupContext = (initialUserState: Groups) => {
   const name = state.name;
   const administrator = state.administrator;
   const moderators = state.moderators;
-  const iSprivate = state.iSprivate;
+  const is_private = state.is_private;
   const id = state.id;
   const topics = state.topics;
   const members = state.members;
   const avatar = state.avatar;
+  const navigateAvailable = state.navigateAvailable;
 
   return {
     dispatch,
     asyncCreateGroup,
     asyncCreateRequest,
+    asyncGetGroupMembers,
     REDUCER_ACTIONS,
     name,
     administrator,
     moderators,
-    iSprivate,
+    is_private,
     id,
     topics,
     members,
     avatar,
+    navigateAvailable,
   };
 };
 
@@ -65,14 +73,16 @@ const initialGroupContextState: UseGroupContextType = {
   dispatch: () => {},
   asyncCreateGroup,
   asyncCreateRequest,
+  asyncGetGroupMembers,
   REDUCER_ACTIONS: REDUCER_ACTION_TYPE,
   name: "",
   administrator: { id: 0, name: "" },
   moderators: [],
-  iSprivate: false,
+  is_private: false,
   id: 0,
   topics: [],
   members: [],
+  navigateAvailable: false,
   avatar: {
     id: "",
     path: "",
