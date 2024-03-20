@@ -38,7 +38,7 @@ export const asyncGetGroupMembers = async (group_id: number) => {
     const response: AxiosResponse = await api.get<AxiosResponse>(
       `groupsmembers/${group_id}`
     );
-
+    console.log("resposta", response);
     return response;
   } catch (err) {
     return err;

@@ -27,12 +27,14 @@ import {
   ButtonAdminContainer,
   ButtonAdminWrapper,
   GroupInfo,
+  NavBar,
+  NavBarItem,
+  StyledLink,
 } from "./styles";
 
 const Group = () => {
   const params = useParams();
   const [group, setGroup] = useState<Partial<Groups>>({});
-
   const [createTopic, setCreateTopic] = useState<boolean>(false);
   const [groupId, setGroupId] = useState<string>("");
   const [isOwner, setIsOwner] = useState<object | null>(null);
@@ -132,6 +134,68 @@ const Group = () => {
     }
   };
 
+  const generateContent = () => {
+    if (1) {
+      return (
+        <>
+          {group?.topics?.length !== 0 ? (
+            <>
+              <TopicList>
+                {group?.topics?.slice(0, 6).map((topic, index) => {
+                  return (
+                    <Topic
+                      URlGroup={true}
+                      topicName={topic.name}
+                      numberOfComments={topic.comments.length}
+                      key={index}
+                      onClick={() => {
+                        openTopic(topic.id);
+                      }}
+                    />
+                  );
+                })}
+              </TopicList>
+            </>
+          ) : (
+            <div>Nenhum tópico criado ainda</div>
+          )}
+        </>
+      );
+    } else if (2) {
+      <>
+        {group?.members?.length !== 0 ? (
+          <>
+            <TopicList>
+              {group?.members?.slice(0, 10).map((topic, index) => {
+                return <div />;
+              })}
+            </TopicList>
+          </>
+        ) : (
+          <div>Nenhum usuário neste grupo</div>
+        )}
+      </>;
+    } else if (3) {
+      <>
+        {group?.moderators?.length !== 0 ? (
+          <>
+            <TopicList>
+              {group?.moderators?.slice(0, 10).map((topic, index) => {
+                return <div />;
+              })}
+            </TopicList>
+          </>
+        ) : (
+          <div>Nenhum usuário neste grupo</div>
+        )}
+      </>;
+    } else if (4) {
+      <>
+        <div>kkkkkkkkkkkkkkkkkkk</div>
+      </>;
+    }
+  };
+
   useEffect(() => {
     void getGroupsByUser();
 
@@ -143,7 +207,20 @@ const Group = () => {
     <>
       <TopBar />
       <GroupContainer>
-        <GroupNavBar groupId={Number(group_id)} />
+        <NavBar>
+          <NavBarItem>
+            <StyledLink to="/">Discussão</StyledLink>
+          </NavBarItem>
+          <NavBarItem>
+            <StyledLink to={`/group/${groupId}/members`}>Membros</StyledLink>
+          </NavBarItem>
+          <NavBarItem>
+            <StyledLink to="/">Administradores</StyledLink>
+          </NavBarItem>
+          <NavBarItem>
+            <StyledLink to="/">Descrição</StyledLink>
+          </NavBarItem>
+        </NavBar>
         {isOwner && (
           <ButtonAdminContainer>
             <ButtonAdminWrapper>
