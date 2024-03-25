@@ -2,6 +2,7 @@ export interface Response {
   numberOfTopics?: number;
   group?: Groups;
   isOwner?: object;
+  numberOfMembers?: number;
 }
 
 export interface Groups {
@@ -19,15 +20,18 @@ export interface Groups {
 interface members {
   id: string;
   name: string;
+  avatar: avatar;
 }
 interface moderators {
   id: number;
   name: string;
+  avatar: avatar;
 }
 
 interface administrator {
   id: number;
   name: string;
+  avatar: avatar;
 }
 
 export interface topics {

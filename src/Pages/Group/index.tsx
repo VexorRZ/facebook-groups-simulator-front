@@ -12,7 +12,6 @@ import CreateTopic from "../../Containers/CreateTopic";
 import TopBar from "../../Components/TopBar";
 import DialogBox from "../../Containers/DialogBox";
 import PublicIcon from "@mui/icons-material/Public";
-import GroupNavBar from "../../Components/GroupNavBar";
 import GroupContainer from "../../Containers/GroupContainer";
 
 import {
@@ -29,7 +28,8 @@ import {
   GroupInfo,
   NavBar,
   NavBarItem,
-  StyledLink,
+  UserCard,
+  UserCardPic,
 } from "./styles";
 
 const Group = () => {
@@ -39,10 +39,11 @@ const Group = () => {
   const [groupId, setGroupId] = useState<string>("");
   const [isOwner, setIsOwner] = useState<object | null>(null);
   const [DialogIsVisible, SetDialogIsVisible] = useState<boolean>(false);
-  const [limit] = useState(5);
+  const [contentName, setContentName] = useState<string>("topics");
+  const [limit, setLimit] = useState(5);
   const [pages, setPages] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [total, setTotal] = useState(0);
+  const [total, setTotal] = useState<number | undefined>(0);
 
   const { group_id } = params;
   const navigate = useNavigate();
@@ -83,9 +84,9 @@ const Group = () => {
         }
       );
 
-      const { group, numberOfTopics, isOwner } = res.data;
+      const { group, numberOfTopics, isOwner, numberOfMembers } = res.data;
 
-      console.log(res.data);
+      console.log("data", res.data);
 
       setGroup({ ...group });
 
@@ -93,7 +94,13 @@ const Group = () => {
         setIsOwner(isOwner);
       }
 
-      if (numberOfTopics) {
+      if (numberOfMembers) {
+        if (contentName === "members") {
+          setLimit(2);
+        } else if (contentName === "topics") {
+          setLimit(5);
+        }
+        //@ts-ignore
         const totalPages = Math.ceil(total / limit);
         const arrayPages = [];
 
@@ -102,7 +109,11 @@ const Group = () => {
         }
 
         setPages(arrayPages);
-        setTotal(numberOfTopics);
+        if (contentName === "members") {
+          setTotal(numberOfMembers);
+        } else if (contentName === "topics") {
+          setTotal(numberOfTopics);
+        }
       }
     } catch (err) {
       return err;
@@ -134,10 +145,22 @@ const Group = () => {
     }
   };
 
+  useEffect(() => {
+    console.log(group.members);
+    void getGroupsByUser();
+
+    generateContent();
+
+    if (group_id) {
+      setGroupId(group_id);
+    }
+  }, [currentPage, limit, total, contentName]);
+
   const generateContent = () => {
-    if (1) {
+    if (contentName === "topics") {
       return (
         <>
+          <div>toópicos</div>
           {group?.topics?.length !== 0 ? (
             <>
               <TopicList>
@@ -155,70 +178,127 @@ const Group = () => {
                   );
                 })}
               </TopicList>
+              <ButtonArea>
+                <CustomButton
+                  onClick={openTopicCreate}
+                  width="130px"
+                  height="40px"
+                >
+                  Criar tópico
+                </CustomButton>
+              </ButtonArea>
             </>
           ) : (
             <div>Nenhum tópico criado ainda</div>
           )}
         </>
       );
-    } else if (2) {
-      <>
-        {group?.members?.length !== 0 ? (
-          <>
-            <TopicList>
-              {group?.members?.slice(0, 10).map((topic, index) => {
-                return <div />;
-              })}
-            </TopicList>
-          </>
-        ) : (
-          <div>Nenhum usuário neste grupo</div>
-        )}
-      </>;
-    } else if (3) {
-      <>
-        {group?.moderators?.length !== 0 ? (
-          <>
-            <TopicList>
-              {group?.moderators?.slice(0, 10).map((topic, index) => {
-                return <div />;
-              })}
-            </TopicList>
-          </>
-        ) : (
-          <div>Nenhum usuário neste grupo</div>
-        )}
-      </>;
-    } else if (4) {
-      <>
-        <div>kkkkkkkkkkkkkkkkkkk</div>
-      </>;
+    }
+    if (contentName === "members") {
+      return (
+        <>
+          <div>members</div>
+
+          <TopicList>
+            {group?.members?.slice(0, 6).map((member, index) => {
+              return (
+                <UserCard key={index}>
+                  <UserCardPic
+                    src={member.avatar?.path ? member.avatar?.path : ""}
+                  />
+                  <strong>{member.name}</strong>
+                </UserCard>
+              );
+            })}
+          </TopicList>
+        </>
+      );
+    }
+    if (contentName === "admin") {
+      return (
+        <>
+          <div>admin</div>
+          {group?.moderators?.length !== 0 ? (
+            <>
+              <TopicList>
+                {group?.topics?.slice(0, 6).map((topic, index) => {
+                  return (
+                    <Topic
+                      URlGroup={true}
+                      topicName={topic.name}
+                      numberOfComments={topic.comments.length}
+                      key={index}
+                      onClick={() => {
+                        openTopic(topic.id);
+                      }}
+                    />
+                  );
+                })}
+              </TopicList>
+              <ButtonArea>
+                <CustomButton
+                  onClick={openTopicCreate}
+                  width="130px"
+                  height="40px"
+                >
+                  Criar tópico
+                </CustomButton>
+              </ButtonArea>
+            </>
+          ) : (
+            <div>Nenhum tópico criado ainda</div>
+          )}
+        </>
+      );
+    } else {
+      return (
+        <>
+          <div>info</div>
+        </>
+      );
     }
   };
 
-  useEffect(() => {
-    void getGroupsByUser();
-
-    if (group_id) {
-      setGroupId(group_id);
-    }
-  }, [currentPage, limit, total]);
   return (
     <>
       <TopBar />
       <GroupContainer>
         <NavBar>
           <NavBarItem>
-            <StyledLink to="/">Discussão</StyledLink>
+            <div
+              onClick={() => {
+                setContentName("topics");
+              }}
+            >
+              Discussão
+            </div>
           </NavBarItem>
           <NavBarItem>
-            <StyledLink to={`/group/${groupId}/members`}>Membros</StyledLink>
+            <div
+              onClick={() => {
+                setContentName("members");
+              }}
+            >
+              Membros
+            </div>
           </NavBarItem>
           <NavBarItem>
-            <StyledLink to="/">Administradores</StyledLink>
+            <div
+              onClick={() => {
+                setContentName("admin");
+              }}
+            >
+              Administradores
+            </div>
           </NavBarItem>
           <NavBarItem>
-            <StyledLink to="/">Descrição</StyledLink>
+            <div
+              onClick={() => {
+                setContentName("info");
+              }}
+            >
+              Descrição
+            </div>
           </NavBarItem>
         </NavBar>
         {isOwner && (
@@ -257,33 +337,8 @@ const Group = () => {
           <GroupImage />
         </Header>
 
-        {group?.topics?.length !== 0 ? (
-          <>
-            <TopicList>
-              {group?.topics?.slice(0, 6).map((topic, index) => {
-                return (
-                  <Topic
-                    URlGroup={true}
-                    topicName={topic.name}
-                    numberOfComments={topic.comments.length}
-                    key={index}
-                    onClick={() => {
-                      openTopic(topic.id);
-                    }}
-                  />
-                );
-              })}
-            </TopicList>
-          </>
-        ) : (
-          <div>Nenhum tópico criado ainda</div>
-        )}
+        {generateContent()}
 
-        <ButtonArea>
-          <CustomButton onClick={openTopicCreate} width="130px" height="40px">
-            Criar tópico
-          </CustomButton>
-        </ButtonArea>
         <>
           <Pagination>
             <div>{total}</div>

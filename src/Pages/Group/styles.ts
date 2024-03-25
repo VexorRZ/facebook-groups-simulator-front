@@ -105,11 +105,32 @@ export const ButtonAdminWrapper = styled.div`
   gap: 1px;
 `;
 
+export const UserCard = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 313px;
+  height: 54px;
+  background-color: #373e4a;
+  border-radius: 4px;
+  padding: 4px;
+  gap: 10px;
+
+  strong {
+    font-size: 14px;
+  }
+`;
+
+export const UserCardPic = styled.img`
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid;
+  padding: 1px;
+`;
+
 export const GroupImage = styled.img``;
 
 export const GroupTitle = styled.h3``;
-
-export const Topic = styled.div``;
 
 export const TopicTitle = styled.h5``;
 
