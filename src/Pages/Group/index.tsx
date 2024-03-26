@@ -13,6 +13,8 @@ import TopBar from "../../Components/TopBar";
 import DialogBox from "../../Containers/DialogBox";
 import PublicIcon from "@mui/icons-material/Public";
 import GroupContainer from "../../Containers/GroupContainer";
+import Loading from "../../Components/Loading";
+import useAuth from "../../Hooks/useAuth";
 
 import {
   GroupImage,
@@ -40,6 +42,7 @@ const Group = () => {
   const [isOwner, setIsOwner] = useState<object | null>(null);
   const [DialogIsVisible, SetDialogIsVisible] = useState<boolean>(false);
   const [contentName, setContentName] = useState<string>("topics");
+  const [loadingVisible, setLoadingVisible] = useState<boolean>(false);
   const [limit, setLimit] = useState(5);
   const [pages, setPages] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,6 +50,8 @@ const Group = () => {
 
   const { group_id } = params;
   const navigate = useNavigate();
+
+  const { token } = useAuth();
 
   const openTopic = useCallback((topicId: number) => {
     navigate(`/topics/${Number(group_id)}/${topicId}`);
@@ -65,13 +70,12 @@ const Group = () => {
   }, []);
 
   const getGroupsByUser = async () => {
-    const token = localStorage.getItem("@token");
-
     if (!token) {
       return;
     }
 
     try {
+      setLoadingVisible(true);
       const res: AxiosResponse<Response> = await api.get<
         Response,
         AxiosResponse<Response>
@@ -115,7 +119,9 @@ const Group = () => {
           setTotal(numberOfTopics);
         }
       }
+      setLoadingVisible(false);
     } catch (err) {
+      setLoadingVisible(false);
       return err;
     }
   };
@@ -160,7 +166,7 @@ const Group = () => {
     if (contentName === "topics") {
       return (
         <>
-          <div>toópicos</div>
+          <div>tópicos</div>
           {group?.topics?.length !== 0 ? (
             <>
               <TopicList>
@@ -187,6 +193,43 @@ const Group = () => {
                   Criar tópico
                 </CustomButton>
               </ButtonArea>
+              <Pagination>
+                <div>{total} tópicos criados</div>
+                <PaginationButton>
+                  {currentPage > 1 && (
+                    <PaginationItem
+                      onClick={() => {
+                        setCurrentPage(currentPage - 1);
+                      }}
+                    >
+                      Anterior
+                    </PaginationItem>
+                  )}
+                  {pages.map((page) => (
+                    <>
+                      <PaginationItem
+                        isSelect={page === currentPage}
+                        key={page}
+                        onClick={() => {
+                          setCurrentPage(Number(page));
+                          console.log(currentPage);
+                        }}
+                      >
+                        {page}
+                      </PaginationItem>
+                    </>
+                  ))}
+                  {currentPage < pages.length && (
+                    <PaginationItem
+                      onClick={() => {
+                        setCurrentPage(currentPage + 1);
+                      }}
+                    >
+                      Próxima
+                    </PaginationItem>
+                  )}
+                </PaginationButton>
+              </Pagination>
             </>
           ) : (
             <div>Nenhum tópico criado ainda</div>
@@ -263,46 +306,48 @@ const Group = () => {
     <>
       <TopBar />
       <GroupContainer>
-        <NavBar>
-          <NavBarItem>
-            <div
-              onClick={() => {
-                setContentName("topics");
-              }}
-            >
-              Discussão
-            </div>
-          </NavBarItem>
-          <NavBarItem>
-            <div
-              onClick={() => {
-                setContentName("members");
-              }}
-            >
-              Membros
-            </div>
-          </NavBarItem>
-          <NavBarItem>
-            <div
-              onClick={() => {
-                setContentName("admin");
-              }}
-            >
-              Administradores
-            </div>
-          </NavBarItem>
-          <NavBarItem>
-            <div
-              onClick={() => {
-                setContentName("info");
-              }}
-            >
-              Descrição
-            </div>
-          </NavBarItem>
-        </NavBar>
-        {isOwner && (
-          <ButtonAdminContainer>
+        <Loading visible={loadingVisible} />
+        <ButtonAdminContainer>
+          <img src={group.avatar?.path ? group.avatar.path : "alt"} />
+          <NavBar>
+            <NavBarItem>
+              <strong
+                onClick={() => {
+                  setContentName("topics");
+                }}
+              >
+                Discussão
+              </strong>
+            </NavBarItem>
+            <NavBarItem>
+              <strong
+                onClick={() => {
+                  setContentName("members");
+                }}
+              >
+                Membros
+              </strong>
+            </NavBarItem>
+            <NavBarItem>
+              <strong
+                onClick={() => {
+                  setContentName("admin");
+                }}
+              >
+                Administradores
+              </strong>
+            </NavBarItem>
+            <NavBarItem>
+              <strong
+                onClick={() => {
+                  setContentName("info");
+                }}
+              >
+                Descrição
+              </strong>
+            </NavBarItem>
+          </NavBar>
+          {isOwner && (
             <ButtonAdminWrapper>
               <CustomButton
                 width="90px"
@@ -323,8 +368,8 @@ const Group = () => {
                 Editar
               </CustomButton>
             </ButtonAdminWrapper>
-          </ButtonAdminContainer>
-        )}
+          )}
+        </ButtonAdminContainer>
         <Header>
           <GroupTitle>{group.name}</GroupTitle>
           <GroupInfo>
@@ -339,45 +384,6 @@ const Group = () => {
 
         {generateContent()}
 
-        <>
-          <Pagination>
-            <div>{total}</div>
-            <PaginationButton>
-              {currentPage > 1 && (
-                <PaginationItem
-                  onClick={() => {
-                    setCurrentPage(currentPage - 1);
-                  }}
-                >
-                  Anterior
-                </PaginationItem>
-              )}
-              {pages.map((page) => (
-                <>
-                  <PaginationItem
-                    isSelect={page === currentPage}
-                    key={page}
-                    onClick={() => {
-                      setCurrentPage(Number(page));
-                      console.log(currentPage);
-                    }}
-                  >
-                    {page}
-                  </PaginationItem>
-                </>
-              ))}
-              {currentPage < pages.length && (
-                <PaginationItem
-                  onClick={() => {
-                    setCurrentPage(currentPage + 1);
-                  }}
-                >
-                  Próxima
-                </PaginationItem>
-              )}
-            </PaginationButton>
-          </Pagination>
-        </>
         {createTopic && (
           <CreateTopic groupId={groupId} onClick={closeTopicModal} />
         )}

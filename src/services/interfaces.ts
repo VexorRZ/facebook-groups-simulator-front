@@ -13,7 +13,7 @@ export interface Groups {
   name: string;
   topics: topics[];
   isMember?: boolean;
-  avatar: string;
+  avatar: avatar;
   members: members[];
 }
 

@@ -2,12 +2,14 @@
 /* eslint-disable multiline-ternary */
 import React, { useState, useCallback, useEffect } from "react";
 import useGroups from "../../Hooks/useGroups";
+import useAuth from "../../Hooks/useAuth";
 // import { type Groups } from "../../services/interfaces";
 import { useNavigate } from "react-router-dom";
 import TopBar from "../../Components/TopBar";
 import Dropzone from "../../Components/DropZone";
 import LockIcon from "@mui/icons-material/Lock";
 import PublicIcon from "@mui/icons-material/Public";
+import Loading from "../../Components/Loading";
 import { styled } from "@mui/material/styles";
 import { useRadioGroup } from "@mui/material/RadioGroup";
 import FormControlLabel, {
@@ -56,12 +58,14 @@ const CreateGroup = () => {
   const [option, setOption] = useState<boolean>(false);
   const [groupName, setGroupName] = useState<string>("");
   const [groupDescription, setGroupDescription] = useState<string>("");
+  const [loadingVisible, setLoadingVisible] = useState<boolean>(false);
   const [status] = useState({
     type: "",
     mensagem: "",
   });
 
   const { asyncCreateGroup } = useGroups();
+  const { token } = useAuth();
 
   const navigate = useNavigate();
 
@@ -87,23 +91,26 @@ const CreateGroup = () => {
   );
 
   const createGroup = async (event: any) => {
-    event.preventDefault();
-    const token = localStorage.getItem("@token");
-
-    if (!token) {
-      throw new Error("Erro inesperado, token não fornecido");
-    }
-
-    const data = new FormData();
-    data.append("is_private", JSON.stringify(Boolean(option)));
-    data.append("name", groupName);
-    data.append("description", groupDescription);
-    data.append("file", image[0]);
-
     try {
+      setLoadingVisible(true);
+      event.preventDefault();
+
+      if (!token) {
+        throw new Error("Erro inesperado, token não fornecido");
+      }
+
+      const data = new FormData();
+      data.append("is_private", JSON.stringify(Boolean(option)));
+      data.append("name", groupName);
+      data.append("description", groupDescription);
+      data.append("file", image[0]);
+
       const res = await asyncCreateGroup(data);
       navigateToCreatedTopic(res.id);
+
+      setLoadingVisible(false);
     } catch (err) {
+      setLoadingVisible(false);
       console.log(err);
       alert(err);
     }
@@ -133,6 +140,7 @@ const CreateGroup = () => {
     <>
       <TopBar />
       <Container>
+        <Loading visible={loadingVisible} />
         <ImageContainer>
           {status.type === "success" ? (
             <p style={{ color: "green" }}>{status.mensagem}</p>

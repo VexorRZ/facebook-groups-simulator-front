@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import useAuth from "../../Hooks/useAuth";
 import useGroups from "../../Hooks/useGroups";
+import Loading from "../../Components/Loading";
 import {
   ToastError,
   ToastSuccess,
@@ -23,6 +24,7 @@ import { Content, Container, GroupCardList, NoTopicsCard } from "./styles";
 const Dashboard = () => {
   const [groups, setGroups] = useState<Groups[]>([]);
   const [userId, SetUserId] = useState<number | null>();
+  const [loadingVisible, setLoadingVisible] = useState<boolean>(false);
   const { name, id } = useAuth();
   const { asyncCreateRequest, dispatch } = useGroups();
   const navigate = useNavigate();
@@ -43,6 +45,7 @@ const Dashboard = () => {
     }
 
     try {
+      setLoadingVisible(true);
       const res: AxiosResponse<Groups> = await api.get<
         Groups,
         AxiosResponse<Groups>
@@ -54,6 +57,8 @@ const Dashboard = () => {
 
       // @ts-expect-error
       setGroups([...res.data]);
+
+      setLoadingVisible(false);
     } catch (err) {
       return err;
     }
@@ -111,6 +116,7 @@ const Dashboard = () => {
         <SideMenu />
 
         <GroupCardList>
+          <Loading visible={loadingVisible} />
           <h1>Olá {name} </h1>
 
           {groups?.map((group, index) => {

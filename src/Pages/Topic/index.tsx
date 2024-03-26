@@ -11,6 +11,7 @@ import {
   type GroupTopic,
   type TopicData,
 } from "../../Contexts/TopicContext/interfaces";
+import useAuth from "../../Hooks/useAuth";
 import { type comments } from "../../services/interfaces";
 import Button from "../../Components/Button";
 import TopBar from "../../Components/TopBar";
@@ -48,9 +49,8 @@ const TopicPage = () => {
   const params = useParams();
   const { group_id, topic_id } = params;
 
+  const { token, name, id, avatar } = useAuth();
   const getTopicByCredentials = async () => {
-    const token = localStorage.getItem("@token");
-
     if (!token) {
       return;
     }
@@ -91,18 +91,14 @@ const TopicPage = () => {
   };
 
   const postNewComment = async () => {
-    const userName = localStorage.getItem("@name:user");
-    const token = localStorage.getItem("@token");
-    const userId = localStorage.getItem("@id:user");
-    const avatarPath = localStorage.getItem("@avatarPath:user");
-    if (userName) {
+    if (name) {
       setCommentlist([
         ...commentList,
         {
           author: {
-            name: userName,
-            id: Number(userId),
-            avatar: { path: avatarPath },
+            name: name,
+            id: Number(id),
+            avatar: { path: avatar.path },
           },
           body: comment,
         },

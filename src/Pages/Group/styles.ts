@@ -15,10 +15,21 @@ export const NavBar = styled.ul`
   padding: 0;
   overflow: hidden;
   background-color: #333;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
 `;
 
 export const NavBarItem = styled.li`
   float: left;
+  strong {
+    font-weight: bold;
+  }
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const StyledLink = styled(Link)`
@@ -76,6 +87,12 @@ export const PaginationButton = styled.div`
 
 export const PaginationItem = styled.div<IPaginationProps>`
   margin: 0 10px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   ${(props) =>
     props.isSelect && {
@@ -94,8 +111,13 @@ export const ButtonArea = styled.div`
 
 export const ButtonAdminContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   width: 100%;
+  img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+  }
 `;
 
 export const ButtonAdminWrapper = styled.div`
