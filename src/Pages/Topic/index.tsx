@@ -49,9 +49,9 @@ const TopicPage = () => {
   const params = useParams();
   const { group_id, topic_id } = params;
 
-  const { token, name, id, avatar } = useAuth();
+  const { userData } = useAuth();
   const getTopicByCredentials = async () => {
-    if (!token) {
+    if (!userData?.token) {
       return;
     }
 
@@ -64,7 +64,7 @@ const TopicPage = () => {
           topic_id
         )}?page=${currentPage}&size=${limit}`,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${userData.token}` },
         }
       );
 
@@ -91,20 +91,20 @@ const TopicPage = () => {
   };
 
   const postNewComment = async () => {
-    if (name) {
+    if (userData?.name) {
       setCommentlist([
         ...commentList,
         {
           author: {
-            name: name,
-            id: Number(id),
-            avatar: { path: avatar.path },
+            name: userData.name,
+            id: Number(userData.id),
+            avatar: { path: userData.avatar.path },
           },
           body: comment,
         },
       ]);
 
-      if (!token) {
+      if (!userData.token) {
         throw new Error("Erro inesperado, token não fornecido");
       }
 
@@ -113,7 +113,7 @@ const TopicPage = () => {
         const res: AxiosResponse = await api.post<AxiosResponse>(
           `/comments/${Number(group_id)}/${Number(topic_id)}`,
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${userData.token}` },
             body: comment,
           }
         );

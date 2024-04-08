@@ -41,14 +41,14 @@ const useAuthContext = (initialUserState: UserType) => {
     return REDUCER_ACTION_TYPE;
   }, []);
 
-  const userName = localStorage.getItem("@name:user");
-  const userEmail = localStorage.getItem("@email:user");
-  const bearerToken = localStorage.getItem("@token");
-  const userId = localStorage.getItem("@id:user");
-  const avatarId = localStorage.getItem("@avatarId:user");
-  const avatarPath = localStorage.getItem("@avatarPath:user");
-  if (bearerToken && userName) {
-    api.defaults.headers.authorization = `Bearer ${bearerToken}`;
+  const user = window.localStorage.getItem("user");
+
+  if (user) {
+    let userData = JSON.parse(user) as UserType;
+
+    if (userData.token) {
+      api.defaults.headers.authorization = `Bearer ${userData.token}`;
+    }
 
     return {
       dispatch,
@@ -58,26 +58,14 @@ const useAuthContext = (initialUserState: UserType) => {
       resetPassword,
       recoverPassword,
       asyncRequestDeleteAccount,
-      ...state,
-      name: userName,
-      email: userEmail,
-      token: bearerToken,
-      avatar: {
-        id: avatarId,
-        path: avatarPath,
-      },
-      id: userId,
       REDUCER_ACTIONS,
+      userData,
     };
   }
 
-  const email = state.email;
-  const password = state.password;
-  const token = state.token;
-  const name = state.name;
-  const avatar = state.avatar;
-  const id = state.id;
+  let userData = {} as UserType;
 
+  userData = state;
   return {
     dispatch,
     asyncLoginFn,
@@ -87,12 +75,7 @@ const useAuthContext = (initialUserState: UserType) => {
     recoverPassword,
     asyncRequestDeleteAccount,
     REDUCER_ACTIONS,
-    email,
-    password,
-    token,
-    name,
-    avatar,
-    id,
+    userData,
   };
 };
 
@@ -107,20 +90,23 @@ const initialUserContextState: UseAuthContextType = {
   recoverPassword,
   asyncRequestDeleteAccount,
   REDUCER_ACTIONS: REDUCER_ACTION_TYPE,
-  email: "",
-  password: "",
-  token: "",
-  name: "",
-  avatar: {
+  userData: {
+    password: "",
+    email: "",
+    token: "",
+    name: "",
+    avatar: {
+      id: "",
+      path: "",
+    },
     id: "",
-    path: "",
   },
-  id: "",
 };
 
 const AuthContext = createContext<UseAuthContextType>(initialUserContextState);
 
 export const AuthProvider = ({ children }: ChildrenType): ReactElement => {
+  console.log(initialUserState);
   return (
     <AuthContext.Provider value={useAuthContext(initialUserState)}>
       {children}

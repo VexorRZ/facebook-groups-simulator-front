@@ -9,7 +9,7 @@ import TopBar from "../../Components/TopBar";
 import Dropzone from "../../Components/DropZone";
 import LockIcon from "@mui/icons-material/Lock";
 import PublicIcon from "@mui/icons-material/Public";
-import Loading from "../../Components/Loading";
+import Loading from "../../Components/Loader";
 import { styled } from "@mui/material/styles";
 import { useRadioGroup } from "@mui/material/RadioGroup";
 import FormControlLabel, {
@@ -65,7 +65,7 @@ const CreateGroup = () => {
   });
 
   const { asyncCreateGroup } = useGroups();
-  const { token } = useAuth();
+  const { userData } = useAuth();
 
   const navigate = useNavigate();
 
@@ -95,7 +95,7 @@ const CreateGroup = () => {
       setLoadingVisible(true);
       event.preventDefault();
 
-      if (!token) {
+      if (userData?.token) {
         throw new Error("Erro inesperado, token não fornecido");
       }
 

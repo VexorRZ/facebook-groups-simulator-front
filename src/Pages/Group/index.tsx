@@ -1,7 +1,7 @@
 /* eslint-disable multiline-ternary */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import { type AxiosResponse } from "axios";
@@ -13,8 +13,10 @@ import TopBar from "../../Components/TopBar";
 import DialogBox from "../../Containers/DialogBox";
 import PublicIcon from "@mui/icons-material/Public";
 import GroupContainer from "../../Containers/GroupContainer";
-import Loading from "../../Components/Loading";
+import Loader from "../../Components/Loader";
 import useAuth from "../../Hooks/useAuth";
+import useGroup from "../../Hooks/useGroups";
+import { members } from "../../Contexts/GroupContext/interfaces";
 
 import {
   GroupImage,
@@ -35,23 +37,29 @@ import {
 } from "./styles";
 
 const Group = () => {
-  const params = useParams();
   const [group, setGroup] = useState<Partial<Groups>>({});
+  //@ts-ignore
+  const [groupMembers, setGroupMembers] = useState<members[]>([]);
   const [createTopic, setCreateTopic] = useState<boolean>(false);
   const [groupId, setGroupId] = useState<string>("");
   const [isOwner, setIsOwner] = useState<object | null>(null);
   const [DialogIsVisible, SetDialogIsVisible] = useState<boolean>(false);
   const [contentName, setContentName] = useState<string>("topics");
-  const [loadingVisible, setLoadingVisible] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [index, setIndex] = useState(2);
   const [limit, setLimit] = useState(5);
   const [pages, setPages] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState<number | undefined>(0);
+  const loaderRef = useRef(null);
 
+  const params = useParams();
+  const { asyncGetGroupMembers, dispatch } = useGroup();
   const { group_id } = params;
+
   const navigate = useNavigate();
 
-  const { token } = useAuth();
+  const { userData } = useAuth();
 
   const openTopic = useCallback((topicId: number) => {
     navigate(`/topics/${Number(group_id)}/${topicId}`);
@@ -70,12 +78,12 @@ const Group = () => {
   }, []);
 
   const getGroupsByUser = async () => {
-    if (!token) {
+    if (userData?.token) {
       return;
     }
 
     try {
-      setLoadingVisible(true);
+      setIsLoading(true);
       const res: AxiosResponse<Response> = await api.get<
         Response,
         AxiosResponse<Response>
@@ -84,13 +92,13 @@ const Group = () => {
           limit
         )}`,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${userData?.token}` },
         }
       );
 
-      const { group, numberOfTopics, isOwner, numberOfMembers } = res.data;
+      const { group, numberOfTopics, isOwner } = res.data;
 
-      console.log("data", res.data);
+      //  console.log("data", res.data);
 
       setGroup({ ...group });
 
@@ -98,38 +106,106 @@ const Group = () => {
         setIsOwner(isOwner);
       }
 
-      if (numberOfMembers) {
-        if (contentName === "members") {
-          setLimit(2);
-        } else if (contentName === "topics") {
-          setLimit(5);
-        }
-        //@ts-ignore
-        const totalPages = Math.ceil(total / limit);
-        const arrayPages = [];
+      // if (contentName === "members") {
+      //   setLimit(2);
+      // } else if (contentName === "topics") {
+      //   setLimit(5);
+      // }
+      //@ts-ignore
+      const totalPages = Math.ceil(total / limit);
+      const arrayPages = [];
 
-        for (let i = 1; i <= totalPages; i++) {
-          arrayPages.push(i);
-        }
-
-        setPages(arrayPages);
-        if (contentName === "members") {
-          setTotal(numberOfMembers);
-        } else if (contentName === "topics") {
-          setTotal(numberOfTopics);
-        }
+      for (let i = 1; i <= totalPages; i++) {
+        arrayPages.push(i);
       }
-      setLoadingVisible(false);
+
+      setPages(arrayPages);
+
+      setTotal(numberOfTopics);
+
+      setIsLoading(false);
     } catch (err) {
-      setLoadingVisible(false);
+      setIsLoading(false);
       return err;
     }
   };
 
-  const deleteGroup = async () => {
-    const token = localStorage.getItem("@token");
+  // const fetchMembers = useCallback(() => {
+  //   try {
+  //     setIsLoading(true);
+  //     asyncGetGroupMembers(
+  //       Number(groupId),
+  //       Number(`${index}0`),
+  //       limit,
+  //       dispatch
+  //     );
 
-    if (!token) {
+  //     //@ts-ignore
+  //     setGroupMembers((curr) => [
+  //       ...(Array.isArray(curr) ? curr : []),
+  //       //@ts-ignore
+  //       ...members,
+  //     ]);
+
+  //     setIndex((prevIndex) => prevIndex + 1);
+
+  //     setIsLoading(false);
+  //   } catch (err) {
+  //     setIsLoading(false);
+  //   }
+  // }, [index, isLoading]);
+
+  // useEffect(() => {
+  //   const observer = new IntersectionObserver((entries) => {
+  //     const target = entries[0];
+  //     if (target.isIntersecting) {
+  //       fetchMembers();
+  //     }
+  //   });
+
+  //   if (loaderRef.current) {
+  //     observer.observe(loaderRef.current);
+  //   }
+
+  //   return () => {
+  //     if (loaderRef.current) {
+  //       observer.unobserve(loaderRef.current);
+  //     }
+  //   };
+  // }, [fetchMembers]);
+
+  useEffect(() => {
+    const getMembers = () => {
+      setIsLoading(true);
+
+      try {
+        asyncGetGroupMembers(Number(group_id), currentPage, limit, dispatch);
+
+        //@ts-ignore
+        setGroupMembers(groupState.members);
+      } catch (err) {
+        setIsLoading(false);
+      }
+
+      setIsLoading(false);
+    };
+
+    getMembers();
+  }, []);
+
+  useEffect(() => {
+    void getGroupsByUser();
+
+    generateContent();
+
+    if (group_id) {
+      setGroupId(group_id);
+    }
+    //console.log("groumembers", groupMembers);
+  }, [currentPage, limit, total, contentName]);
+
+  const deleteGroup = async () => {
+    if (!userData?.token) {
       return;
     }
 
@@ -138,7 +214,7 @@ const Group = () => {
         Response,
         AxiosResponse<Response>
       >(`groups/${String(group_id)}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${userData?.token}` },
       });
 
       SetDialogIsVisible(false);
@@ -150,17 +226,6 @@ const Group = () => {
       return err;
     }
   };
-
-  useEffect(() => {
-    console.log(group.members);
-    void getGroupsByUser();
-
-    generateContent();
-
-    if (group_id) {
-      setGroupId(group_id);
-    }
-  }, [currentPage, limit, total, contentName]);
 
   const generateContent = () => {
     if (contentName === "topics") {
@@ -212,7 +277,6 @@ const Group = () => {
                         key={page}
                         onClick={() => {
                           setCurrentPage(Number(page));
-                          console.log(currentPage);
                         }}
                       >
                         {page}
@@ -243,7 +307,7 @@ const Group = () => {
           <div>members</div>
 
           <TopicList>
-            {group?.members?.slice(0, 6).map((member, index) => {
+            {groupMembers?.map((member, index) => {
               return (
                 <UserCard key={index}>
                   <UserCardPic
@@ -306,7 +370,7 @@ const Group = () => {
     <>
       <TopBar />
       <GroupContainer>
-        <Loading visible={loadingVisible} />
+        <div ref={loaderRef}>{<Loader visible={isLoading} />}</div>
         <ButtonAdminContainer>
           <img src={group.avatar?.path ? group.avatar.path : "alt"} />
           <NavBar>

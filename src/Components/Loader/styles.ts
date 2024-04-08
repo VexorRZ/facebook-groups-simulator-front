@@ -1,7 +1,7 @@
 import styled, { keyframes } from "styled-components";
 
 interface ILoadingProps {
-  visible: boolean;
+  visible?: boolean;
 }
 
 const rotate = keyframes`
@@ -19,7 +19,7 @@ export const Container = styled.div<ILoadingProps>`
   border-top: 40px solid transparent;
   border-right: 68px solid lightblue;
   border-bottom: 40px solid transparent;
-  display: ${(props) => (props.visible ? "inline-block" : "none")};
+  /* display: ${(props) => (props.visible ? "inline-block" : "none")}; */
   animation: ${rotate} 2s linear infinite;
   z-index: 1000;
   position: fixed;

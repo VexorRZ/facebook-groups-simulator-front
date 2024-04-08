@@ -2,6 +2,7 @@ import { type ReactElement } from "react";
 
 export interface Groups {
   administrator: administrator;
+  length: number;
   id: number;
   is_private: boolean;
   members: members[];
@@ -18,9 +19,10 @@ interface avatar {
   id: string;
   path: string;
 }
-interface members {
+export interface members {
   id: number;
   name: string;
+  avatar: avatar;
 }
 
 interface moderators {

@@ -1,5 +1,5 @@
 /* eslint-disable multiline-ternary */
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 
 import { type AxiosResponse } from "axios";
 import TopBar from "../../Components/TopBar";
@@ -10,7 +10,8 @@ import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import useAuth from "../../Hooks/useAuth";
 import useGroups from "../../Hooks/useGroups";
-import Loading from "../../Components/Loading";
+import Loader from "../../Components/Loader";
+
 import {
   ToastError,
   ToastSuccess,
@@ -22,11 +23,18 @@ import { type Groups } from "../../Contexts/GroupContext/interfaces";
 import { Content, Container, GroupCardList, NoTopicsCard } from "./styles";
 
 const Dashboard = () => {
-  const [groups, setGroups] = useState<Groups[]>([]);
+  const [loadedGroups, setGroups] = useState<Groups[]>([]);
   const [userId, SetUserId] = useState<number | null>();
-  const [loadingVisible, setLoadingVisible] = useState<boolean>(false);
-  const { name, id } = useAuth();
-  const { asyncCreateRequest, dispatch } = useGroups();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [index, setIndex] = useState(2);
+  const [lastData, setLastData] = useState<boolean>(false);
+  const loaderRef = useRef(null);
+
+  const { userData } = useAuth();
+
+  const { asyncCreateRequest, dispatch, asyncGetGroups, groupData } =
+    useGroups();
+
   const navigate = useNavigate();
 
   const openGroup = useCallback((id: number) => {
@@ -37,36 +45,86 @@ const Dashboard = () => {
     navigate(`/topics/${Number(groupId)}/${Number(topicId)}`);
   }, []);
 
-  const getGroupsByUser = useCallback(async () => {
-    const token = localStorage.getItem("@token");
-
-    if (!token) {
+  const getMoreGroups = useCallback(async () => {
+    if (userData?.token) {
       return;
     }
 
-    try {
-      setLoadingVisible(true);
-      const res: AxiosResponse<Groups> = await api.get<
-        Groups,
-        AxiosResponse<Groups>
-      >(`groups`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      console.log("data:", res.data);
-
-      // @ts-expect-error
-      setGroups([...res.data]);
-
-      setLoadingVisible(false);
-    } catch (err) {
-      return err;
+    if (lastData) {
+      return;
     }
+
+    if (isLoading) {
+      return;
+    }
+
+    setIsLoading(true);
+
+    const res: AxiosResponse<Groups> = await api.get<
+      Groups,
+      AxiosResponse<Groups>
+    >(`groups/?page=${String(index)}&size=5`, {
+      headers: { Authorization: `Bearer ${userData?.token}` },
+    });
+
+    if (!res.data.length) {
+      setLastData(true);
+      setIsLoading(false);
+      return;
+    }
+
+    //@ts-ignore
+    setGroups((prevGroups) => [...prevGroups, ...res.data]);
+
+    setIndex((prevIndex) => prevIndex + 1);
+
+    setIsLoading(false);
+  }, [index, isLoading]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      const target = entries[0];
+      if (target.isIntersecting) {
+        getMoreGroups();
+      }
+    });
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+
+    return () => {
+      if (loaderRef.current) {
+        observer.unobserve(loaderRef.current);
+      }
+    };
+  }, [getMoreGroups]);
+
+  useEffect(() => {
+    SetUserId(Number(userData?.id));
+    const getGroupsByUser = async () => {
+      if (!userData?.token) {
+        return;
+      }
+
+      setIsLoading(true);
+      try {
+        asyncGetGroups(userData?.token, dispatch);
+
+        // @ts-expect-error
+        setGroups([...groupData]);
+      } catch (err) {
+        console.log(err);
+      }
+      setIsLoading(false);
+    };
+
+    getGroupsByUser();
   }, []);
 
-  const requestEnterInGroup = async (groupId: number) => {
+  const requestEnterInGroup = useCallback(async (groupId: number) => {
     await asyncCreateRequest(groupId, dispatch);
-    const currentGroup = groups.find(({ id }) => id === groupId);
+    const currentGroup = loadedGroups.find(({ id }) => id === groupId);
     const isMember = currentGroup?.members.find(({ id }) => id === userId);
     const requestExists = currentGroup?.requesters?.find(
       ({ id }) => id === userId
@@ -90,10 +148,10 @@ const Dashboard = () => {
         return navigate(`/group/${groupId}`);
       }, 1000);
     }
-  };
+  }, []);
 
   function isAlreadyMember(groupId: number) {
-    const currentGroup = groups.find(({ id }) => id === groupId);
+    const currentGroup = loadedGroups.find(({ id }) => id === groupId);
 
     const isMember = currentGroup?.members.find(({ id }) => id === userId);
 
@@ -104,11 +162,6 @@ const Dashboard = () => {
     }
   }
 
-  useEffect(() => {
-    SetUserId(Number(id));
-    void getGroupsByUser();
-  }, []);
-
   return (
     <Container>
       <TopBar />
@@ -116,10 +169,9 @@ const Dashboard = () => {
         <SideMenu />
 
         <GroupCardList>
-          <Loading visible={loadingVisible} />
-          <h1>Olá {name} </h1>
+          <h1>Olá {userData.name} </h1>
 
-          {groups?.map((group, index) => {
+          {loadedGroups?.map((group, index) => {
             return (
               <>
                 <GroupCard
@@ -167,10 +219,17 @@ const Dashboard = () => {
                       Esse grupo ainda não possui nenhum tópico
                     </NoTopicsCard>
                   )}
+                  <div ref={loaderRef}>{isLoading && <Loader />}</div>
                 </GroupCard>
               </>
             );
           })}
+
+          {lastData && (
+            <NoTopicsCard>
+              Parece que não não há mais nada por enquanto
+            </NoTopicsCard>
+          )}
         </GroupCardList>
       </Content>
     </Container>

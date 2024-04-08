@@ -10,12 +10,14 @@ import {
   asyncCreateGroup,
   asyncCreateRequest,
   asyncGetGroupMembers,
+  asyncGetGroups,
 } from "./middlewares";
 
 import { type Groups, type ChildrenType } from "./interfaces";
 import { reducer } from "./reducers";
 
 const initialUserState: Groups = {
+  length: 0,
   name: "",
   administrator: { id: 0, name: "" },
   moderators: [],
@@ -39,31 +41,34 @@ const useGroupContext = (initialUserState: Groups) => {
     return REDUCER_ACTION_TYPE;
   }, []);
 
-  const name = state.name;
-  const administrator = state.administrator;
-  const moderators = state.moderators;
-  const is_private = state.is_private;
-  const id = state.id;
-  const topics = state.topics;
-  const members = state.members;
-  const avatar = state.avatar;
-  const navigateAvailable = state.navigateAvailable;
+  const group = window.localStorage.getItem("group");
+
+  if (group) {
+    let groupData = JSON.parse(group) as Groups;
+
+    return {
+      dispatch,
+      asyncCreateGroup,
+      asyncCreateRequest,
+      asyncGetGroupMembers,
+      asyncGetGroups,
+      REDUCER_ACTIONS,
+      groupData,
+    };
+  }
+
+  let groupData = {} as Groups;
+
+  groupData = state;
 
   return {
     dispatch,
     asyncCreateGroup,
     asyncCreateRequest,
     asyncGetGroupMembers,
+    asyncGetGroups,
     REDUCER_ACTIONS,
-    name,
-    administrator,
-    moderators,
-    is_private,
-    id,
-    topics,
-    members,
-    avatar,
-    navigateAvailable,
+    groupData,
   };
 };
 
@@ -74,18 +79,22 @@ const initialGroupContextState: UseGroupContextType = {
   asyncCreateGroup,
   asyncCreateRequest,
   asyncGetGroupMembers,
+  asyncGetGroups,
   REDUCER_ACTIONS: REDUCER_ACTION_TYPE,
-  name: "",
-  administrator: { id: 0, name: "" },
-  moderators: [],
-  is_private: false,
-  id: 0,
-  topics: [],
-  members: [],
-  navigateAvailable: false,
-  avatar: {
-    id: "",
-    path: "",
+  groupData: {
+    length: 0,
+    name: "",
+    administrator: { id: 0, name: "" },
+    moderators: [],
+    is_private: false,
+    id: 0,
+    topics: [],
+    members: [],
+    navigateAvailable: false,
+    avatar: {
+      id: "",
+      path: "",
+    },
   },
 };
 

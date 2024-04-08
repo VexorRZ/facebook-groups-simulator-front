@@ -17,11 +17,6 @@ import { ToastError } from "../../Components/ToastContainer/ToastMessages";
 import DialogBox from "../../Containers/DialogBox";
 import { useNavigate } from "react-router-dom";
 
-// import api from "../../services/api";
-
-// import { type UserType } from "../../Contexts/AuthContext/interfaces";
-// import { type AxiosResponse } from "axios";
-
 import {
   Container,
   ProfileText,
@@ -72,16 +67,8 @@ const Profile = ({
 
   const navigate = useNavigate();
 
-  const {
-    avatar,
-    token,
-    name,
-    email,
-    id,
-    dispatch,
-    asyncChangeAvatar,
-    asyncRequestDeleteAccount,
-  } = useAuth();
+  const { userData, dispatch, asyncChangeAvatar, asyncRequestDeleteAccount } =
+    useAuth();
 
   const changeUserName = useCallback(
     (event: React.FormEvent<HTMLInputElement>) => {
@@ -109,7 +96,9 @@ const Profile = ({
 
   const deleteAccount = async () => {
     try {
-      asyncRequestDeleteAccount(Number(id), token);
+      if (userData?.token) {
+        asyncRequestDeleteAccount(Number(userData?.id), userData?.token);
+      }
       setTimeout(() => {
         navigate("/");
       }, 3000);
@@ -121,7 +110,7 @@ const Profile = ({
   const updateAvatar = async (event: any) => {
     event.preventDefault();
 
-    if (!token) {
+    if (!userData?.token) {
       ToastError("Sua sessão foi expirada, faça login novamente");
       return;
     }
@@ -214,7 +203,7 @@ const Profile = ({
       <Container bluried={editProfileVisible || editAvatarVisible}>
         <UserAvatar
           style={{
-            background: `url(${avatar.path} ) no-repeat center`,
+            background: `url(${userData?.avatar.path} ) no-repeat center`,
             backgroundSize: "cover",
           }}
         >
@@ -238,10 +227,10 @@ const Profile = ({
 
         <Title>Informações do perfil </Title>
         <ProfiletextWrapper>
-          <ProfileText>Nome do usuário: {name}</ProfileText>
+          <ProfileText>Nome do usuário: {userData?.name}</ProfileText>
         </ProfiletextWrapper>
         <ProfiletextWrapper>
-          <ProfileText>Email: {email}</ProfileText>
+          <ProfileText>Email: {userData?.email}</ProfileText>
         </ProfiletextWrapper>
         <ProfiletextWrapper>
           <ProfileText>

@@ -30,28 +30,16 @@ export const asyncLoginFn = async (
       response.data.token
     )}`;
 
-    console.log("data", response.data);
-    localStorage.setItem("@name:user", response.data.user.name);
-    localStorage.setItem("@email:user", response.data.user.email);
-    localStorage.setItem("@id:user", response.data.user.id);
-    localStorage.setItem("@token", response.data.token);
+    window.localStorage.setItem("user", JSON.stringify(response.data.user));
 
-    if (response.data.user.avatar) {
-      localStorage.setItem("@avatarId:user", response.data.user.avatar.id);
-      localStorage.setItem("@avatarPath:user", response.data.user.avatar.path);
-    }
+    localStorage.setItem("@token", response.data.user.token);
+
     ToastSuccess("Login realizado com sucesso");
 
     return dispatch({
       type: REDUCER_ACTION_TYPE.LOGIN,
       payload: {
-        name: response.data.user.name,
-        email: response.data.user.email,
-        token: response.data.token,
-        avatar: {
-          id: response.data.user.avatar ? response.data.user.avatar.id : "",
-          path: response.data.user.avatar ? response.data.user.avatar.path : "",
-        },
+        user: response.data.user,
       },
     });
   }

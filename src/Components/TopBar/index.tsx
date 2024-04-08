@@ -10,7 +10,7 @@ import { AsyncLogoutFn } from "../../Contexts/AuthContext/middlewares";
 const TopBar: React.FC = () => {
   const navigate = useNavigate();
 
-  const { dispatch, avatar } = useAuth();
+  const { dispatch, userData } = useAuth();
 
   const Logout = () => {
     AsyncLogoutFn(dispatch);
@@ -58,7 +58,7 @@ const TopBar: React.FC = () => {
           </div>
         </div>
         <img
-          src={avatar.path as string}
+          src={userData?.avatar.path as string}
           alt="avatar"
           className="topbarImg"
           onClick={openProfilePage}
