@@ -16,7 +16,9 @@ import GroupContainer from "../../Containers/GroupContainer";
 import Loader from "../../Components/Loader";
 import useAuth from "../../Hooks/useAuth";
 import useGroup from "../../Hooks/useGroups";
-import { members } from "../../Contexts/GroupContext/interfaces";
+import { Members } from "../../Contexts/GroupMembersContext/interfaces";
+import useGroupMembers from "../../Hooks/useMembers";
+import { asyncGetGroupMembers } from "../../Contexts/GroupContext/middlewares";
 
 import {
   GroupImage,
@@ -39,7 +41,7 @@ import {
 const Group = () => {
   const [group, setGroup] = useState<Partial<Groups>>({});
   //@ts-ignore
-  const [groupMembers, setGroupMembers] = useState<members[]>([]);
+  const [groupMembers, setGroupMembers] = useState<Members[]>([]);
   const [createTopic, setCreateTopic] = useState<boolean>(false);
   const [groupId, setGroupId] = useState<string>("");
   const [isOwner, setIsOwner] = useState<object | null>(null);
@@ -54,12 +56,13 @@ const Group = () => {
   const loaderRef = useRef(null);
 
   const params = useParams();
-  const { asyncGetGroupMembers, dispatch } = useGroup();
+  const { groupData, asyncGetGroupMembers, dispatch } = useGroup();
+  const { membersData, membersDispatch } = useGroupMembers();
+  const { userData } = useAuth();
+
   const { group_id } = params;
 
   const navigate = useNavigate();
-
-  const { userData } = useAuth();
 
   const openTopic = useCallback((topicId: number) => {
     navigate(`/topics/${Number(group_id)}/${topicId}`);
@@ -78,7 +81,7 @@ const Group = () => {
   }, []);
 
   const getGroupsByUser = async () => {
-    if (userData?.token) {
+    if (!userData?.token) {
       return;
     }
 
@@ -98,8 +101,8 @@ const Group = () => {
 
       const { group, numberOfTopics, isOwner } = res.data;
 
-      //  console.log("data", res.data);
-
+      // console.log("data", res.data);
+      console.log("groupdata", group);
       setGroup({ ...group });
 
       if (isOwner) {
@@ -130,30 +133,31 @@ const Group = () => {
     }
   };
 
-  // const fetchMembers = useCallback(() => {
-  //   try {
-  //     setIsLoading(true);
-  //     asyncGetGroupMembers(
-  //       Number(groupId),
-  //       Number(`${index}0`),
-  //       limit,
-  //       dispatch
-  //     );
+  const fetchMembers = useCallback(() => {
+    try {
+      setIsLoading(true);
 
-  //     //@ts-ignore
-  //     setGroupMembers((curr) => [
-  //       ...(Array.isArray(curr) ? curr : []),
-  //       //@ts-ignore
-  //       ...members,
-  //     ]);
+      asyncGetGroupMembers(Number(groupId), dispatch);
 
-  //     setIndex((prevIndex) => prevIndex + 1);
+      //@ts-ignore
+      // setGroupMembers((prevMembers) => [[...prevMembers], [...membersData]]);
+      //  setGroupMembers([...membersData]);
 
-  //     setIsLoading(false);
-  //   } catch (err) {
-  //     setIsLoading(false);
-  //   }
-  // }, [index, isLoading]);
+      //@ts-ignore
+
+      // setGroupMembers((prevMembers) => [
+      //   ...(Array.isArray(prevMembers) ? prevMembers : []),
+      //   //@ts-ignore
+      //   ...membersData,
+      // ]);
+
+      // setIndex((prevIndex) => prevIndex + 1);
+
+      setIsLoading(false);
+    } catch (err) {
+      setIsLoading(false);
+    }
+  }, [index, isLoading]);
 
   // useEffect(() => {
   //   const observer = new IntersectionObserver((entries) => {
@@ -174,34 +178,39 @@ const Group = () => {
   //   };
   // }, [fetchMembers]);
 
-  useEffect(() => {
-    const getMembers = () => {
-      setIsLoading(true);
+  // useEffect(() => {
+  //   const getMembers = () => {
+  //     setIsLoading(true);
 
-      try {
-        asyncGetGroupMembers(Number(group_id), currentPage, limit, dispatch);
+  //     try {
+  //       asyncGetGroupMembers(Number(group_id), currentPage, limit, dispatch);
 
-        //@ts-ignore
-        setGroupMembers(groupState.members);
-      } catch (err) {
-        setIsLoading(false);
-      }
+  //       //@ts-ignore
+  //       setGroupMembers(groupState.members);
+  //     } catch (err) {
+  //       setIsLoading(false);
+  //     }
 
-      setIsLoading(false);
-    };
+  //     setIsLoading(false);
+  //   };
 
-    getMembers();
-  }, []);
+  //   getMembers();
+  // }, []);
 
   useEffect(() => {
     void getGroupsByUser();
+
+    fetchMembers();
 
     generateContent();
 
     if (group_id) {
       setGroupId(group_id);
     }
-    //console.log("groumembers", groupMembers);
+
+    //@ts-ignore
+    //    setGroupMembers([...membersData]);
+    //  console.log("groupdata no grupo", membersData);
   }, [currentPage, limit, total, contentName]);
 
   const deleteGroup = async () => {
@@ -232,6 +241,7 @@ const Group = () => {
       return (
         <>
           <div>tópicos</div>
+
           {group?.topics?.length !== 0 ? (
             <>
               <TopicList>
@@ -258,6 +268,7 @@ const Group = () => {
                   Criar tópico
                 </CustomButton>
               </ButtonArea>
+
               <Pagination>
                 <div>{total} tópicos criados</div>
                 <PaginationButton>
@@ -370,7 +381,7 @@ const Group = () => {
     <>
       <TopBar />
       <GroupContainer>
-        <div ref={loaderRef}>{<Loader visible={isLoading} />}</div>
+        <div ref={loaderRef}>{<Loader /> && isLoading}</div>
         <ButtonAdminContainer>
           <img src={group.avatar?.path ? group.avatar.path : "alt"} />
           <NavBar>

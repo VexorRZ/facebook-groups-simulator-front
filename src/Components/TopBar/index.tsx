@@ -57,12 +57,12 @@ const TopBar: React.FC = () => {
             </TopbarIconBadge>
           </div>
         </div>
-        <img
+        {/* <img
           src={userData?.avatar.path as string}
           alt="avatar"
           className="topbarImg"
           onClick={openProfilePage}
-        />
+        /> */}
         <h4 onClick={Logout} className="logout">
           sair
         </h4>

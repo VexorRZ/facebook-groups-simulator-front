@@ -17,6 +17,7 @@ import Profile from "../Pages/Profile";
 import CreateGroup from "../Pages/CreateGroup";
 import ResetPassword from "../Pages/ResetPassword";
 import { GroupProvider } from "../Contexts/GroupContext";
+import { GroupMembersProvider } from "../Contexts/GroupMembersContext";
 
 const Routes = () => {
   return (
@@ -70,9 +71,11 @@ const Routes = () => {
             path="/group/:group_id"
             element={
               <GroupProvider>
-                <PrivateRoutes>
-                  <Group />
-                </PrivateRoutes>
+                <GroupMembersProvider>
+                  <PrivateRoutes>
+                    <Group />
+                  </PrivateRoutes>
+                </GroupMembersProvider>
               </GroupProvider>
             }
           />
@@ -80,9 +83,11 @@ const Routes = () => {
             path="/group/:group_id/members"
             element={
               <GroupProvider>
-                <PrivateRoutes>
-                  <Group />
-                </PrivateRoutes>
+                <GroupMembersProvider>
+                  <PrivateRoutes>
+                    <Group />
+                  </PrivateRoutes>
+                </GroupMembersProvider>
               </GroupProvider>
             }
           />

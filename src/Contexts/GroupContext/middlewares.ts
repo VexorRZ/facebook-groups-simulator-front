@@ -35,26 +35,6 @@ export const asyncCreateRequest = async (group_id: number, dispatch: any) => {
   }
 };
 
-export const asyncGetGroupMembers = async (
-  group_id: number,
-  currentPage: number,
-  limit: number,
-  dispatch: any
-) => {
-  try {
-    const response: AxiosResponse = await api.get<AxiosResponse>(
-      `groupsmembers/${group_id}?page=${currentPage}&size=${limit}`
-    );
-
-    return dispatch({
-      type: REDUCER_ACTION_TYPE.LOAD_MEMBERS,
-      payload: response.data,
-    });
-  } catch (err) {
-    return err;
-  }
-};
-
 export const asyncGetGroups = async (token: string, dispatch: any) => {
   const response: AxiosResponse<Groups> = await api.get<
     Groups,
@@ -70,6 +50,26 @@ export const asyncGetGroups = async (token: string, dispatch: any) => {
     payload: response.data,
   });
 };
+
+export const asyncGetGroupMembers = async (
+  group_id: number,
+
+  dispatch: any
+) => {
+  try {
+    const response: AxiosResponse = await api.get<AxiosResponse>(
+      `groupsmembers/${String(34)}?page=1&size=3`
+    );
+
+    return dispatch({
+      type: REDUCER_ACTION_TYPE.LOAD_MEMBERS,
+      payload: response.data,
+    });
+  } catch (err) {
+    return err;
+  }
+};
+
 // export async function asyncAddAvatar(dispatch: any, data: FormData) {
 //   try {
 //     const response: AxiosResponse<avatar> = await api.patch<

@@ -9,8 +9,8 @@ import { REDUCER_ACTION_TYPE } from "./action-types";
 import {
   asyncCreateGroup,
   asyncCreateRequest,
-  asyncGetGroupMembers,
   asyncGetGroups,
+  asyncGetGroupMembers,
 } from "./middlewares";
 
 import { type Groups, type ChildrenType } from "./interfaces";
@@ -50,8 +50,8 @@ const useGroupContext = (initialUserState: Groups) => {
       dispatch,
       asyncCreateGroup,
       asyncCreateRequest,
-      asyncGetGroupMembers,
       asyncGetGroups,
+      asyncGetGroupMembers,
       REDUCER_ACTIONS,
       groupData,
     };
@@ -65,8 +65,8 @@ const useGroupContext = (initialUserState: Groups) => {
     dispatch,
     asyncCreateGroup,
     asyncCreateRequest,
-    asyncGetGroupMembers,
     asyncGetGroups,
+    asyncGetGroupMembers,
     REDUCER_ACTIONS,
     groupData,
   };
@@ -78,8 +78,8 @@ const initialGroupContextState: UseGroupContextType = {
   dispatch: () => {},
   asyncCreateGroup,
   asyncCreateRequest,
-  asyncGetGroupMembers,
   asyncGetGroups,
+  asyncGetGroupMembers,
   REDUCER_ACTIONS: REDUCER_ACTION_TYPE,
   groupData: {
     length: 0,

@@ -9,9 +9,6 @@ export const reducer = (state: Groups, action: ReducerAction): Groups => {
       }
 
       const data = action.payload;
-
-      // console.log("data dos grupos", data);
-
       return {
         ...state,
         ...data,
@@ -24,7 +21,7 @@ export const reducer = (state: Groups, action: ReducerAction): Groups => {
       }
 
       const groups = action.payload;
-      //  console.log("dados da resposta no reducer", groups);
+      console.log("array de grupos", action.payload);
       return {
         ...groups,
       };
@@ -34,25 +31,26 @@ export const reducer = (state: Groups, action: ReducerAction): Groups => {
       if (action.payload == null) {
         throw new Error("action.payload missing in ADD action");
       }
+      const members = action.payload;
 
       return {
         ...state,
-        members: [action.payload],
+        ...members,
       };
     }
 
-    case REDUCER_ACTION_TYPE.REQUEST_ENTER_GROUP: {
-      if (action.payload == null) {
-        throw new Error("action.payload missing in ADD action");
-      }
+    // case REDUCER_ACTION_TYPE.REQUEST_ENTER_GROUP: {
+    //   if (action.payload == null) {
+    //     throw new Error("action.payload missing in ADD action");
+    //   }
 
-      const { navigateAvailable } = action.payload;
+    //   const { navigateAvailable } = action.payload;
 
-      return {
-        ...state,
-        navigateAvailable,
-      };
-    }
+    //   return {
+    //     ...state,
+    //     navigateAvailable,
+    //   };
+    // }
 
     default:
       throw new Error("Unidentified reducer action type");

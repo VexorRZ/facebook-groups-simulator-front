@@ -23,6 +23,12 @@ export interface members {
   id: number;
   name: string;
   avatar: avatar;
+  group_as_member: GroupAsMember;
+}
+
+interface GroupAsMember {
+  id: number;
+  createdAt: Date;
 }
 
 interface moderators {

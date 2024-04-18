@@ -46,7 +46,7 @@ const Dashboard = () => {
   }, []);
 
   const getMoreGroups = useCallback(async () => {
-    if (userData?.token) {
+    if (!userData?.token) {
       return;
     }
 
@@ -67,7 +67,7 @@ const Dashboard = () => {
       headers: { Authorization: `Bearer ${userData?.token}` },
     });
 
-    if (!res.data.length) {
+    if (!res.data) {
       setLastData(true);
       setIsLoading(false);
       return;
@@ -83,8 +83,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
-      const target = entries[0];
-      if (target.isIntersecting) {
+      if (entries[0].isIntersecting) {
         getMoreGroups();
       }
     });
@@ -219,7 +218,6 @@ const Dashboard = () => {
                       Esse grupo ainda não possui nenhum tópico
                     </NoTopicsCard>
                   )}
-                  <div ref={loaderRef}>{isLoading && <Loader />}</div>
                 </GroupCard>
               </>
             );
@@ -231,7 +229,9 @@ const Dashboard = () => {
             </NoTopicsCard>
           )}
         </GroupCardList>
+        {isLoading && <Loader />}
       </Content>
+      <div ref={loaderRef} />
     </Container>
   );
 };
