@@ -17,7 +17,7 @@ import Profile from "../Pages/Profile";
 import CreateGroup from "../Pages/CreateGroup";
 import ResetPassword from "../Pages/ResetPassword";
 import { GroupProvider } from "../Contexts/GroupContext";
-import { GroupMembersProvider } from "../Contexts/GroupMembersContext";
+import { GroupMembersProvider } from "../Contexts/GroupContentContext";
 
 const Routes = () => {
   return (
@@ -59,11 +59,11 @@ const Routes = () => {
           <Route
             path="/dashboard"
             element={
-              <GroupProvider>
-                <PrivateRoutes>
+              <PrivateRoutes>
+                <GroupProvider>
                   <DashBoard />
-                </PrivateRoutes>
-              </GroupProvider>
+                </GroupProvider>
+              </PrivateRoutes>
             }
           />
 

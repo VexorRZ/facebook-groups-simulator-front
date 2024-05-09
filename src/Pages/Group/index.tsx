@@ -6,6 +6,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import { type AxiosResponse } from "axios";
 import { type Groups, type Response } from "../../services/interfaces";
+
 import Topic from "../../Components/TopicContent";
 import CustomButton from "../../Components/Button";
 import CreateTopic from "../../Containers/CreateTopic";
@@ -16,9 +17,8 @@ import GroupContainer from "../../Containers/GroupContainer";
 import Loader from "../../Components/Loader";
 import useAuth from "../../Hooks/useAuth";
 import useGroup from "../../Hooks/useGroups";
-import { Members } from "../../Contexts/GroupMembersContext/interfaces";
-import useGroupMembers from "../../Hooks/useMembers";
-import { asyncGetGroupMembers } from "../../Contexts/GroupContext/middlewares";
+import { Group } from "../../Contexts/GroupContentContext/interfaces";
+import useGroupContent from "../../Hooks/useGroupContent";
 
 import {
   GroupImage,
@@ -38,10 +38,9 @@ import {
   UserCardPic,
 } from "./styles";
 
-const Group = () => {
-  const [group, setGroup] = useState<Partial<Groups>>({});
-  //@ts-ignore
-  const [groupMembers, setGroupMembers] = useState<Members[]>([]);
+const GroupPage = () => {
+  const [group, setGroup] = useState<Group>();
+  //const [groupMembers, setGroupMembers] = useState<Group>();
   const [createTopic, setCreateTopic] = useState<boolean>(false);
   const [groupId, setGroupId] = useState<string>("");
   const [isOwner, setIsOwner] = useState<object | null>(null);
@@ -57,7 +56,7 @@ const Group = () => {
 
   const params = useParams();
   const { groupData, asyncGetGroupMembers, dispatch } = useGroup();
-  const { membersData, membersDispatch } = useGroupMembers();
+  const { membersData, membersDispatch } = useGroupContent();
   const { userData } = useAuth();
 
   const { group_id } = params;
@@ -101,9 +100,10 @@ const Group = () => {
 
       const { group, numberOfTopics, isOwner } = res.data;
 
-      // console.log("data", res.data);
-      console.log("groupdata", group);
-      setGroup({ ...group });
+      //@ts-ignore
+      console.log("resposta grupo", res.data.groupData[0]);
+      //@ts-ignore
+      setGroup({ ...res.data.groupData[0] });
 
       if (isOwner) {
         setIsOwner(isOwner);
@@ -178,24 +178,24 @@ const Group = () => {
   //   };
   // }, [fetchMembers]);
 
-  // useEffect(() => {
-  //   const getMembers = () => {
-  //     setIsLoading(true);
+  useEffect(() => {
+    const getMembers = () => {
+      setIsLoading(true);
 
-  //     try {
-  //       asyncGetGroupMembers(Number(group_id), currentPage, limit, dispatch);
+      try {
+        asyncGetGroupMembers(Number(group_id), dispatch);
 
-  //       //@ts-ignore
-  //       setGroupMembers(groupState.members);
-  //     } catch (err) {
-  //       setIsLoading(false);
-  //     }
+        //@ts-ignore
+        //   setGroupMembers(groupData.members);
+      } catch (err) {
+        //   setIsLoading(false);
+      }
 
-  //     setIsLoading(false);
-  //   };
+      setIsLoading(false);
+    };
 
-  //   getMembers();
-  // }, []);
+    getMembers();
+  }, []);
 
   useEffect(() => {
     void getGroupsByUser();
@@ -240,7 +240,7 @@ const Group = () => {
     if (contentName === "topics") {
       return (
         <>
-          <div>tópicos</div>
+          {<div>tópicos</div> && group?.topics?.length !== 0}
 
           {group?.topics?.length !== 0 ? (
             <>
@@ -307,7 +307,18 @@ const Group = () => {
               </Pagination>
             </>
           ) : (
-            <div>Nenhum tópico criado ainda</div>
+            <>
+              <div>Nenhum tópico criado ainda</div>
+              <ButtonArea>
+                <CustomButton
+                  onClick={openTopicCreate}
+                  width="130px"
+                  height="40px"
+                >
+                  Criar
+                </CustomButton>
+              </ButtonArea>
+            </>
           )}
         </>
       );
@@ -318,7 +329,7 @@ const Group = () => {
           <div>members</div>
 
           <TopicList>
-            {groupMembers?.map((member, index) => {
+            {group?.members?.map((member, index) => {
               return (
                 <UserCard key={index}>
                   <UserCardPic
@@ -335,21 +346,24 @@ const Group = () => {
     if (contentName === "admin") {
       return (
         <>
-          <div>admin</div>
+          <div>Administrador e moderadores</div>
+
+          <div>Dono: {group?.administrator?.name} </div>
+          <div>Id do dono {group?.administrator?.id}</div>
+
           {group?.moderators?.length !== 0 ? (
             <>
               <TopicList>
-                {group?.topics?.slice(0, 6).map((topic, index) => {
+                {group?.moderators?.slice(0, 6).map((moderator, index) => {
                   return (
-                    <Topic
-                      URlGroup={true}
-                      topicName={topic.name}
-                      numberOfComments={topic.comments.length}
-                      key={index}
-                      onClick={() => {
-                        openTopic(topic.id);
-                      }}
-                    />
+                    <UserCard key={index}>
+                      <UserCardPic
+                        src={
+                          moderator.avatar?.path ? moderator.avatar?.path : ""
+                        }
+                      />
+                      <strong>{moderator.name}</strong>
+                    </UserCard>
                   );
                 })}
               </TopicList>
@@ -364,7 +378,7 @@ const Group = () => {
               </ButtonArea>
             </>
           ) : (
-            <div>Nenhum tópico criado ainda</div>
+            <div>Esse grupo ainda não possui admistradores</div>
           )}
         </>
       );
@@ -379,11 +393,11 @@ const Group = () => {
 
   return (
     <>
-      <TopBar />
+      <TopBar socket={""} />
       <GroupContainer>
         <div ref={loaderRef}>{<Loader /> && isLoading}</div>
         <ButtonAdminContainer>
-          <img src={group.avatar?.path ? group.avatar.path : "alt"} />
+          <img src={group?.avatar?.path ? group?.avatar.path : "alt"} />
           <NavBar>
             <NavBarItem>
               <strong
@@ -446,12 +460,12 @@ const Group = () => {
           )}
         </ButtonAdminContainer>
         <Header>
-          <GroupTitle>{group.name}</GroupTitle>
+          <GroupTitle>{group?.name}</GroupTitle>
           <GroupInfo>
             <PublicIcon />
             <GroupTitle> grupo público</GroupTitle>
             <div />
-            <GroupTitle>{group.members?.length} membros</GroupTitle>
+            <GroupTitle>{group?.members?.length} membros</GroupTitle>
           </GroupInfo>
 
           <GroupImage />
@@ -478,4 +492,4 @@ const Group = () => {
   );
 };
 
-export default Group;
+export default GroupPage;

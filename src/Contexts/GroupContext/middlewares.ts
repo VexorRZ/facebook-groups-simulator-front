@@ -43,10 +43,28 @@ export const asyncGetGroups = async (token: string, dispatch: any) => {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  window.localStorage.setItem("group", JSON.stringify(response.data));
+  window.localStorage.setItem("@groups", JSON.stringify(response.data));
 
   return dispatch({
     type: REDUCER_ACTION_TYPE.LOAD_GROUPS,
+    payload: response.data,
+  });
+};
+
+export const asyncGetMoreGroups = async (
+  token: string,
+  index: string,
+  dispatch: any
+) => {
+  const response: AxiosResponse<Groups> = await api.get<
+    Groups,
+    AxiosResponse<Groups>
+  >(`groups/?page=${String(index)}&size=5`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  return dispatch({
+    type: REDUCER_ACTION_TYPE.LOAD_MORE_GROUPS,
     payload: response.data,
   });
 };

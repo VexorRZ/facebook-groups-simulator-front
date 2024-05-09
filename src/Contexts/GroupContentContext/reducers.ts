@@ -1,7 +1,7 @@
-import { type Members, type ReducerAction } from "./interfaces";
+import { type Group, type ReducerAction } from "./interfaces";
 
 import { REDUCER_ACTION_TYPE } from "./action-types";
-export const reducers = (state: Members, action: ReducerAction): Members => {
+export const reducers = (state: Group, action: ReducerAction): Group => {
   switch (action.type) {
     case REDUCER_ACTION_TYPE.LOAD_MEMBERS: {
       if (action.payload == null) {
@@ -9,7 +9,7 @@ export const reducers = (state: Members, action: ReducerAction): Members => {
       }
 
       const members = action.payload;
-      console.log("chegou no reducer", members);
+
       return {
         ...members,
       };

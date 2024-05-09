@@ -1,8 +1,7 @@
 import { type ReactElement } from "react";
 
-export interface Groups {
+export interface Group {
   administrator: administrator;
-  length: number;
   id: number;
   is_private: boolean;
   members: members[];
@@ -13,6 +12,18 @@ export interface Groups {
   navigateAvailable?: boolean;
   bans?: bans[];
   requesters?: requesters[];
+}
+
+interface moderators {
+  id: number;
+  name: string;
+  avatar: avatar;
+}
+
+interface administrator {
+  id: number;
+  name: string;
+  avatar: avatar;
 }
 
 interface avatar {
@@ -29,16 +40,6 @@ export interface members {
 interface GroupAsMember {
   id: number;
   createdAt: Date;
-}
-
-interface moderators {
-  id: number;
-  name: string;
-}
-
-interface administrator {
-  id: number;
-  name: string;
 }
 
 interface bans {
@@ -62,13 +63,6 @@ export interface comments {
   body: string;
   id: number;
   createdAt?: Date;
-  likes: likes[];
-}
-
-export interface likes {
-  id: number;
-  author_id: number;
-  comment_id: number;
 }
 
 interface author {
@@ -77,7 +71,7 @@ interface author {
 }
 export interface ReducerAction {
   type: string;
-  payload?: Groups;
+  payload?: Group;
 }
 
 export interface ChildrenType {

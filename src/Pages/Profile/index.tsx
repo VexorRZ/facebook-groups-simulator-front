@@ -132,7 +132,7 @@ const Profile = ({
 
   return (
     <>
-      <TopBar />
+      <TopBar socket={""} />
       {editProfileVisible && (
         <>
           <ProfileEditorContainer>

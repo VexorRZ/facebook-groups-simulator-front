@@ -3,8 +3,8 @@ import GroupContext, {
   type UseGroupContextType,
 } from "../Contexts/GroupContext";
 
-const useGroup = (): UseGroupContextType => {
+const useGroups = (): UseGroupContextType => {
   return useContext(GroupContext);
 };
 
-export default useGroup;
+export default useGroups;

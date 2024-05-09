@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import GroupMemberContext, {
   type UseGroupMembersContextType,
-} from "../Contexts/GroupMembersContext";
+} from "../Contexts/GroupContentContext";
 
-const useGroupmembers = (): UseGroupMembersContextType => {
+const useGroupContext = (): UseGroupMembersContextType => {
   return useContext(GroupMemberContext);
 };
 
-export default useGroupmembers;
+export default useGroupContext;

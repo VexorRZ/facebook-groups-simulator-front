@@ -70,7 +70,6 @@ const CreateGroup = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("option:", option);
     localStorage.getItem("@token");
   });
 
@@ -95,7 +94,7 @@ const CreateGroup = () => {
       setLoadingVisible(true);
       event.preventDefault();
 
-      if (userData?.token) {
+      if (!userData?.token) {
         throw new Error("Erro inesperado, token não fornecido");
       }
 
@@ -138,9 +137,9 @@ const CreateGroup = () => {
 
   return (
     <>
-      <TopBar />
+      <TopBar socket={""} />
       <Container>
-        <Loading visible={loadingVisible} />
+        {<Loading /> && loadingVisible}
         <ImageContainer>
           {status.type === "success" ? (
             <p style={{ color: "green" }}>{status.mensagem}</p>
@@ -192,7 +191,6 @@ const CreateGroup = () => {
                     <Radio
                       onClick={() => {
                         setOption(false);
-                        console.log(option);
                       }}
                     />
                   }
@@ -210,7 +208,6 @@ const CreateGroup = () => {
                     <Radio
                       onClick={() => {
                         setOption(true);
-                        console.log(option);
                       }}
                     />
                   }

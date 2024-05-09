@@ -13,6 +13,8 @@ import {
 } from "../../Contexts/TopicContext/interfaces";
 import useAuth from "../../Hooks/useAuth";
 import { type comments } from "../../services/interfaces";
+import heart from "../../assets/icons/heart.svg";
+import heartFilled from "../../assets/icons/heartFilled.svg";
 import Button from "../../Components/Button";
 import TopBar from "../../Components/TopBar";
 
@@ -41,6 +43,7 @@ const TopicPage = () => {
   const [commentBoxOpenned, setCommentBoxOppened] = useState(false);
   const [comment, setComment] = useState("");
   const [commentList, setCommentlist] = useState<comments[]>([]);
+  const [liked, setLiked] = useState(false);
   const [limit] = useState(5);
   const [pages, setPages] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -50,6 +53,12 @@ const TopicPage = () => {
   const { group_id, topic_id } = params;
 
   const { userData } = useAuth();
+
+  const handleNotification = (commentId: number) => {
+    const findComment = commentList.find(({ id }) => id === commentId);
+    setLiked(!liked);
+  };
+
   const getTopicByCredentials = async () => {
     if (!userData?.token) {
       return;
@@ -69,6 +78,8 @@ const TopicPage = () => {
       );
 
       const { totalCount } = res.data;
+
+      console.log("dataTopic", res.data);
 
       if (totalCount) {
         const totalPages = Math.ceil(totalCount / limit);
@@ -101,6 +112,7 @@ const TopicPage = () => {
             avatar: { path: userData.avatar.path },
           },
           body: comment,
+          commentLikes: [],
         },
       ]);
 
@@ -109,6 +121,7 @@ const TopicPage = () => {
       }
 
       setCommentBoxOppened(false);
+
       try {
         const res: AxiosResponse = await api.post<AxiosResponse>(
           `/comments/${Number(group_id)}/${Number(topic_id)}`,
@@ -139,13 +152,25 @@ const TopicPage = () => {
     [comment]
   );
 
+  const userGaveLike = (commmentId: number) => {
+    const currentComment = commentList.find(({ id }) => (id = commmentId));
+    const userLikeExistis = currentComment?.commentLikes.find(
+      ({ author_id }) => author_id === Number(userData.id)
+    );
+
+    if (userLikeExistis) {
+      return <img src={heartFilled} alt="" />;
+    } else {
+      return <img src={heart} alt="" />;
+    }
+  };
+
   useEffect(() => {
     void getTopicByCredentials();
-    console.log(commentList);
   }, [currentPage, limit, total]);
   return (
     <>
-      <TopBar />
+      <TopBar socket={""} />
       <Container>
         <Header>
           <GroupTitle>{groupTopic.name}</GroupTitle>
@@ -184,6 +209,8 @@ const TopicPage = () => {
                             { locale: ptBR }
                           )}
                         </CommentDate>
+
+                        {void userGaveLike(comment.id ? comment.id : 0)}
                       </Comment>
                     );
                   })}

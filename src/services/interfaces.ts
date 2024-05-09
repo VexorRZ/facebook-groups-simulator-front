@@ -46,6 +46,12 @@ export interface comments {
   body: string;
   id?: number;
   createdAt?: Date | number;
+  commentLikes: commentLikes[];
+}
+
+interface commentLikes {
+  author_id: number;
+  comment_id: number;
 }
 
 interface author {

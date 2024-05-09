@@ -1,16 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Search, Chat, Notifications } from "@material-ui/icons";
 import { Container, TopbarIconBadge } from "./styles";
 import { useNavigate } from "react-router-dom";
 // import image from "../../assets/images/fibonacci.jpg";
 import useAuth from "../../Hooks/useAuth";
+import { io } from "socket.io-client";
 
 import { AsyncLogoutFn } from "../../Contexts/AuthContext/middlewares";
+import { NavBar } from "../../Pages/Group/styles";
 
-const TopBar: React.FC = () => {
-  const navigate = useNavigate();
+const TopBar = ({ socket }: any) => {
+  // const [socket, setSocket] = useState(null);
+  // const [user, setUser] = useState(null);
 
   const { dispatch, userData } = useAuth();
+
+  // useEffect(() => {
+  //   setSocket(io("http://localhost:5000"));
+  //   setUser(userData);
+  // }, []);
+
+  // useEffect(() => {
+  //   socket.emit("newUser", user);
+  // }, [socket, user]);
+
+  const navigate = useNavigate();
 
   const Logout = () => {
     AsyncLogoutFn(dispatch);

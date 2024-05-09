@@ -41,7 +41,7 @@ const useAuthContext = (initialUserState: UserType) => {
     return REDUCER_ACTION_TYPE;
   }, []);
 
-  const user = window.localStorage.getItem("user");
+  const user = window.localStorage.getItem("@user");
 
   if (user) {
     let userData = JSON.parse(user) as UserType;
@@ -106,7 +106,6 @@ const initialUserContextState: UseAuthContextType = {
 const AuthContext = createContext<UseAuthContextType>(initialUserContextState);
 
 export const AuthProvider = ({ children }: ChildrenType): ReactElement => {
-  console.log(initialUserState);
   return (
     <AuthContext.Provider value={useAuthContext(initialUserState)}>
       {children}

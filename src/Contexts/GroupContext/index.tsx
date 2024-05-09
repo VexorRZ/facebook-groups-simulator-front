@@ -11,12 +11,13 @@ import {
   asyncCreateRequest,
   asyncGetGroups,
   asyncGetGroupMembers,
+  asyncGetMoreGroups,
 } from "./middlewares";
 
-import { type Groups, type ChildrenType } from "./interfaces";
+import { type Groups, type ChildrenType, members } from "./interfaces";
 import { reducer } from "./reducers";
 
-const initialUserState: Groups = {
+const initialGroupsState: Groups = {
   length: 0,
   name: "",
   administrator: { id: 0, name: "" },
@@ -34,14 +35,14 @@ const initialUserState: Groups = {
 
 export type ReducerActionType = typeof REDUCER_ACTION_TYPE;
 
-const useGroupContext = (initialUserState: Groups) => {
-  const [state, dispatch] = useReducer(reducer, initialUserState);
+const useGroupContext = (initialGroupsState: Groups) => {
+  const [state, dispatch] = useReducer(reducer, initialGroupsState);
 
   const REDUCER_ACTIONS = useMemo(() => {
     return REDUCER_ACTION_TYPE;
   }, []);
 
-  const group = window.localStorage.getItem("group");
+  const group = window.localStorage.getItem("@groups");
 
   if (group) {
     let groupData = JSON.parse(group) as Groups;
@@ -52,6 +53,7 @@ const useGroupContext = (initialUserState: Groups) => {
       asyncCreateRequest,
       asyncGetGroups,
       asyncGetGroupMembers,
+      asyncGetMoreGroups,
       REDUCER_ACTIONS,
       groupData,
     };
@@ -61,12 +63,17 @@ const useGroupContext = (initialUserState: Groups) => {
 
   groupData = state;
 
+  // console.log("dados do gropo no index", groupData);
+  // const arraydata = [];
+  // arraydata.push(groupData);
+  // console.log("response in index", arraydata);
   return {
     dispatch,
     asyncCreateGroup,
     asyncCreateRequest,
     asyncGetGroups,
     asyncGetGroupMembers,
+    asyncGetMoreGroups,
     REDUCER_ACTIONS,
     groupData,
   };
@@ -80,6 +87,7 @@ const initialGroupContextState: UseGroupContextType = {
   asyncCreateRequest,
   asyncGetGroups,
   asyncGetGroupMembers,
+  asyncGetMoreGroups,
   REDUCER_ACTIONS: REDUCER_ACTION_TYPE,
   groupData: {
     length: 0,
@@ -104,7 +112,7 @@ const GroupContext = createContext<UseGroupContextType>(
 
 export const GroupProvider = ({ children }: ChildrenType): ReactElement => {
   return (
-    <GroupContext.Provider value={useGroupContext(initialUserState)}>
+    <GroupContext.Provider value={useGroupContext(initialGroupsState)}>
       {children}
     </GroupContext.Provider>
   );

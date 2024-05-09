@@ -21,10 +21,20 @@ export const reducer = (state: Groups, action: ReducerAction): Groups => {
       }
 
       const groups = action.payload;
-      console.log("array de grupos", action.payload);
+
       return {
         ...groups,
       };
+    }
+
+    case REDUCER_ACTION_TYPE.LOAD_MORE_GROUPS: {
+      if (action.payload == null) {
+        throw new Error("action.payload missing in ADD action");
+      }
+
+      const groups = action.payload;
+      console.log("array de grupos loadmoregroups", action.payload);
+      return groups;
     }
 
     case REDUCER_ACTION_TYPE.LOAD_MEMBERS: {
@@ -32,6 +42,8 @@ export const reducer = (state: Groups, action: ReducerAction): Groups => {
         throw new Error("action.payload missing in ADD action");
       }
       const members = action.payload;
+
+      console.log("members", members);
 
       return {
         ...state,

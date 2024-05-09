@@ -30,7 +30,7 @@ export const asyncLoginFn = async (
       response.data.token
     )}`;
 
-    window.localStorage.setItem("user", JSON.stringify(response.data.user));
+    window.localStorage.setItem("@user", JSON.stringify(response.data.user));
 
     localStorage.setItem("@token", response.data.user.token);
 
@@ -132,7 +132,6 @@ export async function recoverPassword(email: string) {
 
 export async function resetPassword(newPassword: string, token: string) {
   try {
-    console.log(newPassword);
     const response: AxiosResponse = await api.post<AxiosResponse>(
       `reset_password_confirm`,
       {

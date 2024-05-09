@@ -11,6 +11,7 @@ import api from "../../services/api";
 import useAuth from "../../Hooks/useAuth";
 import useGroups from "../../Hooks/useGroups";
 import Loader from "../../Components/Loader";
+import { io } from "socket.io-client";
 
 import {
   ToastError,
@@ -28,12 +29,19 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [index, setIndex] = useState(2);
   const [lastData, setLastData] = useState<boolean>(false);
+  const [socket, setSocket] = useState(null);
+  const [user, setUser] = useState(null);
   const loaderRef = useRef(null);
 
   const { userData } = useAuth();
 
-  const { asyncCreateRequest, dispatch, asyncGetGroups, groupData } =
-    useGroups();
+  const {
+    asyncCreateRequest,
+    dispatch,
+    asyncGetGroups,
+    asyncGetMoreGroups,
+    groupData,
+  } = useGroups();
 
   const navigate = useNavigate();
 
@@ -60,21 +68,21 @@ const Dashboard = () => {
 
     setIsLoading(true);
 
-    const res: AxiosResponse<Groups> = await api.get<
+    const response: AxiosResponse<Groups> = await api.get<
       Groups,
       AxiosResponse<Groups>
     >(`groups/?page=${String(index)}&size=5`, {
       headers: { Authorization: `Bearer ${userData?.token}` },
     });
 
-    if (!res.data) {
+    if (response.data.length === 0 || !response.data) {
       setLastData(true);
       setIsLoading(false);
       return;
     }
 
     //@ts-ignore
-    setGroups((prevGroups) => [...prevGroups, ...res.data]);
+    setGroups((prevGroups) => [...prevGroups, ...response.data]);
 
     setIndex((prevIndex) => prevIndex + 1);
 
@@ -108,9 +116,10 @@ const Dashboard = () => {
 
       setIsLoading(true);
       try {
-        asyncGetGroups(userData?.token, dispatch);
+        await asyncGetGroups(userData?.token, dispatch);
 
-        // @ts-expect-error
+        console.log("userdata", userData);
+        //@ts-ignore
         setGroups([...groupData]);
       } catch (err) {
         console.log(err);
@@ -120,6 +129,15 @@ const Dashboard = () => {
 
     getGroupsByUser();
   }, []);
+
+  // useEffect(() => {
+  //   setSocket(io("http://localhost:5000"));
+  //   setUser(userData);
+  // }, []);
+
+  // useEffect(() => {
+  //   socket.emit("newUser", user);
+  // }, [socket, user]);
 
   const requestEnterInGroup = useCallback(async (groupId: number) => {
     await asyncCreateRequest(groupId, dispatch);
@@ -163,7 +181,7 @@ const Dashboard = () => {
 
   return (
     <Container>
-      <TopBar />
+      <TopBar socket={socket} />
       <Content>
         <SideMenu />
 
@@ -219,6 +237,7 @@ const Dashboard = () => {
                     </NoTopicsCard>
                   )}
                 </GroupCard>
+                <div ref={loaderRef} />
               </>
             );
           })}
@@ -231,7 +250,6 @@ const Dashboard = () => {
         </GroupCardList>
         {isLoading && <Loader />}
       </Content>
-      <div ref={loaderRef} />
     </Container>
   );
 };

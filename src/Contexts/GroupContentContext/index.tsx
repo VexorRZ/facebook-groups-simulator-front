@@ -8,12 +8,18 @@ import React, {
 import { REDUCER_ACTION_TYPE } from "./action-types";
 import { asyncGetGroupMembers } from "./middlewares";
 
-import { type Members, type ChildrenType } from "./interfaces";
+import { type Group, type ChildrenType } from "./interfaces";
 import { reducers } from "./reducers";
 
-const initialMembersState: Members = {
-  id: 0,
+const initialMembersState: Group = {
   name: "",
+  administrator: { id: 0, name: "", avatar: { id: "", path: "" } },
+  moderators: [],
+  is_private: false,
+  id: 0,
+  topics: [],
+  members: [],
+  navigateAvailable: false,
   avatar: {
     id: "",
     path: "",
@@ -22,7 +28,7 @@ const initialMembersState: Members = {
 
 export type ReducerActionType = typeof REDUCER_ACTION_TYPE;
 
-const useGroupContext = (initialMembersState: Members) => {
+const useGroupContext = (initialMembersState: Group) => {
   const [state, membersDispatch] = useReducer(reducers, initialMembersState);
 
   const REDUCER_ACTIONS = useMemo(() => {
@@ -32,7 +38,7 @@ const useGroupContext = (initialMembersState: Members) => {
   const members = window.localStorage.getItem("members");
 
   if (members) {
-    let membersData = JSON.parse(members) as Members;
+    let membersData = JSON.parse(members) as Group;
 
     return {
       membersDispatch,
@@ -42,7 +48,7 @@ const useGroupContext = (initialMembersState: Members) => {
     };
   }
 
-  let membersData = {} as Members;
+  let membersData = {} as Group;
 
   membersData = state;
 
@@ -61,8 +67,14 @@ const initialGroupContextState: UseGroupMembersContextType = {
   asyncGetGroupMembers,
   REDUCER_ACTIONS: REDUCER_ACTION_TYPE,
   membersData: {
-    id: 0,
     name: "",
+    administrator: { id: 0, name: "", avatar: { id: "", path: "" } },
+    moderators: [],
+    is_private: false,
+    id: 0,
+    topics: [],
+    members: [],
+    navigateAvailable: false,
     avatar: {
       id: "",
       path: "",

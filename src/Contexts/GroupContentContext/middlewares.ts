@@ -4,21 +4,12 @@ import { useCallback } from "react";
 import { type AxiosResponse } from "axios";
 import api from "../../services/api";
 import { REDUCER_ACTION_TYPE } from "./action-types";
-import { Members } from "./interfaces";
+import { Group } from "./interfaces";
 
-import {
-  ToastError,
-  ToastSuccess,
-} from "../../Components/ToastContainer/ToastMessages";
-
-export const asyncGetGroupMembers = async (
-  group_id: number,
-
-  dispatch: any
-) => {
+export const asyncGetGroupMembers = async (group_id: string, dispatch: any) => {
   try {
     const response: AxiosResponse = await api.get<AxiosResponse>(
-      `groupsmembers/${String(34)}?page=1&size=5`
+      `groupsmembers/${group_id}?page=1&size=5`
     );
 
     return dispatch({
