@@ -3,14 +3,17 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import GroupsIcon from "@mui/icons-material/Groups";
 import PersonIcon from "@mui/icons-material/Person";
 
-export const Container = styled.div`
+interface IContainerProps {
+  position?: string;
+}
+export const Container = styled.div<IContainerProps>`
   border-radius: 5px;
   display: flex;
   flex-direction: column;
   margin-left: 18px;
   width: 300px;
   background: #25282e;
-  position: sticky;
+  position: ${(props) => (props.position ? props.position : "sticky")};
   top: 85px;
   height: 100%;
   border: 1px solid #526173;

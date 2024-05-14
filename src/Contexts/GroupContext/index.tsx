@@ -12,6 +12,7 @@ import {
   asyncGetGroups,
   asyncGetGroupMembers,
   asyncGetMoreGroups,
+  asyncGetGroupsByMember,
 } from "./middlewares";
 
 import { type Groups, type ChildrenType, members } from "./interfaces";
@@ -54,6 +55,7 @@ const useGroupContext = (initialGroupsState: Groups) => {
       asyncGetGroups,
       asyncGetGroupMembers,
       asyncGetMoreGroups,
+      asyncGetGroupsByMember,
       REDUCER_ACTIONS,
       groupData,
     };
@@ -63,10 +65,6 @@ const useGroupContext = (initialGroupsState: Groups) => {
 
   groupData = state;
 
-  // console.log("dados do gropo no index", groupData);
-  // const arraydata = [];
-  // arraydata.push(groupData);
-  // console.log("response in index", arraydata);
   return {
     dispatch,
     asyncCreateGroup,
@@ -74,6 +72,7 @@ const useGroupContext = (initialGroupsState: Groups) => {
     asyncGetGroups,
     asyncGetGroupMembers,
     asyncGetMoreGroups,
+    asyncGetGroupsByMember,
     REDUCER_ACTIONS,
     groupData,
   };
@@ -88,6 +87,7 @@ const initialGroupContextState: UseGroupContextType = {
   asyncGetGroups,
   asyncGetGroupMembers,
   asyncGetMoreGroups,
+  asyncGetGroupsByMember,
   REDUCER_ACTIONS: REDUCER_ACTION_TYPE,
   groupData: {
     length: 0,

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/space-before-function-paren */
 
-import { useCallback } from "react";
 import { type AxiosResponse } from "axios";
 import api from "../../services/api";
 import { REDUCER_ACTION_TYPE } from "./action-types";
@@ -81,6 +80,21 @@ export const asyncGetGroupMembers = async (
 
     return dispatch({
       type: REDUCER_ACTION_TYPE.LOAD_MEMBERS,
+      payload: response.data,
+    });
+  } catch (err) {
+    return err;
+  }
+};
+
+export const asyncGetGroupsByMember = async (dispatch: any) => {
+  try {
+    const response: AxiosResponse = await api.get<AxiosResponse>(
+      `groupsmembers`
+    );
+
+    return dispatch({
+      type: REDUCER_ACTION_TYPE.LOAD_GROUPS_MEMBER,
       payload: response.data,
     });
   } catch (err) {

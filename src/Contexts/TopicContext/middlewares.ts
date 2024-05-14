@@ -7,6 +7,6 @@ export const asyncCreateGroup = useCallback(async () => {
   return true;
 }, []);
 
-export const asyncGetGroups = useCallback(async () => {
+export const asyncUpdateOrCreateLike = useCallback(async () => {
   return true;
 }, []);

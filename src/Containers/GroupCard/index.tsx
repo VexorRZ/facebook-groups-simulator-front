@@ -1,5 +1,4 @@
 import React from "react";
-import CustomButton from "../../Components/Button";
 
 import {
   Container,
@@ -20,22 +19,23 @@ import {
 } from "./styles";
 
 interface IGrupoCardProps {
-  onClickView: () => void;
+  onClickView?: () => void;
   onClickEnter: () => void;
-  groupName: string;
-  numberOfMbembers: number;
+  groupName?: string;
+  numberOfMbembers?: number;
   children?: React.ReactNode;
-  numberOfTopics: number;
+  numberOfTopics?: number;
   groupImage?: string;
   isPrivate?: boolean;
   dialogIsVisible?: boolean;
-  groupOwner: string;
-  groupStatus: string;
-  statusColor: string;
-  CardButtonTextEnter: string;
-  cardButtonTextEnterVisible: boolean;
-  ButtonViewGroupVisible: boolean;
-  CardButtonTextView: string;
+  groupOwner?: string;
+  groupStatus?: string;
+  statusColor?: string;
+  CardButtonTextEnter?: string;
+  cardButtonTextEnterVisible?: boolean;
+  ButtonViewGroupVisible?: boolean;
+  CardButtonTextView?: string;
+  marginLeft?: string;
 }
 
 const GroupCard = ({
@@ -52,11 +52,12 @@ const GroupCard = ({
   groupOwner,
   groupStatus,
   statusColor,
+  marginLeft,
   onClickView,
   onClickEnter,
 }: IGrupoCardProps) => {
   return (
-    <Container>
+    <Container marginLeft={marginLeft}>
       <GroupCardHeader>
         <TitleAndStatus>
           <GroupTitle>Grupo: {groupName}</GroupTitle>

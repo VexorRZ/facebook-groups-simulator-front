@@ -8,19 +8,31 @@ import { useNavigate } from "react-router-dom";
 
 import { Container, ElementArea } from "./styles";
 
-const SideMenu: React.FC = () => {
+interface ISideMenuProps {
+  position?: string;
+}
+
+const SideMenu: React.FC = ({ position }: ISideMenuProps) => {
   const navigate = useNavigate();
 
   const openProfilePage = () => {
     navigate("/profile");
   };
 
+  const openUserGroups = () => {
+    navigate("/user-groups");
+  };
+
   const openGroupCreatePage = () => {
     navigate("/create-group");
   };
 
+  const openUsersList = () => {
+    navigate("/users");
+  };
+
   return (
-    <Container>
+    <Container position={position}>
       <ElementArea onClick={openProfilePage}>
         <AccountCircleIcon
           style={{
@@ -29,7 +41,7 @@ const SideMenu: React.FC = () => {
         />
         <h6>Perfil </h6>
       </ElementArea>
-      <ElementArea>
+      <ElementArea onClick={openUsersList}>
         <PersonIcon
           style={{
             color: "#ebeff5",
@@ -37,13 +49,13 @@ const SideMenu: React.FC = () => {
         />
         <h6>usuários </h6>
       </ElementArea>
-      <ElementArea>
+      <ElementArea onClick={openUserGroups}>
         <GroupsIcon
           style={{
             color: "#ebeff5",
           }}
         />
-        <h6>grupos </h6>
+        <h6> Meus grupos </h6>
       </ElementArea>
       <ElementArea onClick={openGroupCreatePage}>
         <GroupAddIcon

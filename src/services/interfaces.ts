@@ -52,6 +52,7 @@ export interface comments {
 interface commentLikes {
   author_id: number;
   comment_id: number;
+  like: boolean;
 }
 
 interface author {

@@ -16,6 +16,8 @@ import Topic from "../Pages/Topic";
 import Profile from "../Pages/Profile";
 import CreateGroup from "../Pages/CreateGroup";
 import ResetPassword from "../Pages/ResetPassword";
+import UserGroups from "../Pages/UserGroups";
+import UsersPage from "../Pages/Users";
 import { GroupProvider } from "../Contexts/GroupContext";
 import { GroupMembersProvider } from "../Contexts/GroupContentContext";
 
@@ -137,6 +139,24 @@ const Routes = () => {
                   <CreateGroup />
                 </PrivateRoutes>
               </GroupProvider>
+            }
+          />
+          <Route
+            path="/user-groups"
+            element={
+              <GroupProvider>
+                <PrivateRoutes>
+                  <UserGroups />
+                </PrivateRoutes>
+              </GroupProvider>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <PrivateRoutes>
+                <UsersPage />
+              </PrivateRoutes>
             }
           />
         </Routers>

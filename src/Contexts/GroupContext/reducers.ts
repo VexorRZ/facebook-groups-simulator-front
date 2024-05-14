@@ -51,6 +51,18 @@ export const reducer = (state: Groups, action: ReducerAction): Groups => {
       };
     }
 
+    case REDUCER_ACTION_TYPE.LOAD_GROUPS_MEMBER: {
+      if (action.payload == null) {
+        throw new Error("action.payload missing in ADD action");
+      }
+      const groups = action.payload;
+
+      return {
+        ...state,
+        ...groups,
+      };
+    }
+
     // case REDUCER_ACTION_TYPE.REQUEST_ENTER_GROUP: {
     //   if (action.payload == null) {
     //     throw new Error("action.payload missing in ADD action");

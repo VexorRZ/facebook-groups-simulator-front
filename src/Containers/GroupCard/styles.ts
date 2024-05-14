@@ -8,14 +8,18 @@ interface cardButtonProps {
   visible?: boolean;
 }
 
-export const Container = styled.div`
+interface IcontainerProps {
+  marginLeft?: string;
+}
+
+export const Container = styled.div<IcontainerProps>`
   display: flex;
   flex-direction: column;
   width: 600px;
   border-radius: 6px;
   box-shadow: 0vh;
   background-color: #25282e;
-  margin-left: 40px;
+  margin-left: ${(props) => (props.marginLeft ? props.marginLeft : "40px")};
   border: 1px solid #526173;
   padding: 10px;
   box-shadow: 18px 19px 32px -11px rgba(0, 0, 0, 1);

@@ -23,9 +23,27 @@ interface Author {
 }
 
 export interface Comments {
-  id: number;
+  author: author;
   body: string;
-  author: CommentAuthor;
+  id: number;
+  createdAt?: Date;
+  commentLikes: commentLikes[];
+}
+
+interface author {
+  id: number;
+  name: string;
+  avatar: avatar;
+}
+
+interface avatar {
+  id?: string;
+  path: string;
+}
+export interface commentLikes {
+  id: number;
+  author_id: number;
+  comment_id: number;
 }
 
 interface CommentAuthor {

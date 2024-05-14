@@ -1,0 +1,3 @@
+export const REDUCER_ACTION_TYPE = {
+  LOAD_USERS: "LOAD_USERS",
+};

@@ -5,17 +5,19 @@ import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "./Contexts/AuthContext";
 import { GroupProvider } from "./Contexts/GroupContext";
 import { GroupMembersProvider } from "./Contexts/GroupContentContext";
+import { UsersProvider } from "./Contexts/UsersContext";
 
 const App = () => {
   return (
     <>
       <GlobalStyle />
-
       <AuthProvider>
         <GroupProvider>
-          <GroupMembersProvider>
-            <Routes />
-          </GroupMembersProvider>
+          <UsersProvider>
+            <GroupMembersProvider>
+              <Routes />
+            </GroupMembersProvider>
+          </UsersProvider>
         </GroupProvider>
       </AuthProvider>
       <ToastContainer />

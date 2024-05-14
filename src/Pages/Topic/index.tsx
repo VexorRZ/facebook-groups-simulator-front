@@ -12,7 +12,7 @@ import {
   type TopicData,
 } from "../../Contexts/TopicContext/interfaces";
 import useAuth from "../../Hooks/useAuth";
-import { type comments } from "../../services/interfaces";
+import { type Comments } from "../../Contexts/TopicContext/interfaces";
 import heart from "../../assets/icons/heart.svg";
 import heartFilled from "../../assets/icons/heartFilled.svg";
 import Button from "../../Components/Button";
@@ -42,7 +42,7 @@ const TopicPage = () => {
   const [groupTopic, setTopic] = useState<Partial<TopicData>>({});
   const [commentBoxOpenned, setCommentBoxOppened] = useState(false);
   const [comment, setComment] = useState("");
-  const [commentList, setCommentlist] = useState<comments[]>([]);
+  const [commentList, setCommentlist] = useState<Comments[]>([]);
   const [liked, setLiked] = useState(false);
   const [limit] = useState(5);
   const [pages, setPages] = useState<number[]>([]);
@@ -93,6 +93,7 @@ const TopicPage = () => {
         setTotal(totalCount);
       }
 
+      //@ts-ignore
       setCommentlist(res.data.groupTopics.topics[0].comments);
 
       setTopic({ ...res.data.groupTopics });
@@ -106,6 +107,7 @@ const TopicPage = () => {
       setCommentlist([
         ...commentList,
         {
+          id: 0,
           author: {
             name: userData.name,
             id: Number(userData.id),
@@ -152,16 +154,49 @@ const TopicPage = () => {
     [comment]
   );
 
+  const updateLike = async (commentId: number) => {
+    try {
+      const res: AxiosResponse<GroupTopic> = await api.put<
+        GroupTopic,
+        AxiosResponse<GroupTopic>
+      >(`comments_likes/${Number(userData.id)}/${Number(commentId)}`, {
+        headers: { Authorization: `Bearer ${userData.token}` },
+      });
+      return res;
+    } catch (err) {
+      return err;
+    }
+  };
+
   const userGaveLike = (commmentId: number) => {
     const currentComment = commentList.find(({ id }) => (id = commmentId));
-    const userLikeExistis = currentComment?.commentLikes.find(
-      ({ author_id }) => author_id === Number(userData.id)
+
+    const userLikeExists = currentComment?.commentLikes.find(
+      ({ author_id, comment_id }) =>
+        author_id === Number(userData.id) && comment_id === commmentId
     );
 
-    if (userLikeExistis) {
-      return <img src={heartFilled} alt="" />;
+    if (!userLikeExists) {
+      return (
+        <img
+          src={heart}
+          alt=""
+          onClick={() => {
+            updateLike(commmentId);
+          }}
+        />
+      );
     } else {
-      return <img src={heart} alt="" />;
+      return (
+        <img
+          src={heartFilled}
+          alt=""
+          onClick={() => {
+            updateLike(commmentId);
+            console.log("clicked on:", commmentId);
+          }}
+        />
+      );
     }
   };
 
@@ -210,7 +245,9 @@ const TopicPage = () => {
                           )}
                         </CommentDate>
 
-                        {void userGaveLike(comment.id ? comment.id : 0)}
+                        {userGaveLike(comment.id)}
+
+                        {<div>{comment.commentLikes.length}</div>}
                       </Comment>
                     );
                   })}

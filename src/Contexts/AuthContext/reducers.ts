@@ -46,6 +46,17 @@ export const reducer = (state: UserType, action: ReducerAction): UserType => {
       return { ...state, avatar };
     }
 
+    case REDUCER_ACTION_TYPE.LOAD_USERS: {
+      if (action.payload == null) {
+        throw new Error("action.payload missing in ADD action");
+      }
+      const users = action.payload;
+      return {
+        ...state,
+        ...users,
+      };
+    }
+
     default:
       throw new Error("Unidentified reducer action type");
   }
