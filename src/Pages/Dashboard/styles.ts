@@ -14,7 +14,7 @@ export const Container = styled.div`
 export const GroupCardList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 8px;
 
   h1 {
     font-family: sans-serif;

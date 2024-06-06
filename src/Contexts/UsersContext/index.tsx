@@ -31,6 +31,19 @@ const usersContext = (initialUsersState: Users) => {
     return REDUCER_ACTION_TYPE;
   }, []);
 
+  const users = window.localStorage.getItem("@users");
+
+  if (users) {
+    const usersData = JSON.parse(users) as Users;
+
+    return {
+      dispatch,
+      asyncLoadUsers,
+      REDUCER_ACTIONS,
+      usersData,
+    };
+  }
+
   let usersData = {} as Users;
 
   usersData = state;
@@ -46,7 +59,6 @@ export type UsersContextType = ReturnType<typeof usersContext>;
 
 const initialUsersContextState: UsersContextType = {
   dispatch: () => {},
-
   asyncLoadUsers,
   REDUCER_ACTIONS: REDUCER_ACTION_TYPE,
   usersData: {
@@ -60,14 +72,14 @@ const initialUsersContextState: UsersContextType = {
   },
 };
 
-const AuthContext = createContext<UsersContextType>(initialUsersContextState);
+const UserContext = createContext<UsersContextType>(initialUsersContextState);
 
 export const UsersProvider = ({ children }: ChildrenType): ReactElement => {
   return (
-    <AuthContext.Provider value={usersContext(initialUsersState)}>
+    <UserContext.Provider value={usersContext(initialUsersState)}>
       {children}
-    </AuthContext.Provider>
+    </UserContext.Provider>
   );
 };
 
-export default AuthContext;
+export default UserContext;

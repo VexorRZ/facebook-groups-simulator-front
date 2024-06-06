@@ -2,26 +2,40 @@ import React, { useEffect, useState } from "react";
 import { Search, Chat, Notifications } from "@material-ui/icons";
 import { Container, TopbarIconBadge } from "./styles";
 import { useNavigate } from "react-router-dom";
-// import image from "../../assets/images/fibonacci.jpg";
 import useAuth from "../../Hooks/useAuth";
 import { io } from "socket.io-client";
 
 import { AsyncLogoutFn } from "../../Contexts/AuthContext/middlewares";
 import { NavBar } from "../../Pages/Group/styles";
 
-const TopBar = ({ socket }: any) => {
-  // const [socket, setSocket] = useState(null);
-  // const [user, setUser] = useState(null);
+const TopBar = () => {
+  // const [socket, setSocket] = useState<any>(null);
+  const [notifications, setNotifications] = useState<any>([]);
+  const [user, setUser] = useState({});
 
   const { dispatch, userData } = useAuth();
 
   // useEffect(() => {
-  //   setSocket(io("http://localhost:5000"));
+  //   setSocket(io("http://localhost:3333", { transports: ["websocket"] }));
+
   //   setUser(userData);
   // }, []);
 
   // useEffect(() => {
-  //   socket.emit("newUser", user);
+  //   socket?.emit("newUser", userData);
+  // }, [socket, userData]);
+
+  // useEffect(() => {
+  //   socket?.on("getNotification", (data: any) => {
+  //     setNotifications([...notifications, data]);
+  //   });
+  // }, [socket]);
+
+  //console.log(notifications);
+  // useEffect(() => {
+  //   if (socket) {
+  //     socket?.emit("newUser", user);
+  //   }
   // }, [socket, user]);
 
   const navigate = useNavigate();
@@ -71,12 +85,12 @@ const TopBar = ({ socket }: any) => {
             </TopbarIconBadge>
           </div>
         </div>
-        {/* <img
+        <img
           src={userData?.avatar.path as string}
           alt="avatar"
           className="topbarImg"
           onClick={openProfilePage}
-        /> */}
+        />
         <h4 onClick={Logout} className="logout">
           sair
         </h4>

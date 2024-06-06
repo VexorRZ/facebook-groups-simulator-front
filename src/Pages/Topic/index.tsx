@@ -7,6 +7,7 @@ import { type AxiosResponse } from "axios";
 import api from "../../services/api";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import DOMPurify from "dompurify";
 import {
   type GroupTopic,
   type TopicData,
@@ -17,6 +18,8 @@ import heart from "../../assets/icons/heart.svg";
 import heartFilled from "../../assets/icons/heartFilled.svg";
 import Button from "../../Components/Button";
 import TopBar from "../../Components/TopBar";
+import TextEditor from "../../Containers/Editor";
+import { io } from "socket.io-client";
 
 import {
   Container,
@@ -30,12 +33,13 @@ import {
   CommentAuthor,
   AuthorAvatar,
   UserInfoArea,
-  CommentBox,
   Comment,
   Pagination,
   PaginationButton,
   PaginationItem,
   CommentDate,
+  CommentDetailsWrapper,
+  LikeIcon,
 } from "./styles";
 
 const TopicPage = () => {
@@ -48,15 +52,27 @@ const TopicPage = () => {
   const [pages, setPages] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState(0);
+  const [socket, setSocket] = useState<any>(null);
+  const [user, setUser] = useState({});
 
   const params = useParams();
   const { group_id, topic_id } = params;
 
   const { userData } = useAuth();
 
-  const handleNotification = (commentId: number) => {
+  // useEffect(() => {
+  //   setSocket(io("http://localhost:3333", { transports: ["websocket"] }));
+  //   setUser(userData);
+  // }, []);
+
+  const handleNotification = (commentId: number, type: any) => {
     const findComment = commentList.find(({ id }) => id === commentId);
-    setLiked(!liked);
+
+    socket?.emit("sendNotification", {
+      senderName: userData.name,
+      receiverName: findComment?.author,
+      type,
+    });
   };
 
   const getTopicByCredentials = async () => {
@@ -147,9 +163,9 @@ const TopicPage = () => {
   }, [commentBoxOpenned]);
 
   const changeComment = useCallback(
-    (e: React.FormEvent<HTMLInputElement>) => {
-      e.preventDefault();
-      setComment(e.currentTarget.value);
+    (value: any) => {
+      setComment(value);
+      console.log("comentário", comment);
     },
     [comment]
   );
@@ -168,44 +184,53 @@ const TopicPage = () => {
     }
   };
 
-  const userGaveLike = (commmentId: number) => {
-    const currentComment = commentList.find(({ id }) => (id = commmentId));
+  const renderLikeIcon = useCallback(
+    (userLikeExists: boolean, commentId: number) => {
+      if (!userLikeExists) {
+        return (
+          <LikeIcon
+            src={heart}
+            alt=""
+            onClick={() => {
+              setLiked(true);
+              updateLike(commentId);
+            }}
+          />
+        );
+      } else {
+        return (
+          <LikeIcon
+            src={heartFilled}
+            alt=""
+            onClick={() => {
+              setLiked(false);
+              updateLike(commentId);
+              handleNotification(commentId, 1);
+              console.log("clicked on:", commentId);
+            }}
+          />
+        );
+      }
+    },
+    [liked]
+  );
+  const commentHasLike = (commentId: number) => {
+    const currentComment = commentList.find(({ id }) => id === commentId);
 
     const userLikeExists = currentComment?.commentLikes.find(
       ({ author_id, comment_id }) =>
-        author_id === Number(userData.id) && comment_id === commmentId
+        author_id === Number(userData.id) && comment_id === commentId
     );
 
-    if (!userLikeExists) {
-      return (
-        <img
-          src={heart}
-          alt=""
-          onClick={() => {
-            updateLike(commmentId);
-          }}
-        />
-      );
-    } else {
-      return (
-        <img
-          src={heartFilled}
-          alt=""
-          onClick={() => {
-            updateLike(commmentId);
-            console.log("clicked on:", commmentId);
-          }}
-        />
-      );
-    }
+    return renderLikeIcon(Boolean(userLikeExists), commentId);
   };
 
   useEffect(() => {
     void getTopicByCredentials();
-  }, [currentPage, limit, total]);
+  }, [currentPage, limit, total, liked]);
   return (
     <>
-      <TopBar socket={""} />
+      <TopBar />
       <Container>
         <Header>
           <GroupTitle>{groupTopic.name}</GroupTitle>
@@ -215,16 +240,16 @@ const TopicPage = () => {
           {groupTopic.topics?.map((topic, index) => {
             return (
               <>
-                <div key={index}>{topic.name}</div>
-                <div>Criador do tópico {topic.author.name}</div>
+                <h2 key={index}>{topic.name}</h2>
+                <div className="authorWrapper">
+                  <h3>Autor:</h3> <h4>{topic.author.name}</h4>
+                </div>
                 <CommentsLists>
                   {commentList.map((comment, index) => {
                     return (
-                      <Comment key={index}>
+                      <Comment key={index} socket={socket} user={user}>
                         <UserInfoArea>
-                          <CommentAuthor className="author">
-                            {comment.author.name}:
-                          </CommentAuthor>
+                          <CommentAuthor>{comment.author.name}:</CommentAuthor>
                           <AuthorAvatar
                             src={
                               comment.author.avatar?.path
@@ -233,25 +258,35 @@ const TopicPage = () => {
                             }
                           />
                         </UserInfoArea>
-                        <CommentContent>{comment.body}</CommentContent>
-                        <CommentDate>
-                          Postado:
-                          {format(
-                            new Date(
-                              comment.createdAt ? comment.createdAt : new Date()
-                            ),
-                            "'dia' dd 'de' MMMM', às ' HH:mm'h'",
-                            { locale: ptBR }
-                          )}
-                        </CommentDate>
+                        <CommentContent
+                          dangerouslySetInnerHTML={{
+                            __html: DOMPurify.sanitize(comment.body),
+                          }}
+                        />
+                        <CommentDetailsWrapper>
+                          <CommentDate>
+                            Postado:
+                            {format(
+                              new Date(
+                                comment.createdAt
+                                  ? comment.createdAt
+                                  : new Date()
+                              ),
+                              "'dia' dd 'de' MMMM', às ' HH:mm'h'",
+                              { locale: ptBR }
+                            )}
+                          </CommentDate>
+                          <div className="likeWrapper">
+                            {commentHasLike(comment.id)}
 
-                        {userGaveLike(comment.id)}
-
-                        {<div>{comment.commentLikes.length}</div>}
+                            {comment.commentLikes.length}
+                          </div>
+                        </CommentDetailsWrapper>
                       </Comment>
                     );
                   })}
-                  {commentBoxOpenned && <CommentBox onChange={changeComment} />}
+                  {commentBoxOpenned && <TextEditor onChange={changeComment} />}
+
                   <ButtonArea>
                     {commentBoxOpenned && (
                       <Button

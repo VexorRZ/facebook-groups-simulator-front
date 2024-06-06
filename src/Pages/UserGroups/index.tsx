@@ -14,13 +14,14 @@ const UserGroups = () => {
   const { userData } = useAuth();
   const { asyncGetGroupsByMember, dispatch, groupData } = useGroups();
 
-  useEffect(() => {
-    asyncGetGroupsByMember(dispatch);
-    //@ts-ignore
-    setGroups(groupData);
+  // useEffect(() => {
+  //   // asyncGetGroupsByMember(dispatch);
+  //   console.log(groupData, "groups na página de grupos");
+  //   //@ts-ignore
+  //   setGroups(groupData);
 
-    console.log("groupdata on usergroups", groupData);
-  }, []);
+  //   console.log("groupdata on usergroups", groupData);
+  // }, []);
 
   return (
     <Container>

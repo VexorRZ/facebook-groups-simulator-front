@@ -13,13 +13,14 @@ export const Container = styled.div<ItopicContent>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #303640;
+  background-color: transparent;
   border: 1px solid #293544;
   border-radius: 6px;
-  max-height: 62px;
+  max-height: 56px;
 
   &:hover {
     cursor: pointer;
+    background-color: #303640;
     transition: all 0.2s ease-in;
     transition: ${(props) =>
       props.URlGroup ? " all 0.3s ease-in" : "all 0.2s ease-in"};

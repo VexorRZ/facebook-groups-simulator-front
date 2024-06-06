@@ -43,6 +43,7 @@ const useGroupContext = (initialGroupsState: Groups) => {
     return REDUCER_ACTION_TYPE;
   }, []);
 
+  console.log("groupsmembers no index", state);
   const group = window.localStorage.getItem("@groups");
 
   if (group) {

@@ -11,7 +11,6 @@ import api from "../../services/api";
 import useAuth from "../../Hooks/useAuth";
 import useGroups from "../../Hooks/useGroups";
 import Loader from "../../Components/Loader";
-import { io } from "socket.io-client";
 
 import {
   ToastError,
@@ -29,8 +28,8 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [index, setIndex] = useState(2);
   const [lastData, setLastData] = useState<boolean>(false);
-  const [socket, setSocket] = useState(null);
-  const [user, setUser] = useState(null);
+  const [socket, setSocket] = useState<any>(null);
+  const [user, setUser] = useState({});
   const loaderRef = useRef(null);
 
   const { userData } = useAuth();
@@ -130,15 +129,6 @@ const Dashboard = () => {
     getGroupsByUser();
   }, []);
 
-  // useEffect(() => {
-  //   setSocket(io("http://localhost:5000"));
-  //   setUser(userData);
-  // }, []);
-
-  // useEffect(() => {
-  //   socket.emit("newUser", user);
-  // }, [socket, user]);
-
   const requestEnterInGroup = useCallback(async (groupId: number) => {
     await asyncCreateRequest(groupId, dispatch);
     const currentGroup = loadedGroups.find(({ id }) => id === groupId);
@@ -181,7 +171,7 @@ const Dashboard = () => {
 
   return (
     <Container>
-      <TopBar socket={socket} />
+      <TopBar />
       <Content>
         <SideMenu />
 

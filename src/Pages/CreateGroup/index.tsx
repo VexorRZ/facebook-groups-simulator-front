@@ -137,7 +137,7 @@ const CreateGroup = () => {
 
   return (
     <>
-      <TopBar socket={""} />
+      <TopBar />
       <Container>
         {<Loading /> && loadingVisible}
         <ImageContainer>

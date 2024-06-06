@@ -393,7 +393,7 @@ const GroupPage = () => {
 
   return (
     <>
-      <TopBar socket={""} />
+      <TopBar />
       <GroupContainer>
         <div ref={loaderRef}>{<Loader /> && isLoading}</div>
         <ButtonAdminContainer>

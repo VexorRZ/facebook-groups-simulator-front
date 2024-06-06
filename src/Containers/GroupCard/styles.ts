@@ -18,7 +18,7 @@ export const Container = styled.div<IcontainerProps>`
   width: 600px;
   border-radius: 6px;
   box-shadow: 0vh;
-  background-color: #25282e;
+  background-color: transparent;
   margin-left: ${(props) => (props.marginLeft ? props.marginLeft : "40px")};
   border: 1px solid #526173;
   padding: 10px;
@@ -71,8 +71,8 @@ export const NumberOfComments = styled.span`
 
 export const GroupAvatar = styled.img`
   border-radius: 50%;
-  width: 140px;
-  height: 140px;
+  width: 120px;
+  height: 120px;
   border: 1px solid;
 `;
 
@@ -96,9 +96,9 @@ export const InfoWrapper = styled.div<IinfoWraperProps>`
 
 export const CardButton = styled.button<cardButtonProps>`
   display: ${(props) => (props.visible ? "block" : "none")};
-  background-color: #373e4a;
+  background-color: transparent;
+  border: 1px solid #373e4a;
   opacity: 0.7;
-  border: none;
   white-space: nowrap;
   color: hsla(150, 14%, 97%, 1);
   cursor: pointer;
@@ -116,7 +116,7 @@ export const CardButton = styled.button<cardButtonProps>`
   }
 
   &:hover {
-    background-color: #556073;
+    background-color: #373e4a;
   }
 
   &:active {
@@ -132,8 +132,10 @@ export const ButtonArea = styled.div`
 
 export const AmountWrapper = styled.div`
   background-color: #06b81e;
-  width: 43px;
-  height: 27px;
+  max-width: 20px;
+  min-width: 20px;
+  max-height: 20px;
+  min-height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;

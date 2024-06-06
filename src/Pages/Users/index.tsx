@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import GroupCard from "../../Containers/GroupCard";
 import TopBar from "../../Components/TopBar";
 import useUsers from "../../Hooks/useUsers";
 import useAuth from "../../Hooks/useAuth";
+import defaultProfilePic from "../../assets/images/default-profile-pic.png";
+import CustomButton from "../../Components/Button";
 
 import { type Users } from "../../Contexts/UsersContext/interfaces";
 
@@ -12,6 +13,7 @@ import {
   UserCardAvatar,
   UserCardContainer,
   UserCardName,
+  UserdataArea,
 } from "./styles";
 
 const UsersPage = () => {
@@ -21,11 +23,12 @@ const UsersPage = () => {
   const { userData } = useAuth();
 
   useEffect(() => {
-    asyncLoadUsers(userData.token, dispatch);
+    asyncLoadUsers(dispatch, userData.token);
 
-    console.log("users in page users", userData);
     //@ts-ignore
     setUsers(usersData);
+
+    console.log("users in page users", usersData);
   }, []);
 
   return (
@@ -36,9 +39,17 @@ const UsersPage = () => {
         {loadedUsers.map((user, index) => {
           return (
             <>
-              <UserCardContainer>
-                <UserCardAvatar src={user.avatar.path} alt="" />
-                <UserCardName>{user.name}</UserCardName>
+              <UserCardContainer key={index}>
+                <UserdataArea>
+                  <UserCardAvatar
+                    src={
+                      user.avatar?.path ? user.avatar?.path : defaultProfilePic
+                    }
+                    alt=""
+                  />
+                  <UserCardName>{user.name}</UserCardName>
+                </UserdataArea>
+                <CustomButton width="120px">Ver perfil</CustomButton>
               </UserCardContainer>
             </>
           );

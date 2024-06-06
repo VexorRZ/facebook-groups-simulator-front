@@ -2,9 +2,9 @@ import { type Users, type ReducerAction } from "./interfaces";
 
 import { REDUCER_ACTION_TYPE } from "./action-types";
 export const reducer = (state: Users, action: ReducerAction): Users => {
-  console.log("chegou aqui no reducer");
   switch (action.type) {
     case REDUCER_ACTION_TYPE.LOAD_USERS: {
+      console.log("chegou aqui no reducer");
       if (action.payload == null) {
         throw new Error("action.payload missing in ADD action");
       }

@@ -20,6 +20,7 @@ import UserGroups from "../Pages/UserGroups";
 import UsersPage from "../Pages/Users";
 import { GroupProvider } from "../Contexts/GroupContext";
 import { GroupMembersProvider } from "../Contexts/GroupContentContext";
+import { UsersProvider } from "../Contexts/UsersContext";
 
 const Routes = () => {
   return (
@@ -155,7 +156,9 @@ const Routes = () => {
             path="/users"
             element={
               <PrivateRoutes>
-                <UsersPage />
+                <UsersProvider>
+                  <UsersPage />
+                </UsersProvider>
               </PrivateRoutes>
             }
           />

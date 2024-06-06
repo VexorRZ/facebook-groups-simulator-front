@@ -20,4 +20,5 @@ export const StylezedInput = styled.input<ICustomInput>`
   background-color: ${(props) => props.customBackgroundColor};
   color: ${(props) => props.customColor};
   border-color: ${(props) => props.customBorderColor};
+  background: #ffffff;
 `;

@@ -57,10 +57,7 @@ export const reducer = (state: Groups, action: ReducerAction): Groups => {
       }
       const groups = action.payload;
 
-      return {
-        ...state,
-        ...groups,
-      };
+      return { ...groups };
     }
 
     // case REDUCER_ACTION_TYPE.REQUEST_ENTER_GROUP: {

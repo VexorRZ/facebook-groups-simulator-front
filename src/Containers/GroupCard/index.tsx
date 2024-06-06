@@ -68,15 +68,15 @@ const GroupCard = ({
         </TitleAndStatus>
         <CenterArea>
           <GroupInfoArea>
-            <InfoWrapper gap="14px">
+            <InfoWrapper gap="21px">
               <InfoText>Dono: {groupOwner}</InfoText>
             </InfoWrapper>
-            <InfoWrapper>
-              <InfoText>qtd de membros:</InfoText>
+            <InfoWrapper gap="12px">
+              <InfoText>Membros:</InfoText>
               <AmountWrapper>{numberOfMbembers}</AmountWrapper>
             </InfoWrapper>
-            <InfoWrapper gap="14px">
-              <InfoText>qtd de tópicos:</InfoText>
+            <InfoWrapper gap="21px">
+              <InfoText>Tópicos:</InfoText>
               <AmountWrapper>{numberOfTopics}</AmountWrapper>
             </InfoWrapper>
           </GroupInfoArea>

@@ -7,7 +7,7 @@ import { REDUCER_ACTION_TYPE } from "./action-types";
 
 import { ToastError } from "../../Components/ToastContainer/ToastMessages";
 
-export const asyncLoadUsers = async (token: string, dispatch: any) => {
+export const asyncLoadUsers = async (dispatch: any, token: string) => {
   try {
     const res: AxiosResponse<Response> = await api.get<
       Response,
@@ -15,6 +15,8 @@ export const asyncLoadUsers = async (token: string, dispatch: any) => {
     >(`users`, {
       headers: { Authorization: `Bearer ${token}` },
     });
+
+    window.localStorage.setItem("@users", JSON.stringify(res.data));
 
     return dispatch({
       type: REDUCER_ACTION_TYPE.LOAD_USERS,
