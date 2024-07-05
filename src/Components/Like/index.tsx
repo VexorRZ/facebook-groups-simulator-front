@@ -8,7 +8,6 @@ interface ILikeProps {
   onClickParent: () => void;
   likeAmount: number;
   hasLike?: boolean;
-  paginationChange: any;
 }
 
 const Like = ({ onClickParent, likeAmount, hasLike }: ILikeProps) => {

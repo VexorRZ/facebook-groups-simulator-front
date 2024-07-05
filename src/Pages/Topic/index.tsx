@@ -252,7 +252,6 @@ const TopicPage = () => {
                                 await updateLike(comment.id);
                               }}
                               likeAmount={comment.commentLikes.length}
-                              paginationChange={currentPage}
                             />
                           </div>
                         </CommentDetailsWrapper>
