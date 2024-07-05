@@ -1,14 +1,16 @@
 import React from "react";
-import {
-  FormatBold,
-  FormatItalic,
-  FormatUnderlined,
-} from "@mui/icons-material";
 
-import { StyledBold, StyledItalic, StyledUnderlined } from "./styles";
+import {
+  StyledBold,
+  StyledItalic,
+  StyledUnderlined,
+  StyledFormatListBulleted,
+  StyledFormatListNumbered,
+  Container,
+} from "./styles";
 const TextOperation = ({ editor }: any) => {
   return (
-    <div className="flex">
+    <Container>
       <button
         title="bold"
         onClick={() => editor.chain().focus().toggleBold().run()}
@@ -17,7 +19,7 @@ const TextOperation = ({ editor }: any) => {
         <StyledBold />
       </button>
       <button
-        title="Italics"
+        title="Italic"
         onClick={() => editor.chain().focus().toggleItalic().run()}
         className={editor.isActive("italic") ? "is-active" : ""}
       >
@@ -30,7 +32,22 @@ const TextOperation = ({ editor }: any) => {
       >
         <StyledUnderlined />
       </button>
-    </div>
+      <button
+        title="bullet-list"
+        onClick={() => editor.chain().focus().toggleBulletList().run()}
+        className={editor.isActive("bullet-list") ? "is-active" : ""}
+      >
+        <StyledFormatListBulleted />
+      </button>
+
+      <button
+        title="list-numbered"
+        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+        className={editor.isActive("list-numbered") ? "is-active" : ""}
+      >
+        <StyledFormatListNumbered />
+      </button>
+    </Container>
   );
 };
 

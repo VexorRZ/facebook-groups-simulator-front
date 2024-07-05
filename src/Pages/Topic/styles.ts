@@ -84,7 +84,8 @@ export const CommentContent = styled.div`
   border: solid 1px #526173;
   border-radius: 4px;
   width: 540px;
-  height: 100px;
+  min-height: 100px;
+  height: 100%;
   padding: 10px;
   font-family: Arial, Helvetica, sans-serif;
   color: #d9d9d9;

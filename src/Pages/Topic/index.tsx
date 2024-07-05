@@ -11,15 +11,16 @@ import DOMPurify from "dompurify";
 import {
   type GroupTopic,
   type TopicData,
+  type Comments,
 } from "../../Contexts/TopicContext/interfaces";
 import useAuth from "../../Hooks/useAuth";
-import { type Comments } from "../../Contexts/TopicContext/interfaces";
-import heart from "../../assets/icons/heart.svg";
-import heartFilled from "../../assets/icons/heartFilled.svg";
+
 import Button from "../../Components/Button";
 import TopBar from "../../Components/TopBar";
+import Like from "../../Components/Like";
 import TextEditor from "../../Containers/Editor";
-import { io } from "socket.io-client";
+
+// import { io } from "socket.io-client";
 
 import {
   Container,
@@ -39,7 +40,6 @@ import {
   PaginationItem,
   CommentDate,
   CommentDetailsWrapper,
-  LikeIcon,
 } from "./styles";
 
 const TopicPage = () => {
@@ -47,13 +47,13 @@ const TopicPage = () => {
   const [commentBoxOpenned, setCommentBoxOppened] = useState(false);
   const [comment, setComment] = useState("");
   const [commentList, setCommentlist] = useState<Comments[]>([]);
-  const [liked, setLiked] = useState(false);
+  const [liked] = useState(false);
   const [limit] = useState(5);
   const [pages, setPages] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState(0);
-  const [socket, setSocket] = useState<any>(null);
-  const [user, setUser] = useState({});
+  const [socket] = useState<any>(null);
+  const [user] = useState({});
 
   const params = useParams();
   const { group_id, topic_id } = params;
@@ -65,15 +65,15 @@ const TopicPage = () => {
   //   setUser(userData);
   // }, []);
 
-  const handleNotification = (commentId: number, type: any) => {
-    const findComment = commentList.find(({ id }) => id === commentId);
+  // const handleNotification = (commentId: number, type: any) => {
+  //   const findComment = commentList.find(({ id }) => id === commentId);
 
-    socket?.emit("sendNotification", {
-      senderName: userData.name,
-      receiverName: findComment?.author,
-      type,
-    });
-  };
+  //   socket?.emit("sendNotification", {
+  //     senderName: userData.name,
+  //     receiverName: findComment?.author,
+  //     type,
+  //   });
+  // };
 
   const getTopicByCredentials = async () => {
     if (!userData?.token) {
@@ -109,7 +109,6 @@ const TopicPage = () => {
         setTotal(totalCount);
       }
 
-      //@ts-ignore
       setCommentlist(res.data.groupTopics.topics[0].comments);
 
       setTopic({ ...res.data.groupTopics });
@@ -178,51 +177,21 @@ const TopicPage = () => {
       >(`comments_likes/${Number(userData.id)}/${Number(commentId)}`, {
         headers: { Authorization: `Bearer ${userData.token}` },
       });
+
       return res;
     } catch (err) {
       return err;
     }
   };
 
-  const renderLikeIcon = useCallback(
-    (userLikeExists: boolean, commentId: number) => {
-      if (!userLikeExists) {
-        return (
-          <LikeIcon
-            src={heart}
-            alt=""
-            onClick={() => {
-              setLiked(true);
-              updateLike(commentId);
-            }}
-          />
-        );
-      } else {
-        return (
-          <LikeIcon
-            src={heartFilled}
-            alt=""
-            onClick={() => {
-              setLiked(false);
-              updateLike(commentId);
-              handleNotification(commentId, 1);
-              console.log("clicked on:", commentId);
-            }}
-          />
-        );
-      }
-    },
-    [liked]
-  );
   const commentHasLike = (commentId: number) => {
     const currentComment = commentList.find(({ id }) => id === commentId);
 
     const userLikeExists = currentComment?.commentLikes.find(
-      ({ author_id, comment_id }) =>
-        author_id === Number(userData.id) && comment_id === commentId
+      ({ author_id }) => author_id === Number(userData.id)
     );
 
-    return renderLikeIcon(Boolean(userLikeExists), commentId);
+    return userLikeExists;
   };
 
   useEffect(() => {
@@ -277,9 +246,14 @@ const TopicPage = () => {
                             )}
                           </CommentDate>
                           <div className="likeWrapper">
-                            {commentHasLike(comment.id)}
-
-                            {comment.commentLikes.length}
+                            <Like
+                              hasLike={Boolean(commentHasLike(comment.id))}
+                              onClickParent={async () => {
+                                await updateLike(comment.id);
+                              }}
+                              likeAmount={comment.commentLikes.length}
+                              paginationChange={currentPage}
+                            />
                           </div>
                         </CommentDetailsWrapper>
                       </Comment>

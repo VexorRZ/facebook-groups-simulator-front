@@ -226,8 +226,8 @@ const Dashboard = () => {
                       Esse grupo ainda não possui nenhum tópico
                     </NoTopicsCard>
                   )}
+                  <div ref={loaderRef} />
                 </GroupCard>
-                <div ref={loaderRef} />
               </>
             );
           })}
