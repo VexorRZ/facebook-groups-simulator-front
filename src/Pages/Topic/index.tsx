@@ -5,6 +5,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { type AxiosResponse } from "axios";
 import api from "../../services/api";
+//require("dotenv").config();
+//import Pusher from "pusher-js";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import DOMPurify from "dompurify";
@@ -75,6 +77,33 @@ const TopicPage = () => {
   //   });
   // };
 
+  // useEffect(() => {
+  //   //@ts-ignore
+  //   const pusher = new Pusher(process.env.PUSHER_APP_KEY, {
+  //     cluster: "mt1",
+  //   });
+
+  //   let socketId;
+
+  //   pusher.connection.bind("connected", function () {
+  //     socketId = pusher.connection.socket_id;
+  //   });
+
+  //   const channel = pusher.subscribe("comment-events");
+  //   channel.bind("likeAction", function (data: any) {
+  //     console.log(data);
+  //     var action = data.action;
+  //     //     updatePostStats[action](data.postId);
+  //   });
+
+  //   return () => {
+  //     pusher.unsubscribe("comment-events");
+  //     // pusher.unsubscribe('channel_name2')
+  //   };
+
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+
   const getTopicByCredentials = async () => {
     if (!userData?.token) {
       return;
@@ -94,8 +123,6 @@ const TopicPage = () => {
       );
 
       const { totalCount } = res.data;
-
-      console.log("dataTopic", res.data);
 
       if (totalCount) {
         const totalPages = Math.ceil(totalCount / limit);
@@ -164,12 +191,25 @@ const TopicPage = () => {
   const changeComment = useCallback(
     (value: any) => {
       setComment(value);
-      console.log("comentário", comment);
     },
     [comment]
   );
 
   const updateLike = async (commentId: number) => {
+    //console.log("commentário clicado indexof", currentComment);
+
+    // if (likeExists) {
+    //   const commentPLus1 = currentComment?.commentLikes.length;
+    //   if (commentPLus1) {
+    //     commentPLus1 + 1;
+    //   }
+    // } else {
+    //   const commentLess1 = currentComment?.commentLikes.length;
+    //   if (commentLess1) {
+    //     commentLess1 - 1;
+    //   }
+    // }
+
     try {
       const res: AxiosResponse<GroupTopic> = await api.put<
         GroupTopic,
@@ -178,6 +218,55 @@ const TopicPage = () => {
         headers: { Authorization: `Bearer ${userData.token}` },
       });
 
+      // const currentComment = commentList.find(({ id }) => id === commentId);
+
+      // if (currentComment?.id) {
+      //   var commentPos = commentList
+      //     .map((comment) => {
+      //       return comment.id;
+      //     })
+      //     .indexOf(currentComment?.id);
+
+      // if (commentPos > -1) {
+      //   const commentSelected = commentList.splice(commentPos, 1);
+
+      //   const likeExists = commentHasLike(commentId);
+
+      //   if (!likeExists) {
+      //     //@ts-ignore
+      //     currentComment.commentLikes.push(res.data);
+
+      //     setCommentlist([...commentList, currentComment]);
+
+      //     console.log("estrutura newcommnet", commentList);
+      //   } else {
+      //     //@ts-ignore
+
+      //     commentSelected[0].commentLikes.filter(
+      //       ({ author_id }) => author_id !== Number(userData.id)
+      //     );
+
+      //     // const currentCommentLike = commentSelected[0].commentLikes.find(
+      //     //   ({ author_id }) => author_id === Number(userData.id)
+      //     // );
+
+      //     // if (currentCommentLike?.id) {
+      //     //   var commentLikepos = commentSelected[0].commentLikes
+      //     //     .map((like) => {
+      //     //       return like.id;
+      //     //     })
+      //     //     .indexOf(currentCommentLike.id);
+
+      //     //   if (commentLikepos) {
+      //     //   }
+      //     // }
+
+      //     // commentSelected[0].commentLikes.splice();
+      //   }
+      // }
+      // }
+
+      console.log("likes no comentário", res);
       return res;
     } catch (err) {
       return err;
@@ -307,7 +396,6 @@ const TopicPage = () => {
                     key={page}
                     onClick={() => {
                       setCurrentPage(Number(page));
-                      console.log(currentPage);
                     }}
                   >
                     {page}

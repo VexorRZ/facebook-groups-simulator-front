@@ -74,16 +74,25 @@ const Dashboard = () => {
       headers: { Authorization: `Bearer ${userData?.token}` },
     });
 
-    if (response.data.length === 0 || !response.data) {
-      setLastData(true);
-      setIsLoading(false);
-      return;
+    //  asyncGetMoreGroups(userData.token, String(index), dispatch);
+
+    //const moreGroups = window.localStorage.getItem("@MoreGroups");
+
+    if (response) {
+      //   let letMoregroupsData = JSON.parse(moreGroups) as Groups;
+
+      if (response.data.length === 0 || !response.data) {
+        setLastData(true);
+        setIsLoading(false);
+        return;
+      } else {
+        //@ts-ignore
+        setGroups((prevGroups) => [...prevGroups, ...response.data]);
+
+        setIndex((prevIndex) => prevIndex + 1);
+        setIsLoading(false);
+      }
     }
-
-    //@ts-ignore
-    setGroups((prevGroups) => [...prevGroups, ...response.data]);
-
-    setIndex((prevIndex) => prevIndex + 1);
 
     setIsLoading(false);
   }, [index, isLoading]);
@@ -117,9 +126,14 @@ const Dashboard = () => {
       try {
         await asyncGetGroups(userData?.token, dispatch);
 
-        console.log("userdata", userData);
-        //@ts-ignore
-        setGroups([...groupData]);
+        const group = window.localStorage.getItem("@groups");
+
+        if (group) {
+          let groupData = JSON.parse(group) as Groups;
+
+          //@ts-ignore
+          setGroups((loadedGroups) => [...loadedGroups, ...groupData]);
+        }
       } catch (err) {
         console.log(err);
       }
@@ -181,6 +195,7 @@ const Dashboard = () => {
           {loadedGroups?.map((group, index) => {
             return (
               <>
+                <div ref={loaderRef} />
                 <GroupCard
                   onClickView={() => {
                     openGroup(group.id);
@@ -226,18 +241,17 @@ const Dashboard = () => {
                       Esse grupo ainda não possui nenhum tópico
                     </NoTopicsCard>
                   )}
-                  <div ref={loaderRef} />
                 </GroupCard>
               </>
             );
           })}
-
           {lastData && (
             <NoTopicsCard>
-              Parece que não não há mais nada por enquanto
+              Parece que você chegou ao fim, não não há mais nada por enquanto.
             </NoTopicsCard>
           )}
         </GroupCardList>
+
         {isLoading && <Loader />}
       </Content>
     </Container>

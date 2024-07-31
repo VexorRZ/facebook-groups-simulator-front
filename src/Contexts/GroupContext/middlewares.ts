@@ -61,6 +61,8 @@ export const asyncGetMoreGroups = async (
   >(`groups/?page=${String(index)}&size=5`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+  window.localStorage.removeItem("@MoreGroups");
+  window.localStorage.setItem("@MoreGroups", JSON.stringify(response.data));
 
   return dispatch({
     type: REDUCER_ACTION_TYPE.LOAD_MORE_GROUPS,
@@ -95,6 +97,42 @@ export const asyncGetGroupsByMember = async (dispatch: any) => {
 
     return dispatch({
       type: REDUCER_ACTION_TYPE.LOAD_GROUPS_MEMBER,
+      payload: response.data,
+    });
+  } catch (err) {
+    return err;
+  }
+};
+
+export const asyncEditGroup = async (
+  group_id: string,
+  data: FormData,
+  dispatch: any
+) => {
+  try {
+    const response: AxiosResponse = await api.put<AxiosResponse>(
+      `groups/${group_id}`,
+      data
+    );
+
+    window.localStorage.setItem("@group", JSON.stringify(response.data));
+    const group = window.localStorage.getItem("@group");
+
+    if (group) {
+      let groupData = JSON.parse(group);
+
+      groupData.avatar.path = response.data.avatar.path;
+
+      window.localStorage.setItem("@group", JSON.stringify(groupData));
+    }
+
+    if (response.data.error) {
+      ToastError("Ocourre um erro ao atualizar o grupo");
+    } else {
+      ToastSuccess("Grupo atualizado com sucesso");
+    }
+    return dispatch({
+      type: REDUCER_ACTION_TYPE.UPDATE_GROUP,
       payload: response.data,
     });
   } catch (err) {

@@ -12,11 +12,11 @@ export const Container = styled.div<IContainerProps>`
   flex-direction: column;
   margin-left: 18px;
   width: 300px;
-  background: #25282e;
   position: ${(props) => (props.position ? props.position : "sticky")};
   top: 85px;
   height: 100%;
-  border: 1px solid #526173;
+  background-color: #0e1014;
+  box-shadow: 18px 8px 12px 0px rgba(8, 9, 16, 4);
   ::-webkit-scrollbar {
     width: 30px;
   }
@@ -40,7 +40,7 @@ export const Container = styled.div<IContainerProps>`
 export const ElementArea = styled.div`
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 10px;
   margin-left: 10px;
   h6 {
     color: #ebeff5;
@@ -54,11 +54,11 @@ export const ElementArea = styled.div`
 export const GroupsList = styled.div``;
 
 export const StyledAccountCircleIcon = styled(AccountCircleIcon)`
-  background-color: #ebeff5;
+  color: #565f82;
 `;
 export const StyledGroupsList = styled(GroupsIcon)`
-  background-color: #ebeff5;
+  color: #565f82;
 `;
 export const StyledGroupsIcon = styled(PersonIcon)`
-  background-color: #ebeff5;
+  color: #565f82;
 `;

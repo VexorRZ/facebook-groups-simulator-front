@@ -1,6 +1,7 @@
 import { type Groups, type ReducerAction } from "./interfaces";
 
 import { REDUCER_ACTION_TYPE } from "./action-types";
+
 export const reducer = (state: Groups, action: ReducerAction): Groups => {
   switch (action.type) {
     case REDUCER_ACTION_TYPE.CREATE_GROUP: {
@@ -22,9 +23,7 @@ export const reducer = (state: Groups, action: ReducerAction): Groups => {
 
       const groups = action.payload;
 
-      return {
-        ...groups,
-      };
+      return groups;
     }
 
     case REDUCER_ACTION_TYPE.LOAD_MORE_GROUPS: {
@@ -32,9 +31,9 @@ export const reducer = (state: Groups, action: ReducerAction): Groups => {
         throw new Error("action.payload missing in ADD action");
       }
 
-      const groups = action.payload;
-      console.log("array de grupos loadmoregroups", action.payload);
-      return groups;
+      const moreGroups = action.payload;
+
+      return moreGroups;
     }
 
     case REDUCER_ACTION_TYPE.LOAD_MEMBERS: {
@@ -60,6 +59,14 @@ export const reducer = (state: Groups, action: ReducerAction): Groups => {
       return { ...groups };
     }
 
+    case REDUCER_ACTION_TYPE.UPDATE_GROUP: {
+      if (action.payload == null) {
+        throw new Error("action.payload missing in ADD action");
+      }
+      const editedGroup = action.payload;
+
+      return { ...state, ...editedGroup };
+    }
     // case REDUCER_ACTION_TYPE.REQUEST_ENTER_GROUP: {
     //   if (action.payload == null) {
     //     throw new Error("action.payload missing in ADD action");

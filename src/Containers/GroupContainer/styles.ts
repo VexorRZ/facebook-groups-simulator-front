@@ -12,8 +12,7 @@ export const Container = styled.div`
   flex: 10;
   border-radius: 6px;
   box-shadow: 0vh;
-  background-color: #3e4d60;
-  border: 1px solid #526173;
   padding: 10px;
-  box-shadow: 18px 19px 32px -11px rgba(0, 0, 0, 1);
+  background-color: #0e1014;
+  box-shadow: 18px 8px 12px 0px rgba(8, 9, 16, 4);
 `;

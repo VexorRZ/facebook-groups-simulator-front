@@ -13,6 +13,7 @@ import Dropzone from "../../Components/DropZone";
 import CustomInput from "../../Components/Input";
 import CameraswitchIcon from "@mui/icons-material/Cameraswitch";
 import TopBar from "../../Components/TopBar";
+import defaultProfilePic from "../../assets/images/default-profile-pic.png";
 import { ToastError } from "../../Components/ToastContainer/ToastMessages";
 import DialogBox from "../../Containers/DialogBox";
 import { useNavigate } from "react-router-dom";
@@ -69,6 +70,8 @@ const Profile = ({
 
   const { userData, dispatch, asyncChangeAvatar, asyncRequestDeleteAccount } =
     useAuth();
+
+  useEffect(() => {}, [editAvatarVisible, userData]);
 
   const changeUserName = useCallback(
     (event: React.FormEvent<HTMLInputElement>) => {
@@ -128,7 +131,13 @@ const Profile = ({
     }
   };
 
-  useEffect(() => {}, [editAvatarVisible]);
+  const generateProfilePic = useCallback(() => {
+    if (userData.avatar !== null || userData.avatar || "") {
+      return userData.avatar.path;
+    } else {
+      return defaultProfilePic;
+    }
+  }, [userData]);
 
   return (
     <>
@@ -203,7 +212,7 @@ const Profile = ({
       <Container bluried={editProfileVisible || editAvatarVisible}>
         <UserAvatar
           style={{
-            background: `url(${userData?.avatar.path} ) no-repeat center`,
+            background: `url(${generateProfilePic()} ) no-repeat center`,
             backgroundSize: "cover",
           }}
         >

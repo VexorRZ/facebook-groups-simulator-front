@@ -16,6 +16,17 @@ import {
   TitleAndStatus,
   CenterArea,
   StatusWrapper,
+  NavBar,
+  NavBarItem,
+  GroupInfo,
+  NavBarItemLabel,
+  GroupDescription,
+  ContentWrapper,
+  NavBarItemNumber,
+  StyleAdminIcon,
+  StyledGroupsIcon,
+  StyledChatIcon,
+  StyledPublicIcon,
 } from "./styles";
 
 interface IGrupoCardProps {
@@ -36,9 +47,10 @@ interface IGrupoCardProps {
   ButtonViewGroupVisible?: boolean;
   CardButtonTextView?: string;
   marginLeft?: string;
+  description?: string;
 }
 
-const GroupCard = ({
+const OldGroupCard = ({
   children,
   groupName,
   numberOfMbembers,
@@ -53,6 +65,7 @@ const GroupCard = ({
   groupStatus,
   statusColor,
   marginLeft,
+
   onClickView,
   onClickEnter,
 }: IGrupoCardProps) => {
@@ -102,4 +115,77 @@ const GroupCard = ({
   );
 };
 
-export default GroupCard;
+const NewGroupCard = ({
+  children,
+  groupName,
+  numberOfMbembers,
+  numberOfTopics,
+  CardButtonTextEnter,
+  cardButtonTextEnterVisible,
+  ButtonViewGroupVisible,
+  CardButtonTextView,
+  groupImage,
+  isPrivate,
+  groupOwner,
+  groupStatus,
+  statusColor,
+  marginLeft,
+  description,
+  onClickView,
+  onClickEnter,
+}: IGrupoCardProps) => {
+  return (
+    <Container marginLeft={marginLeft}>
+      <GroupAvatar src={groupImage} />
+
+      <ContentWrapper>
+        <NavBar>
+          <NavBarItem>
+            <StyleAdminIcon />
+            <NavBarItemLabel>
+              Dono: <p>{groupOwner}</p>
+            </NavBarItemLabel>
+          </NavBarItem>
+          <NavBarItem>
+            <StyledGroupsIcon />
+            <NavBarItemLabel>Membros</NavBarItemLabel>
+            <NavBarItemNumber>
+              <p>{numberOfMbembers}</p>
+            </NavBarItemNumber>
+          </NavBarItem>
+          <NavBarItem>
+            <StyledChatIcon />
+            <NavBarItemLabel>Tópicos</NavBarItemLabel>
+            <NavBarItemNumber>
+              <p>{numberOfTopics}</p>
+            </NavBarItemNumber>
+          </NavBarItem>
+          <NavBarItem>
+            <NavBarItemLabel>Grupo</NavBarItemLabel>
+            <NavBarItemLabel statusColor={statusColor}>
+              {groupStatus}
+            </NavBarItemLabel>
+          </NavBarItem>
+        </NavBar>
+        <GroupInfo>
+          <GroupTitle>{groupName}</GroupTitle>
+          <GroupDescription>{description}</GroupDescription>
+        </GroupInfo>
+        <ButtonArea>
+          <CardButton
+            onClick={onClickEnter}
+            disabled={isPrivate}
+            visible={cardButtonTextEnterVisible}
+          >
+            {CardButtonTextEnter}
+          </CardButton>
+          <CardButton onClick={onClickView} visible={ButtonViewGroupVisible}>
+            {CardButtonTextView}
+          </CardButton>
+        </ButtonArea>
+      </ContentWrapper>
+    </Container>
+  );
+};
+
+export default NewGroupCard;

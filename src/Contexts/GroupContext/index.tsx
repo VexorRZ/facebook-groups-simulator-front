@@ -2,6 +2,7 @@ import React, {
   useMemo,
   useReducer,
   createContext,
+  useEffect,
   type ReactElement,
 } from "react";
 
@@ -13,9 +14,10 @@ import {
   asyncGetGroupMembers,
   asyncGetMoreGroups,
   asyncGetGroupsByMember,
+  asyncEditGroup,
 } from "./middlewares";
 
-import { type Groups, type ChildrenType, members } from "./interfaces";
+import { type Groups, type ChildrenType } from "./interfaces";
 import { reducer } from "./reducers";
 
 const initialGroupsState: Groups = {
@@ -43,8 +45,7 @@ const useGroupContext = (initialGroupsState: Groups) => {
     return REDUCER_ACTION_TYPE;
   }, []);
 
-  console.log("groupsmembers no index", state);
-  const group = window.localStorage.getItem("@groups");
+  const group = window.localStorage.getItem("@group");
 
   if (group) {
     let groupData = JSON.parse(group) as Groups;
@@ -57,6 +58,7 @@ const useGroupContext = (initialGroupsState: Groups) => {
       asyncGetGroupMembers,
       asyncGetMoreGroups,
       asyncGetGroupsByMember,
+      asyncEditGroup,
       REDUCER_ACTIONS,
       groupData,
     };
@@ -74,6 +76,7 @@ const useGroupContext = (initialGroupsState: Groups) => {
     asyncGetGroupMembers,
     asyncGetMoreGroups,
     asyncGetGroupsByMember,
+    asyncEditGroup,
     REDUCER_ACTIONS,
     groupData,
   };
@@ -89,6 +92,7 @@ const initialGroupContextState: UseGroupContextType = {
   asyncGetGroupMembers,
   asyncGetMoreGroups,
   asyncGetGroupsByMember,
+  asyncEditGroup,
   REDUCER_ACTIONS: REDUCER_ACTION_TYPE,
   groupData: {
     length: 0,

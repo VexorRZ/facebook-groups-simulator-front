@@ -79,13 +79,23 @@ export function AsyncLogoutFn(dispatch: any) {
 
 export async function asyncChangeAvatar(dispatch: any, data: FormData) {
   try {
-    const response: AxiosResponse<avatar> = await api.patch<
+    const response: AxiosResponse<avatar> = await api.put<
       avatar,
       AxiosResponse<avatar>
     >(`files`, data);
 
     localStorage.setItem("@avatarId:user", response.data.id);
     localStorage.setItem("@avatarPath:user", response.data.path);
+
+    const user = window.localStorage.getItem("@user");
+    if (user) {
+      let userData = JSON.parse(user);
+
+      userData.avatar = response.data;
+
+      window.localStorage.setItem("@user", JSON.stringify(userData));
+    }
+
     ToastSuccess("Avatar atualizado");
 
     return dispatch({

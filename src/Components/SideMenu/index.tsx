@@ -36,7 +36,7 @@ const SideMenu: React.FC = ({ position }: ISideMenuProps) => {
       <ElementArea onClick={openProfilePage}>
         <AccountCircleIcon
           style={{
-            color: "#ebeff5",
+            color: "#565f82",
           }}
         />
         <h6>Perfil </h6>
@@ -44,7 +44,7 @@ const SideMenu: React.FC = ({ position }: ISideMenuProps) => {
       <ElementArea onClick={openUsersList}>
         <PersonIcon
           style={{
-            color: "#ebeff5",
+            color: "#565f82",
           }}
         />
         <h6>usuários </h6>
@@ -52,7 +52,7 @@ const SideMenu: React.FC = ({ position }: ISideMenuProps) => {
       <ElementArea onClick={openUserGroups}>
         <GroupsIcon
           style={{
-            color: "#ebeff5",
+            color: "#565f82",
           }}
         />
         <h6> Meus grupos </h6>
@@ -60,7 +60,7 @@ const SideMenu: React.FC = ({ position }: ISideMenuProps) => {
       <ElementArea onClick={openGroupCreatePage}>
         <GroupAddIcon
           style={{
-            color: "#ebeff5",
+            color: "#565f82",
           }}
         />
         <h6>criar grupo</h6>

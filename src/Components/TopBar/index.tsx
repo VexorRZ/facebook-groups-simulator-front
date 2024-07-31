@@ -1,20 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Search, Chat, Notifications } from "@material-ui/icons";
 import { Container, TopbarIconBadge } from "./styles";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../Hooks/useAuth";
 import { io } from "socket.io-client";
+import defaultProfilePic from "../../assets/images/default-profile-pic.png";
 
 import { AsyncLogoutFn } from "../../Contexts/AuthContext/middlewares";
 import { NavBar } from "../../Pages/Group/styles";
 
-const TopBar = () => {
+interface IinputProps {
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const TopBar = ({ onChange }: IinputProps) => {
   // const [socket, setSocket] = useState<any>(null);
   const [notifications, setNotifications] = useState<any>([]);
   const [user, setUser] = useState({});
 
   const { dispatch, userData } = useAuth();
-
+  useEffect(() => {}, [userData]);
   // useEffect(() => {
   //   setSocket(io("http://localhost:3333", { transports: ["websocket"] }));
 
@@ -53,6 +58,14 @@ const TopBar = () => {
     navigate("/dashboard");
   };
 
+  const generateProfilePic = useCallback(() => {
+    if (userData.avatar !== null || userData.avatar || "") {
+      return userData.avatar.path;
+    } else {
+      return defaultProfilePic;
+    }
+  }, []);
+
   return (
     <Container>
       <div className="topbarLeft">
@@ -63,22 +76,30 @@ const TopBar = () => {
       <div className="topbarCenter">
         <div className="searchbar">
           <Search className="searchIcon" />
-          <input placeholder="Buscar por grupos" className="searchInput" />
+          <input
+            placeholder="Buscar por grupos"
+            onChange={onChange}
+            className="searchInput"
+          />
         </div>
       </div>
       <div className="topbarRight">
-        <div className="topbarLinks">
-          <span className="topbarLink">Homepage</span>
-          <span className="topbarLink">Timeline</span>
-        </div>
         <div className="topbarIcons">
           <div className="topbarIconItem">
-            <Chat />
+            <Chat
+              style={{
+                color: "#565f82",
+              }}
+            />
             <TopbarIconBadge className="topbarIconBadge">2</TopbarIconBadge>
             <div>grupos</div>
           </div>
           <div className="topbarIconItem">
-            <Notifications />
+            <Notifications
+              style={{
+                color: "#565f82",
+              }}
+            />
             <div>notificações</div>
             <TopbarIconBadge className="topbarIconBadge" isRingBell>
               1
@@ -86,7 +107,7 @@ const TopBar = () => {
           </div>
         </div>
         <img
-          src={userData?.avatar.path as string}
+          src={generateProfilePic()}
           alt="avatar"
           className="topbarImg"
           onClick={openProfilePage}

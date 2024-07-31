@@ -12,14 +12,28 @@ interface ILikeProps {
 
 const Like = ({ onClickParent, likeAmount, hasLike }: ILikeProps) => {
   const [liked, setLiked] = useState(false);
+  const [clicked, setClicked] = useState(false);
   const [_likeAMount, setLikeAMount] = useState(0);
 
   useEffect(() => {
+    setClicked(false);
     setLiked(Boolean(hasLike));
+
+    valueAmount();
   }, [hasLike]);
 
   const updateLike = async () => {
     setLiked(!liked);
+  };
+
+  const valueAmount = () => {
+    if (hasLike && clicked) {
+      return likeAmount - 1;
+    } else if (!hasLike && clicked) {
+      return likeAmount + 1;
+    } else {
+      return likeAmount;
+    }
   };
 
   return (
@@ -30,9 +44,10 @@ const Like = ({ onClickParent, likeAmount, hasLike }: ILikeProps) => {
         onClick={async () => {
           await updateLike();
           onClickParent();
+          setClicked(!clicked);
         }}
       />
-      {likeAmount}
+      {valueAmount()}
     </div>
   );
 };

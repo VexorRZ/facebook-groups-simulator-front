@@ -1,4 +1,9 @@
 import styled from "styled-components";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import GroupsIcon from "@mui/icons-material/Groups";
+import ChatIcon from "@mui/icons-material/Chat";
+import PublicIcon from "@mui/icons-material/Public";
+import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
 
 interface IinfoWraperProps {
   gap?: string;
@@ -12,17 +17,91 @@ interface IcontainerProps {
   marginLeft?: string;
 }
 
+interface INavBarProps {
+  statusColor?: string;
+}
+
+export const StyleAdminIcon = styled(AdminPanelSettingsIcon)`
+  color: #565f82;
+`;
+export const StyledGroupsIcon = styled(GroupsIcon)`
+  color: #565f82;
+`;
+export const StyledChatIcon = styled(ChatIcon)`
+  color: #565f82;
+`;
+
+export const StyledPublicIcon = styled(PublicIcon)`
+  color: #565f82;
+`;
+
 export const Container = styled.div<IcontainerProps>`
+  gap: 28px;
   display: flex;
-  flex-direction: column;
-  width: 600px;
+  width: 708px;
   border-radius: 6px;
   box-shadow: 0vh;
-  background-color: transparent;
-  margin-left: ${(props) => (props.marginLeft ? props.marginLeft : "40px")};
-  border: 1px solid #526173;
+  background-color: #0e1014;
+  margin-left: 40px;
   padding: 10px;
-  box-shadow: 18px 19px 32px -11px rgba(0, 0, 0, 1);
+  box-shadow: 18px 8px 12px 0px rgba(8, 9, 16, 4);
+`;
+
+export const NavBar = styled.div`
+  border-radius: 6px;
+  width: 100%;
+  z-index: 99;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  justify-content: flex-start;
+  gap: 28px;
+`;
+
+export const NavBarItem = styled.div`
+  float: left;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+`;
+
+export const NavBarItemLabel = styled.h6<INavBarProps>`
+  display: flex;
+  gap: 6px;
+  font-weight: bold;
+  color: ${(props) => (props.statusColor ? props.statusColor : "#c3c8d6")};
+  margin: 0;
+  P {
+    color: blue;
+    margin: 0;
+  }
+`;
+
+export const NavBarItemNumber = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  p {
+    margin: 0;
+    color: rebeccapurple;
+    font-weight: bold;
+  }
+`;
+
+export const GroupDescription = styled.h6``;
+
+export const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+export const GroupInfo = styled.div`
+  display: flex;
+  flex-direction: row;
 `;
 
 export const GroupCardHeader = styled.header`
@@ -33,7 +112,7 @@ export const GroupCardHeader = styled.header`
   flex-direction: column;
 `;
 
-export const GroupTitle = styled.h3`
+export const GroupTitle = styled.h4`
   width: 100%;
   color: #ebeff5;
   border-radius: 16px;
@@ -70,10 +149,13 @@ export const NumberOfComments = styled.span`
 `;
 
 export const GroupAvatar = styled.img`
-  border-radius: 50%;
+  min-width: 120px;
   width: 120px;
   height: 120px;
   border: 1px solid;
+  border-radius: 14px;
+  border-right: solid 1px #526173;
+  border-top: solid 1px #526173;
 `;
 
 export const GroupInfoArea = styled.div`
@@ -95,7 +177,7 @@ export const InfoWrapper = styled.div<IinfoWraperProps>`
 `;
 
 export const CardButton = styled.button<cardButtonProps>`
-  display: ${(props) => (props.visible ? "block" : "none")};
+  display: ${(props) => (props.visible ? "flex" : "none")};
   background-color: transparent;
   border: 1px solid #373e4a;
   opacity: 0.7;
@@ -103,13 +185,20 @@ export const CardButton = styled.button<cardButtonProps>`
   color: hsla(150, 14%, 97%, 1);
   cursor: pointer;
   outline: none;
-  font-size: 1rem;
   text-shadow: 0.1rem 0.1rem 0.5rem hsla(0, 0%, 0%, 0.5);
   letter-spacing: 0.1rem;
   border-radius: 0.5rem;
   user-select: none;
   padding: 1.5rem 2rem;
   transition: all 0.1s ease-in;
+  font-size: 11px;
+  width: 100px;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  color: green;
+  font-family: math;
+  font-weight: 900;
 
   ::-moz-focus-inner {
     border: 0;
@@ -179,6 +268,12 @@ export const StatusWrapper = styled.div`
   gap: 2px;
 `;
 
-export const StatusText = styled.h5`
-  color: ${(props) => (props.color ? props.color : "white")};
+export const StatusText = styled.div`
+  h6 {
+    font-weight: bold;
+    color: #c3c8d6;
+  }
+  strong {
+    color: ${(props) => (props.color ? props.color : "white")};
+  }
 `;

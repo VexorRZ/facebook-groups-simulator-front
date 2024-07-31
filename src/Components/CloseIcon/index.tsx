@@ -2,10 +2,14 @@ import React from "react";
 
 import { Container, XIcon } from "./styles";
 
-const CloseIcon = () => {
+interface IbuttonProps {
+  onClick?: (param?: any) => void;
+}
+
+const CloseIcon = ({ onClick }: IbuttonProps) => {
   return (
     <Container>
-      <XIcon />
+      <XIcon onClick={onClick} />
     </Container>
   );
 };

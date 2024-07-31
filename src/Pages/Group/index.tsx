@@ -6,19 +6,30 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import { type AxiosResponse } from "axios";
 import { type Groups, type Response } from "../../services/interfaces";
-
+import LockIcon from "@mui/icons-material/Lock";
+import PublicIcon from "@mui/icons-material/Public";
 import Topic from "../../Components/TopicContent";
 import CustomButton from "../../Components/Button";
+import CustomInput from "../../Components/Input";
 import CreateTopic from "../../Containers/CreateTopic";
 import TopBar from "../../Components/TopBar";
 import DialogBox from "../../Containers/DialogBox";
-import PublicIcon from "@mui/icons-material/Public";
 import GroupContainer from "../../Containers/GroupContainer";
 import Loader from "../../Components/Loader";
 import useAuth from "../../Hooks/useAuth";
 import useGroup from "../../Hooks/useGroups";
 import { Group } from "../../Contexts/GroupContentContext/interfaces";
+import CloseIcon from "../../Components/CloseIcon";
 import useGroupContent from "../../Hooks/useGroupContent";
+import { useRadioGroup } from "@mui/material/RadioGroup";
+import Radio from "@mui/material/Radio";
+import Dropzone from "../../Components/DropZone";
+import defaultProfilePic from "../../assets/images/default-profile-pic.png";
+import FormControlLabel, {
+  type FormControlLabelProps,
+} from "@mui/material/FormControlLabel";
+import { styled } from "@mui/material/styles";
+import { group } from "console";
 
 import {
   GroupImage,
@@ -36,10 +47,33 @@ import {
   NavBarItem,
   UserCard,
   UserCardPic,
+  GroupEditorContainer,
+  CloseIconDiv,
+  DataArea,
+  EditProfileFieldWrapper,
+  CardOptions,
+  StyledRadioGroup,
+  ProfileEditorContainer,
 } from "./styles";
+
+interface StyledFormControlLabelProps extends FormControlLabelProps {
+  checked: boolean;
+}
+
+const StyledFormControlLabel = styled((props: StyledFormControlLabelProps) => (
+  <FormControlLabel {...props} />
+))(({ theme, checked }) => ({
+  ".MuiFormControlLabel-label": checked && {
+    color: theme.palette.primary.main,
+  },
+}));
 
 const GroupPage = () => {
   const [group, setGroup] = useState<Group>();
+  const [groupName, setGroupName] = useState<string>("");
+  const [option, setOption] = useState<boolean>(false);
+  const [editProfileVisible, setEditProfileVisible] = useState<boolean>(false);
+  const [profileImage, setProfileImage] = useState<File[]>([]);
   //const [groupMembers, setGroupMembers] = useState<Group>();
   const [createTopic, setCreateTopic] = useState<boolean>(false);
   const [groupId, setGroupId] = useState<string>("");
@@ -52,10 +86,10 @@ const GroupPage = () => {
   const [pages, setPages] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState<number | undefined>(0);
-  const loaderRef = useRef(null);
 
   const params = useParams();
-  const { groupData, asyncGetGroupMembers, dispatch } = useGroup();
+  const { groupData, asyncGetGroupMembers, asyncEditGroup, dispatch } =
+    useGroup();
   const { membersData, membersDispatch } = useGroupContent();
   const { userData } = useAuth();
 
@@ -75,11 +109,15 @@ const GroupPage = () => {
     SetDialogIsVisible(value);
   }, []);
 
+  const toggleEditGroupBox = useCallback((value: boolean) => {
+    setEditProfileVisible(value);
+  }, []);
+
   const closeTopicModal = useCallback(() => {
     setCreateTopic(false);
   }, []);
 
-  const getGroupsByUser = async () => {
+  const getGroup = async () => {
     if (!userData?.token) {
       return;
     }
@@ -159,48 +197,8 @@ const GroupPage = () => {
     }
   }, [index, isLoading]);
 
-  // useEffect(() => {
-  //   const observer = new IntersectionObserver((entries) => {
-  //     const target = entries[0];
-  //     if (target.isIntersecting) {
-  //       fetchMembers();
-  //     }
-  //   });
-
-  //   if (loaderRef.current) {
-  //     observer.observe(loaderRef.current);
-  //   }
-
-  //   return () => {
-  //     if (loaderRef.current) {
-  //       observer.unobserve(loaderRef.current);
-  //     }
-  //   };
-  // }, [fetchMembers]);
-
   useEffect(() => {
-    const getMembers = () => {
-      setIsLoading(true);
-
-      try {
-        asyncGetGroupMembers(Number(group_id), dispatch);
-
-        //@ts-ignore
-        //   setGroupMembers(groupData.members);
-      } catch (err) {
-        //   setIsLoading(false);
-      }
-
-      setIsLoading(false);
-    };
-
-    getMembers();
-  }, []);
-
-  useEffect(() => {
-    void getGroupsByUser();
-
-    fetchMembers();
+    void getGroup();
 
     generateContent();
 
@@ -211,7 +209,31 @@ const GroupPage = () => {
     //@ts-ignore
     //    setGroupMembers([...membersData]);
     //  console.log("groupdata no grupo", membersData);
-  }, [currentPage, limit, total, contentName]);
+  }, [currentPage, limit, total, contentName, groupData]);
+
+  const changeGroupname = useCallback(
+    (event: React.FormEvent<HTMLInputElement>) => {
+      event.preventDefault();
+      setGroupName(event.currentTarget.value);
+    },
+    [groupName]
+  );
+
+  const editGroup = async () => {
+    try {
+      const data = new FormData();
+      data.append("is_private", JSON.stringify(Boolean(option)));
+      data.append("name", groupName);
+      data.append("file", profileImage[0]);
+
+      console.log("groupname:", groupName);
+
+      asyncEditGroup(groupId, data, dispatch);
+      toggleEditGroupBox(false);
+    } catch (err) {
+      return err;
+    }
+  };
 
   const deleteGroup = async () => {
     if (!userData?.token) {
@@ -235,6 +257,18 @@ const GroupPage = () => {
       return err;
     }
   };
+
+  function MyFormControlLabel(props: FormControlLabelProps) {
+    const radioGroup = useRadioGroup();
+
+    let checked = false;
+
+    if (radioGroup) {
+      checked = radioGroup.value === props.value;
+    }
+
+    return <StyledFormControlLabel checked={checked} {...props} />;
+  }
 
   const generateContent = () => {
     if (contentName === "topics") {
@@ -333,7 +367,11 @@ const GroupPage = () => {
               return (
                 <UserCard key={index}>
                   <UserCardPic
-                    src={member.avatar?.path ? member.avatar?.path : ""}
+                    src={
+                      member.avatar?.path
+                        ? member.avatar?.path
+                        : defaultProfilePic
+                    }
                   />
                   <strong>{member.name}</strong>
                 </UserCard>
@@ -359,7 +397,9 @@ const GroupPage = () => {
                     <UserCard key={index}>
                       <UserCardPic
                         src={
-                          moderator.avatar?.path ? moderator.avatar?.path : ""
+                          moderator.avatar?.path
+                            ? moderator.avatar?.path
+                            : defaultProfilePic
                         }
                       />
                       <strong>{moderator.name}</strong>
@@ -394,8 +434,92 @@ const GroupPage = () => {
   return (
     <>
       <TopBar />
+      {editProfileVisible && (
+        <GroupEditorContainer>
+          <CloseIconDiv>
+            <CloseIcon
+              onClick={() => {
+                toggleEditGroupBox(false);
+              }}
+            />
+          </CloseIconDiv>
+          <Dropzone
+            previewMessage="Selecione a sua nova foto de perfil.."
+            files={profileImage}
+            onDrop={(acceptedImage) => {
+              setProfileImage(
+                acceptedImage.map((file) =>
+                  Object.assign(file, {
+                    preview: URL.createObjectURL(file),
+                  })
+                )
+              );
+            }}
+          />
+          <DataArea>
+            <EditProfileFieldWrapper>
+              <CustomInput
+                type="text"
+                value={groupName}
+                placeHolder="Alterar Nome"
+                onChange={changeGroupname}
+              />
+            </EditProfileFieldWrapper>
+          </DataArea>
+          <CardOptions>
+            <StyledRadioGroup
+              radioActive={true}
+              name="use-radio-group"
+              defaultValue="first"
+            >
+              <div className="radio-options">
+                <PublicIcon />
+                <MyFormControlLabel
+                  value="first"
+                  label="público"
+                  control={
+                    <Radio
+                      onClick={() => {
+                        setOption(false);
+                      }}
+                    />
+                  }
+                />
+                <span className="option-description">
+                  (Qualquer pessoa poderá visualizar o conteúdo do grupo)
+                </span>
+              </div>
+              <div className="radio-options">
+                <LockIcon />
+                <MyFormControlLabel
+                  value="second"
+                  label="privado"
+                  control={
+                    <Radio
+                      onClick={() => {
+                        setOption(true);
+                      }}
+                    />
+                  }
+                />
+
+                <span className="option-description">
+                  (Somente membros poderão ver o conteúdo do grupo)
+                </span>
+              </div>
+            </StyledRadioGroup>
+          </CardOptions>
+          <CustomButton
+            onClick={() => {
+              editGroup();
+            }}
+          >
+            Alterar dados
+          </CustomButton>
+        </GroupEditorContainer>
+      )}
       <GroupContainer>
-        <div ref={loaderRef}>{<Loader /> && isLoading}</div>
+        {<Loader /> && isLoading}
         <ButtonAdminContainer>
           <img src={group?.avatar?.path ? group?.avatar.path : "alt"} />
           <NavBar>
@@ -451,7 +575,7 @@ const GroupPage = () => {
                 width="90px"
                 height="30px"
                 onClick={() => {
-                  toggleDialogBOx(true);
+                  toggleEditGroupBox(true);
                 }}
               >
                 Editar

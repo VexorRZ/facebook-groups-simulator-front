@@ -26,12 +26,15 @@ export const GroupCardList = styled.div`
 export const NoTopicsCard = styled.div`
   transition: transform 250ms;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  background-color: #303640;
-  border: 1px solid #293544;
   border-radius: 6px;
   max-height: 62px;
   justify-content: center;
-  height: 200px;
+  height: 400px;
+  margin-left: 40px;
+  background-color: #0e1014;
+  box-shadow: 18px 8px 12px 0px rgba(8, 9, 16, 4);
+  color: red;
+  font-size: 16px;
+  font-family: math;
 `;

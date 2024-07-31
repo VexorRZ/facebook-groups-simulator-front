@@ -8,13 +8,14 @@ interface ITopbarIconBadgeProps {
 export const Container = styled.div`
   height: 64px;
   width: 100%;
-  background-color: #373e4a;
+  background-color: #0e1014;
   display: flex;
   align-items: center;
   top: 0;
   z-index: 999;
   border-radius: 6px;
   position: sticky;
+  box-shadow: 18px 8px 12px 0px rgba(8, 9, 16, 4);
 
   .topbarLeft {
     flex: 3;
@@ -34,10 +35,11 @@ export const Container = styled.div`
     .searchbar {
       width: 100%;
       height: 30px;
-      background-color: white;
+      background-color: #7b8296;
       border-radius: 6px;
       display: flex;
       align-items: center;
+      color: black;
 
       .searchIcon {
         font-size: 20px !important;
@@ -46,6 +48,7 @@ export const Container = styled.div`
       .searchInput {
         border: none;
         width: 70%;
+        background-color: #7b8296;
       }
       .searchInput:focus {
         outline: none;

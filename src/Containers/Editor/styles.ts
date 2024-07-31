@@ -13,9 +13,14 @@ export const Container = styled.div`
     height: 100%;
     border-radius: 6px;
     .tiptap {
-      min-height: 80px;
+      padding: 8px;
+      min-height: 100px;
       height: 100%;
       border-radius: 6px;
+
+      p {
+        margin: 0;
+      }
     }
   }
 

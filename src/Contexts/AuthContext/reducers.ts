@@ -43,7 +43,7 @@ export const reducer = (state: UserType, action: ReducerAction): UserType => {
 
       const { avatar } = action.payload;
 
-      return { ...state, avatar };
+      return { ...state, ...avatar };
     }
 
     case REDUCER_ACTION_TYPE.LOAD_USERS: {

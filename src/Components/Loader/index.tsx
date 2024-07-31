@@ -1,13 +1,16 @@
 import React from "react";
-import { Container } from "./styles";
+import { Container, StyledLoading } from "./styles";
 
 interface ILoadingProps {
-  visible?: boolean;
   ref?: React.Ref<HTMLInputElement>;
 }
 
-const Loader = ({ visible, ref }: ILoadingProps) => {
-  return <Container ref={ref} />;
+const Loader = ({ ref }: ILoadingProps) => {
+  return (
+    <Container ref={ref}>
+      <StyledLoading />
+    </Container>
+  );
 };
 
 export default Loader;

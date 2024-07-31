@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import TopBar from "../../Components/TopBar";
 import useUsers from "../../Hooks/useUsers";
 import useAuth from "../../Hooks/useAuth";
 import defaultProfilePic from "../../assets/images/default-profile-pic.png";
 import CustomButton from "../../Components/Button";
+import useDebounce from "../../utils/Debounce";
 
 import { type Users } from "../../Contexts/UsersContext/interfaces";
 
@@ -18,22 +19,33 @@ import {
 
 const UsersPage = () => {
   const [loadedUsers, setUsers] = useState<Users[]>([]);
-
-  const { usersData, asyncLoadUsers, dispatch } = useUsers();
+  const [query, setQuery] = useState("");
   const { userData } = useAuth();
 
   useEffect(() => {
-    asyncLoadUsers(dispatch, userData.token);
+    if (!query) {
+      return;
+    }
+
+    asyncLoadUsers(dispatch, userData.token, query);
 
     //@ts-ignore
-    setUsers(usersData);
+    setUsers([...usersData]);
 
     console.log("users in page users", usersData);
-  }, []);
+  }, [query]);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setQuery(value);
+  };
+  const debouncedQuery = useDebounce(query, 1000);
+
+  const { usersData, asyncLoadUsers, dispatch } = useUsers();
 
   return (
     <Container>
-      <TopBar />
+      <TopBar onChange={handleChange} />
 
       <GroupCardList>
         {loadedUsers.map((user, index) => {
