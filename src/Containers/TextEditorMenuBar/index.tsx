@@ -13,7 +13,12 @@ const MenuBar = ({ editor }: any) => {
     <div className="testing">
       <TextFormatters editor={editor} />
       <div className="flex">
-        <div className="relative" onMouseLeave={() => setModal(false)}></div>
+        <div
+          className="relative"
+          onMouseLeave={() => {
+            setModal(false);
+          }}
+        ></div>
       </div>
     </div>
   );

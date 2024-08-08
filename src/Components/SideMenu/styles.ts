@@ -17,6 +17,7 @@ export const Container = styled.div<IContainerProps>`
   height: 100%;
   background-color: #0e1014;
   box-shadow: 18px 8px 12px 0px rgba(8, 9, 16, 4);
+
   ::-webkit-scrollbar {
     width: 30px;
   }

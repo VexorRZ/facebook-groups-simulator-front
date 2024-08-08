@@ -100,7 +100,7 @@ const Profile = ({
   const deleteAccount = async () => {
     try {
       if (userData?.token) {
-        asyncRequestDeleteAccount(Number(userData?.id), userData?.token);
+        await asyncRequestDeleteAccount(Number(userData?.id), userData?.token);
       }
       setTimeout(() => {
         navigate("/");

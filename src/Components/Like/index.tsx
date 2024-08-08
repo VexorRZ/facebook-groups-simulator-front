@@ -1,8 +1,7 @@
+/* eslint-disable multiline-ternary */
 import React, { useState, useEffect } from "react";
 
-import { LikeIcon } from "./styles";
-import heart from "../../assets/icons/heart.svg";
-import heartFilled from "../../assets/icons/heartFilled.svg";
+import { StyledOutineIcon, StyledOutinefilledIcon } from "./styles";
 
 interface ILikeProps {
   onClickParent: () => void;
@@ -13,7 +12,6 @@ interface ILikeProps {
 const Like = ({ onClickParent, likeAmount, hasLike }: ILikeProps) => {
   const [liked, setLiked] = useState(false);
   const [clicked, setClicked] = useState(false);
-  const [_likeAMount, setLikeAMount] = useState(0);
 
   useEffect(() => {
     setClicked(false);
@@ -38,15 +36,23 @@ const Like = ({ onClickParent, likeAmount, hasLike }: ILikeProps) => {
 
   return (
     <div>
-      <LikeIcon
-        src={liked ? heartFilled : heart}
-        alt=""
-        onClick={async () => {
-          await updateLike();
-          onClickParent();
-          setClicked(!clicked);
-        }}
-      />
+      {liked ? (
+        <StyledOutinefilledIcon
+          onClick={async () => {
+            await updateLike();
+            onClickParent();
+            setClicked(!clicked);
+          }}
+        />
+      ) : (
+        <StyledOutineIcon
+          onClick={async () => {
+            await updateLike();
+            onClickParent();
+            setClicked(!clicked);
+          }}
+        />
+      )}
       {valueAmount()}
     </div>
   );

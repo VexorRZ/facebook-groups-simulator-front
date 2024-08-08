@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/space-before-function-paren */
 
 import { type AxiosResponse } from "axios";
 import api from "../../services/api";
 import { REDUCER_ACTION_TYPE } from "./action-types";
-import { Groups } from "./interfaces";
+import { type Groups } from "./interfaces";
 
 import {
   ToastError,
@@ -11,7 +13,14 @@ import {
 } from "../../Components/ToastContainer/ToastMessages";
 
 export const asyncCreateGroup = async (data: FormData) => {
-  const response: AxiosResponse = await api.post<AxiosResponse>(`groups`, data);
+  const token = localStorage.getItem("@token");
+  const response: AxiosResponse = await api.post<AxiosResponse>(
+    `groups`,
+    data,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
 
   if (response.data.error) {
     ToastError("Erro ao tentar criar o grupo");
@@ -119,7 +128,7 @@ export const asyncEditGroup = async (
     const group = window.localStorage.getItem("@group");
 
     if (group) {
-      let groupData = JSON.parse(group);
+      const groupData = JSON.parse(group);
 
       groupData.avatar.path = response.data.avatar.path;
 

@@ -7,6 +7,8 @@ import React, {
 
 import { REDUCER_ACTION_TYPE } from "./action-types";
 
+import { asyncDeleteComment } from "./middlewares";
+
 import { type TopicData, type ChildrenType } from "./interfaces";
 import { reducer } from "./reducers";
 
@@ -14,6 +16,7 @@ const initialTopicState: TopicData = {
   id: 0,
   name: "",
   topics: [],
+  members: [],
 };
 
 export type ReducerActionType = typeof REDUCER_ACTION_TYPE;
@@ -31,6 +34,7 @@ const useTopicContext = (initialTopicState: TopicData) => {
 
   return {
     dispatch,
+    asyncDeleteComment,
     REDUCER_ACTIONS,
     id,
     name,
@@ -42,6 +46,7 @@ export type UseTopicContextType = ReturnType<typeof useTopicContext>;
 
 const initialGroupContextState: UseTopicContextType = {
   dispatch: () => {},
+  asyncDeleteComment,
   REDUCER_ACTIONS: REDUCER_ACTION_TYPE,
   id: 0,
   name: "",

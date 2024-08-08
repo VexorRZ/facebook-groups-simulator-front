@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/consistent-type-assertions */
 import React, {
   useMemo,
   useReducer,
   createContext,
-  useEffect,
   type ReactElement,
 } from "react";
 
@@ -48,7 +48,7 @@ const useGroupContext = (initialGroupsState: Groups) => {
   const group = window.localStorage.getItem("@group");
 
   if (group) {
-    let groupData = JSON.parse(group) as Groups;
+    const groupData = JSON.parse(group) as Groups;
 
     return {
       dispatch,

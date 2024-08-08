@@ -1,3 +1,4 @@
+/* eslint-disable spaced-comment */
 /* eslint-disable @typescript-eslint/prefer-optional-chain */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
@@ -16,6 +17,7 @@ import {
   type Comments,
 } from "../../Contexts/TopicContext/interfaces";
 import useAuth from "../../Hooks/useAuth";
+import useTopicContext from "../../Hooks/useTopics";
 
 import Button from "../../Components/Button";
 import TopBar from "../../Components/TopBar";
@@ -35,7 +37,6 @@ import {
   ButtonArea,
   CommentAuthor,
   AuthorAvatar,
-  UserInfoArea,
   Comment,
   Pagination,
   PaginationButton,
@@ -56,11 +57,12 @@ const TopicPage = () => {
   const [total, setTotal] = useState(0);
   const [socket] = useState<any>(null);
   const [user] = useState({});
-
   const params = useParams();
   const { group_id, topic_id } = params;
 
   const { userData } = useAuth();
+
+  const { asyncDeleteComment } = useTopicContext();
 
   // useEffect(() => {
   //   setSocket(io("http://localhost:3333", { transports: ["websocket"] }));
@@ -104,6 +106,26 @@ const TopicPage = () => {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, []);
 
+  const deleteComment = async (
+    group_id: number,
+    topic_id: number,
+    comment_id: number
+  ) => {
+    try {
+      await asyncDeleteComment(group_id, topic_id, comment_id, userData.token);
+    } catch (err) {
+      console.log(err);
+      return;
+    } finally {
+      if (commentList) {
+        const newCommentList = commentList.filter(
+          ({ id }) => id !== comment_id
+        );
+        setCommentlist(newCommentList);
+      }
+    }
+  };
+
   const getTopicByCredentials = async () => {
     if (!userData?.token) {
       return;
@@ -121,6 +143,8 @@ const TopicPage = () => {
           headers: { Authorization: `Bearer ${userData.token}` },
         }
       );
+
+      //   console.log("response", res.data.groupTopics.members);
 
       const { totalCount } = res.data;
 
@@ -196,20 +220,6 @@ const TopicPage = () => {
   );
 
   const updateLike = async (commentId: number) => {
-    //console.log("commentário clicado indexof", currentComment);
-
-    // if (likeExists) {
-    //   const commentPLus1 = currentComment?.commentLikes.length;
-    //   if (commentPLus1) {
-    //     commentPLus1 + 1;
-    //   }
-    // } else {
-    //   const commentLess1 = currentComment?.commentLikes.length;
-    //   if (commentLess1) {
-    //     commentLess1 - 1;
-    //   }
-    // }
-
     try {
       const res: AxiosResponse<GroupTopic> = await api.put<
         GroupTopic,
@@ -218,55 +228,6 @@ const TopicPage = () => {
         headers: { Authorization: `Bearer ${userData.token}` },
       });
 
-      // const currentComment = commentList.find(({ id }) => id === commentId);
-
-      // if (currentComment?.id) {
-      //   var commentPos = commentList
-      //     .map((comment) => {
-      //       return comment.id;
-      //     })
-      //     .indexOf(currentComment?.id);
-
-      // if (commentPos > -1) {
-      //   const commentSelected = commentList.splice(commentPos, 1);
-
-      //   const likeExists = commentHasLike(commentId);
-
-      //   if (!likeExists) {
-      //     //@ts-ignore
-      //     currentComment.commentLikes.push(res.data);
-
-      //     setCommentlist([...commentList, currentComment]);
-
-      //     console.log("estrutura newcommnet", commentList);
-      //   } else {
-      //     //@ts-ignore
-
-      //     commentSelected[0].commentLikes.filter(
-      //       ({ author_id }) => author_id !== Number(userData.id)
-      //     );
-
-      //     // const currentCommentLike = commentSelected[0].commentLikes.find(
-      //     //   ({ author_id }) => author_id === Number(userData.id)
-      //     // );
-
-      //     // if (currentCommentLike?.id) {
-      //     //   var commentLikepos = commentSelected[0].commentLikes
-      //     //     .map((like) => {
-      //     //       return like.id;
-      //     //     })
-      //     //     .indexOf(currentCommentLike.id);
-
-      //     //   if (commentLikepos) {
-      //     //   }
-      //     // }
-
-      //     // commentSelected[0].commentLikes.splice();
-      //   }
-      // }
-      // }
-
-      console.log("likes no comentário", res);
       return res;
     } catch (err) {
       return err;
@@ -283,9 +244,32 @@ const TopicPage = () => {
     return userLikeExists;
   };
 
+  const currentUserIsMember = () => {
+    const isMember = groupTopic.members?.find(
+      ({ id }) => id === Number(userData.id)
+    );
+
+    if (isMember) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  // const currentUserIsAuthor = () => {
+  //   if (groupTopic.topics) {
+  //     const isAuthor = groupTopic.topics[0].comments[0].author.id;
+
+  //     console.log("isAuthor:", isAuthor);
+  //   }
+  // };
+
+  useEffect(() => {}, [commentList]);
+
   useEffect(() => {
     void getTopicByCredentials();
   }, [currentPage, limit, total, liked]);
+
   return (
     <>
       <TopBar />
@@ -306,8 +290,12 @@ const TopicPage = () => {
                   {commentList.map((comment, index) => {
                     return (
                       <Comment key={index} socket={socket} user={user}>
-                        <UserInfoArea>
-                          <CommentAuthor>{comment.author.name}:</CommentAuthor>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "14px",
+                          }}
+                        >
                           <AuthorAvatar
                             src={
                               comment.author.avatar?.path
@@ -315,62 +303,121 @@ const TopicPage = () => {
                                 : ""
                             }
                           />
-                        </UserInfoArea>
-                        <CommentContent
-                          dangerouslySetInnerHTML={{
-                            __html: DOMPurify.sanitize(comment.body),
-                          }}
-                        />
-                        <CommentDetailsWrapper>
-                          <CommentDate>
-                            Postado:
-                            {format(
-                              new Date(
-                                comment.createdAt
-                                  ? comment.createdAt
-                                  : new Date()
-                              ),
-                              "'dia' dd 'de' MMMM', às ' HH:mm'h'",
-                              { locale: ptBR }
-                            )}
-                          </CommentDate>
-                          <div className="likeWrapper">
-                            <Like
-                              hasLike={Boolean(commentHasLike(comment.id))}
-                              onClickParent={async () => {
-                                await updateLike(comment.id);
-                              }}
-                              likeAmount={comment.commentLikes.length}
-                            />
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <CommentAuthor>{comment.author.name}</CommentAuthor>
+                            <CommentDate>
+                              {format(
+                                new Date(
+                                  comment.createdAt
+                                    ? comment.createdAt
+                                    : new Date()
+                                ),
+                                "'dia' dd 'de' MMMM', às ' HH:mm'h'",
+                                { locale: ptBR }
+                              )}
+                            </CommentDate>
                           </div>
-                        </CommentDetailsWrapper>
+                        </div>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "8px",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "flex-end",
+                            }}
+                          >
+                            <CommentContent
+                              dangerouslySetInnerHTML={{
+                                __html: DOMPurify.sanitize(comment.body),
+                              }}
+                            />
+                            <CommentDetailsWrapper>
+                              <div className="likeWrapper">
+                                <Like
+                                  hasLike={Boolean(commentHasLike(comment.id))}
+                                  onClickParent={async () => {
+                                    await updateLike(comment.id);
+                                  }}
+                                  likeAmount={comment.commentLikes.length}
+                                />
+                              </div>
+                            </CommentDetailsWrapper>
+                          </div>
+
+                          {
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "flex-start",
+                                gap: "6px",
+                              }}
+                            >
+                              <Button
+                                width="60px"
+                                height="32px"
+                                customColor="cadetblue"
+                              >
+                                Editar
+                              </Button>
+                              <Button
+                                width="60px"
+                                height="32px"
+                                customColor="crimson"
+                                onClick={() => {
+                                  void deleteComment(
+                                    Number(group_id),
+                                    Number(topic_id),
+                                    comment.id
+                                  );
+                                }}
+                              >
+                                Deletar
+                              </Button>
+                            </div>
+                          }
+                        </div>
                       </Comment>
                     );
                   })}
                   {commentBoxOpenned && <TextEditor onChange={changeComment} />}
 
-                  <ButtonArea>
-                    {commentBoxOpenned && (
+                  {currentUserIsMember() && (
+                    <ButtonArea>
+                      {commentBoxOpenned && (
+                        <Button
+                          width="150px"
+                          onClick={() => {
+                            void postNewComment();
+                          }}
+                        >
+                          Postar
+                        </Button>
+                      )}
                       <Button
                         width="150px"
                         onClick={() => {
-                          void postNewComment();
+                          addNewComment();
                         }}
                       >
-                        Postar
+                        {!commentBoxOpenned
+                          ? `${`Adicionar comentário`}`
+                          : `${`cancelar`}`}
                       </Button>
-                    )}
-                    <Button
-                      width="150px"
-                      onClick={() => {
-                        addNewComment();
-                      }}
-                    >
-                      {!commentBoxOpenned
-                        ? `${`Adicionar comentário`}`
-                        : `${`cancelar`}`}
-                    </Button>
-                  </ButtonArea>
+                    </ButtonArea>
+                  )}
                 </CommentsLists>
               </>
             );

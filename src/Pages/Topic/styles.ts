@@ -20,11 +20,9 @@ export const Container = styled.div`
   height: 100%;
   flex: 10;
   border-radius: 6px;
-  box-shadow: 0vh;
-  background-color: transparent;
-  border: 1px solid #526173;
   padding: 10px;
-  box-shadow: 18px 19px 32px -11px rgba(0, 0, 0, 1);
+  background-color: #0e1014;
+  box-shadow: 18px 8px 12px 0px rgba(8, 9, 16, 4);
 `;
 
 export const Header = styled.div`
@@ -61,6 +59,9 @@ export const CommentList = styled.div`
 `;
 
 export const Comment = styled.div<ICommentProps>`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   .author {
     font-size: 16px;
     color: black;
@@ -179,8 +180,9 @@ export const CommentDetailsWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   margin-top: 2px;
+  float: right;
 
   .likeWrapper {
     display: flex;

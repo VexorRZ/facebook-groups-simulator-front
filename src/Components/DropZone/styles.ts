@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import DefaulGrouPic from "../../assets/images/default-pic.jpg";
 
 interface IUploadMessage {
   messageType?: "default" | "success" | "error";
@@ -13,8 +14,8 @@ export const IframeBox = styled.iframe`
   width: 100%;
 `;
 export const Image = styled.img`
-  width: 164px;
-  height: 164px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   border: 1px solid black;
 `;
@@ -44,13 +45,15 @@ export const FilesContainer = styled.div`
 `;
 export const DragContainer = styled.div`
   padding: 9px 10px;
-  border: 1px solid #aaa;
-  border-radius: 10px;
+  border: none;
+  border-radius: 50%;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  background: url(${DefaulGrouPic}) no-repeat center;
+  background-size: cover;
 
   &:hover {
     cursor: pointer;
@@ -58,6 +61,8 @@ export const DragContainer = styled.div`
 `;
 
 export const UploadMessage = styled.p<IUploadMessage>`
+  position: absolute;
+  margin-top: 232px;
   display: flex;
   color: ${(props) => props.color};
   justify-content: center;

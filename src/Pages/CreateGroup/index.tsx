@@ -50,7 +50,15 @@ function MyFormControlLabel(props: FormControlLabelProps) {
     checked = radioGroup.value === props.value;
   }
 
-  return <StyledFormControlLabel checked={checked} {...props} />;
+  return (
+    <StyledFormControlLabel
+      checked={checked}
+      {...props}
+      style={{
+        color: "#565f82",
+      }}
+    />
+  );
 }
 
 const CreateGroup = () => {
@@ -183,29 +191,48 @@ const CreateGroup = () => {
               defaultValue="first"
             >
               <div className="radio-options">
-                <PublicIcon />
+                <PublicIcon
+                  style={{
+                    color: "#565f82",
+                  }}
+                />
                 <MyFormControlLabel
                   value="first"
                   label="público"
                   control={
                     <Radio
+                      style={{
+                        color: "#565f82",
+                      }}
                       onClick={() => {
                         setOption(false);
                       }}
                     />
                   }
                 />
-                <span className="option-description">
+                <span
+                  className="option-description"
+                  style={{
+                    color: "#c4721f",
+                  }}
+                >
                   (Qualquer pessoa poderá visualizar o conteúdo do grupo)
                 </span>
               </div>
               <div className="radio-options">
-                <LockIcon />
+                <LockIcon
+                  style={{
+                    color: "#565f82",
+                  }}
+                />
                 <MyFormControlLabel
                   value="second"
                   label="privado"
                   control={
                     <Radio
+                      style={{
+                        color: "#565f82",
+                      }}
                       onClick={() => {
                         setOption(true);
                       }}

@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable multiline-ternary */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import { type AxiosResponse } from "axios";
-import { type Groups, type Response } from "../../services/interfaces";
+import { type Response } from "../../services/interfaces";
 import LockIcon from "@mui/icons-material/Lock";
 import PublicIcon from "@mui/icons-material/Public";
 import Topic from "../../Components/TopicContent";
@@ -18,7 +20,7 @@ import GroupContainer from "../../Containers/GroupContainer";
 import Loader from "../../Components/Loader";
 import useAuth from "../../Hooks/useAuth";
 import useGroup from "../../Hooks/useGroups";
-import { Group } from "../../Contexts/GroupContentContext/interfaces";
+import type { Group } from "../../Contexts/GroupContentContext/interfaces";
 import CloseIcon from "../../Components/CloseIcon";
 import useGroupContent from "../../Hooks/useGroupContent";
 import { useRadioGroup } from "@mui/material/RadioGroup";
@@ -29,7 +31,6 @@ import FormControlLabel, {
   type FormControlLabelProps,
 } from "@mui/material/FormControlLabel";
 import { styled } from "@mui/material/styles";
-import { group } from "console";
 
 import {
   GroupImage,
@@ -53,7 +54,13 @@ import {
   EditProfileFieldWrapper,
   CardOptions,
   StyledRadioGroup,
-  ProfileEditorContainer,
+  NavBarWrapper,
+  GroupInfoContainer,
+  StyledAdminIcon,
+  StyledChatIcon,
+  StyledGroupsList,
+  StyledDescriptionIcon,
+  StyledGavelIcon,
 } from "./styles";
 
 interface StyledFormControlLabelProps extends FormControlLabelProps {
@@ -74,15 +81,16 @@ const GroupPage = () => {
   const [option, setOption] = useState<boolean>(false);
   const [editProfileVisible, setEditProfileVisible] = useState<boolean>(false);
   const [profileImage, setProfileImage] = useState<File[]>([]);
-  //const [groupMembers, setGroupMembers] = useState<Group>();
+  // const [groupMembers, setGroupMembers] = useState<Group>();
   const [createTopic, setCreateTopic] = useState<boolean>(false);
   const [groupId, setGroupId] = useState<string>("");
   const [isOwner, setIsOwner] = useState<object | null>(null);
+  const [userId, SetUserId] = useState<string | null>();
   const [DialogIsVisible, SetDialogIsVisible] = useState<boolean>(false);
   const [contentName, setContentName] = useState<string>("topics");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [index, setIndex] = useState(2);
-  const [limit, setLimit] = useState(5);
+  const [index] = useState(2);
+  const [limit] = useState(5);
   const [pages, setPages] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState<number | undefined>(0);
@@ -90,7 +98,7 @@ const GroupPage = () => {
   const params = useParams();
   const { groupData, asyncGetGroupMembers, asyncEditGroup, dispatch } =
     useGroup();
-  const { membersData, membersDispatch } = useGroupContent();
+  // const { membersData, membersDispatch } = useGroupContent();
   const { userData } = useAuth();
 
   const { group_id } = params;
@@ -117,6 +125,10 @@ const GroupPage = () => {
     setCreateTopic(false);
   }, []);
 
+  useEffect(() => {
+    SetUserId(userData.id);
+  });
+
   const getGroup = async () => {
     if (!userData?.token) {
       return;
@@ -138,9 +150,9 @@ const GroupPage = () => {
 
       const { group, numberOfTopics, isOwner } = res.data;
 
-      //@ts-ignore
+      // @ts-expect-error
       console.log("resposta grupo", res.data.groupData[0]);
-      //@ts-ignore
+      // @ts-expect-error
       setGroup({ ...res.data.groupData[0] });
 
       if (isOwner) {
@@ -152,7 +164,7 @@ const GroupPage = () => {
       // } else if (contentName === "topics") {
       //   setLimit(5);
       // }
-      //@ts-ignore
+      // @ts-expect-error
       const totalPages = Math.ceil(total / limit);
       const arrayPages = [];
 
@@ -171,17 +183,14 @@ const GroupPage = () => {
     }
   };
 
-  const fetchMembers = useCallback(() => {
+  const fetchMembers = useCallback(async () => {
     try {
       setIsLoading(true);
 
-      asyncGetGroupMembers(Number(groupId), dispatch);
+      await asyncGetGroupMembers(Number(groupId), dispatch);
 
-      //@ts-ignore
       // setGroupMembers((prevMembers) => [[...prevMembers], [...membersData]]);
       //  setGroupMembers([...membersData]);
-
-      //@ts-ignore
 
       // setGroupMembers((prevMembers) => [
       //   ...(Array.isArray(prevMembers) ? prevMembers : []),
@@ -206,7 +215,6 @@ const GroupPage = () => {
       setGroupId(group_id);
     }
 
-    //@ts-ignore
     //    setGroupMembers([...membersData]);
     //  console.log("groupdata no grupo", membersData);
   }, [currentPage, limit, total, contentName, groupData]);
@@ -228,7 +236,7 @@ const GroupPage = () => {
 
       console.log("groupname:", groupName);
 
-      asyncEditGroup(groupId, data, dispatch);
+      await asyncEditGroup(groupId, data, dispatch);
       toggleEditGroupBox(false);
     } catch (err) {
       return err;
@@ -270,6 +278,28 @@ const GroupPage = () => {
     return <StyledFormControlLabel checked={checked} {...props} />;
   }
 
+  const currentUserIsMember = () => {
+    const isMember = group?.members.find(({ id }) => id === Number(userId));
+
+    if (isMember) {
+      return (
+        <ButtonArea>
+          <CustomButton onClick={openTopicCreate} width="130px" height="40px">
+            Criar tópico
+          </CustomButton>
+        </ButtonArea>
+      );
+    } else {
+      return (
+        <div
+          style={{
+            display: "none",
+          }}
+        />
+      );
+    }
+  };
+
   const generateContent = () => {
     if (contentName === "topics") {
       return (
@@ -293,15 +323,7 @@ const GroupPage = () => {
                   );
                 })}
               </TopicList>
-              <ButtonArea>
-                <CustomButton
-                  onClick={openTopicCreate}
-                  width="130px"
-                  height="40px"
-                >
-                  Criar tópico
-                </CustomButton>
-              </ButtonArea>
+              {currentUserIsMember()}
 
               <Pagination>
                 <div>{total} tópicos criados</div>
@@ -511,7 +533,7 @@ const GroupPage = () => {
           </CardOptions>
           <CustomButton
             onClick={() => {
-              editGroup();
+              void editGroup();
             }}
           >
             Alterar dados
@@ -521,50 +543,69 @@ const GroupPage = () => {
       <GroupContainer>
         {<Loader /> && isLoading}
         <ButtonAdminContainer>
-          <img src={group?.avatar?.path ? group?.avatar.path : "alt"} />
-          <NavBar>
-            <NavBarItem>
-              <strong
-                onClick={() => {
-                  setContentName("topics");
-                }}
-              >
-                Discussão
-              </strong>
-            </NavBarItem>
-            <NavBarItem>
-              <strong
-                onClick={() => {
-                  setContentName("members");
-                }}
-              >
-                Membros
-              </strong>
-            </NavBarItem>
-            <NavBarItem>
-              <strong
-                onClick={() => {
-                  setContentName("admin");
-                }}
-              >
-                Administradores
-              </strong>
-            </NavBarItem>
-            <NavBarItem>
-              <strong
-                onClick={() => {
-                  setContentName("info");
-                }}
-              >
-                Descrição
-              </strong>
-            </NavBarItem>
-          </NavBar>
+          <NavBarWrapper>
+            <NavBar>
+              <NavBarItem>
+                <StyledChatIcon />
+                <h6
+                  onClick={() => {
+                    setContentName("topics");
+                  }}
+                >
+                  Discussão
+                </h6>
+              </NavBarItem>
+              <NavBarItem>
+                <StyledGroupsList />
+                <h6
+                  onClick={() => {
+                    setContentName("members");
+                  }}
+                >
+                  Membros
+                </h6>
+              </NavBarItem>
+              <NavBarItem>
+                <StyledAdminIcon />
+                <h6
+                  onClick={() => {
+                    setContentName("admin");
+                  }}
+                >
+                  Administradores
+                </h6>
+              </NavBarItem>
+
+              <NavBarItem>
+                <StyledDescriptionIcon />
+                <h6
+                  onClick={() => {
+                    setContentName("info");
+                  }}
+                >
+                  Descrição
+                </h6>
+              </NavBarItem>
+              <NavBarItem>
+                <StyledGavelIcon />
+                <h6
+                  onClick={() => {
+                    setContentName("regras");
+                  }}
+                >
+                  Regras
+                </h6>
+              </NavBarItem>
+            </NavBar>
+          </NavBarWrapper>
+
           {isOwner && (
             <ButtonAdminWrapper>
               <CustomButton
                 width="90px"
                 height="30px"
+                customColor="red"
+                customBackgroundColor=" #090a0d"
                 onClick={() => {
                   toggleDialogBOx(true);
                 }}
@@ -574,6 +615,8 @@ const GroupPage = () => {
               <CustomButton
                 width="90px"
                 height="30px"
+                customColor="green"
+                customBackgroundColor=" #090a0d"
                 onClick={() => {
                   toggleEditGroupBox(true);
                 }}
@@ -583,17 +626,32 @@ const GroupPage = () => {
             </ButtonAdminWrapper>
           )}
         </ButtonAdminContainer>
-        <Header>
-          <GroupTitle>{group?.name}</GroupTitle>
-          <GroupInfo>
-            <PublicIcon />
-            <GroupTitle> grupo público</GroupTitle>
-            <div />
-            <GroupTitle>{group?.members?.length} membros</GroupTitle>
-          </GroupInfo>
+        <GroupInfoContainer>
+          <img
+            src={group?.avatar?.path ? group?.avatar.path : "alt"}
+            style={{
+              width: "200px",
 
-          <GroupImage />
-        </Header>
+              height: "200px",
+              borderRadius: "8%",
+            }}
+          />
+          <Header>
+            <GroupTitle>{group?.name}</GroupTitle>
+            <GroupInfo>
+              <PublicIcon
+                style={{
+                  color: "#565f82",
+                }}
+              />
+              <GroupTitle> grupo público</GroupTitle>
+              <div />
+              <GroupTitle>{group?.members?.length} membros</GroupTitle>
+            </GroupInfo>
+
+            <GroupImage />
+          </Header>
+        </GroupInfoContainer>
 
         {generateContent()}
 

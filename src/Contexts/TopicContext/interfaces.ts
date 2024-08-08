@@ -4,10 +4,16 @@ export interface GroupTopic {
   totalCount?: number;
 }
 
+export interface Members {
+  id: number;
+  name: string;
+}
+
 export interface TopicData {
   id: number;
   name: string;
   topics: Topics[];
+  members: Members[];
 }
 
 interface Topics {
@@ -46,10 +52,10 @@ export interface commentLikes {
   comment_id: number;
 }
 
-interface CommentAuthor {
-  id: number;
-  name: string;
-}
+// interface CommentAuthor {
+//   id: number;
+//   name: string;
+// }
 
 export interface ReducerAction {
   type: string;

@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
+/* eslint-disable @typescript-eslint/prefer-ts-expect-error */
+/* eslint-disable spaced-comment */
 /* eslint-disable multiline-ternary */
 import React, { useEffect, useState, useCallback, useRef } from "react";
 
@@ -28,8 +32,8 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [index, setIndex] = useState(2);
   const [lastData, setLastData] = useState<boolean>(false);
-  const [socket, setSocket] = useState<any>(null);
-  const [user, setUser] = useState({});
+  // const [socket, setSocket] = useState<any>(null);
+  // const [user, setUser] = useState({});
   const loaderRef = useRef(null);
 
   const { userData } = useAuth();
@@ -38,8 +42,8 @@ const Dashboard = () => {
     asyncCreateRequest,
     dispatch,
     asyncGetGroups,
-    asyncGetMoreGroups,
-    groupData,
+    // asyncGetMoreGroups,
+    // groupData,
   } = useGroups();
 
   const navigate = useNavigate();
@@ -129,7 +133,7 @@ const Dashboard = () => {
         const group = window.localStorage.getItem("@groups");
 
         if (group) {
-          let groupData = JSON.parse(group) as Groups;
+          const groupData = JSON.parse(group) as Groups;
 
           //@ts-ignore
           setGroups((loadedGroups) => [...loadedGroups, ...groupData]);

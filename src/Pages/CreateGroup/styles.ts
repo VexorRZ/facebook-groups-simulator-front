@@ -17,8 +17,7 @@ export const CardOptions = styled.div`
   width: 339px;
   display: flex;
   flex-direction: column;
-  background-color: #25282e;
-  border: solid 1px white;
+
   padding: 10px;
 `;
 
@@ -31,7 +30,7 @@ export const StyledRadioGroup = styled(RadioGroup)<IStyledRadioGroupProps>`
 
   .option-description {
     font-size: 10px;
-    color: ${(props) => (props.radioActive ? "#1976d2" : "#fff")};
+    color: ${(props) => (props.radioActive ? "white" : "white")};
   }
   .radio-options {
     display: flex;
@@ -63,9 +62,9 @@ export const Container = styled.div`
   background-color: #25282e;
   margin: auto;
   margin-top: 20px;
-  border: 1px solid #526173;
   padding: 10px;
-  box-shadow: 18px 19px 32px -11px rgba(0, 0, 0, 1);
+  background-color: #0e1014;
+  box-shadow: 18px 8px 12px 0px rgba(8, 9, 16, 4);
 `;
 
 export const Header = styled.div`
