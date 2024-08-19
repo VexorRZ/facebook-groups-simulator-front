@@ -35,7 +35,14 @@ const Like = ({ onClickParent, likeAmount, hasLike }: ILikeProps) => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "flex-end",
+        color: "white",
+        alignItems: "flex-start",
+      }}
+    >
       {liked ? (
         <StyledOutinefilledIcon
           onClick={async () => {

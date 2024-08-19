@@ -6,11 +6,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { type AxiosResponse } from "axios";
 import api from "../../services/api";
-//require("dotenv").config();
-//import Pusher from "pusher-js";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import DOMPurify from "dompurify";
 import {
   type GroupTopic,
   type TopicData,
@@ -18,13 +13,12 @@ import {
 } from "../../Contexts/TopicContext/interfaces";
 import useAuth from "../../Hooks/useAuth";
 import useTopicContext from "../../Hooks/useTopics";
-
 import Button from "../../Components/Button";
 import TopBar from "../../Components/TopBar";
 import Like from "../../Components/Like";
 import TextEditor from "../../Containers/Editor";
-
-// import { io } from "socket.io-client";
+import CustomComment from "../../Components/Comment";
+import { io } from "socket.io-client";
 
 import {
   Container,
@@ -32,17 +26,11 @@ import {
   GroupTitle,
   Header,
   CommentList,
-  CommentContent,
   CommentsLists,
   ButtonArea,
-  CommentAuthor,
-  AuthorAvatar,
-  Comment,
   Pagination,
   PaginationButton,
   PaginationItem,
-  CommentDate,
-  CommentDetailsWrapper,
 } from "./styles";
 
 const TopicPage = () => {
@@ -55,56 +43,13 @@ const TopicPage = () => {
   const [pages, setPages] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState(0);
-  const [socket] = useState<any>(null);
-  const [user] = useState({});
+  const [socket, setSocket] = useState(null);
   const params = useParams();
   const { group_id, topic_id } = params;
 
   const { userData } = useAuth();
 
   const { asyncDeleteComment } = useTopicContext();
-
-  // useEffect(() => {
-  //   setSocket(io("http://localhost:3333", { transports: ["websocket"] }));
-  //   setUser(userData);
-  // }, []);
-
-  // const handleNotification = (commentId: number, type: any) => {
-  //   const findComment = commentList.find(({ id }) => id === commentId);
-
-  //   socket?.emit("sendNotification", {
-  //     senderName: userData.name,
-  //     receiverName: findComment?.author,
-  //     type,
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   //@ts-ignore
-  //   const pusher = new Pusher(process.env.PUSHER_APP_KEY, {
-  //     cluster: "mt1",
-  //   });
-
-  //   let socketId;
-
-  //   pusher.connection.bind("connected", function () {
-  //     socketId = pusher.connection.socket_id;
-  //   });
-
-  //   const channel = pusher.subscribe("comment-events");
-  //   channel.bind("likeAction", function (data: any) {
-  //     console.log(data);
-  //     var action = data.action;
-  //     //     updatePostStats[action](data.postId);
-  //   });
-
-  //   return () => {
-  //     pusher.unsubscribe("comment-events");
-  //     // pusher.unsubscribe('channel_name2')
-  //   };
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   const deleteComment = async (
     group_id: number,
@@ -143,8 +88,6 @@ const TopicPage = () => {
           headers: { Authorization: `Bearer ${userData.token}` },
         }
       );
-
-      //   console.log("response", res.data.groupTopics.members);
 
       const { totalCount } = res.data;
 
@@ -256,18 +199,30 @@ const TopicPage = () => {
     }
   };
 
-  // const currentUserIsAuthor = () => {
-  //   if (groupTopic.topics) {
-  //     const isAuthor = groupTopic.topics[0].comments[0].author.id;
+  const currentUserIsAuthor = (commentId: number) => {
+    const currentCumment = commentList.find(({ id }) => id === commentId);
 
-  //     console.log("isAuthor:", isAuthor);
-  //   }
-  // };
+    if (currentCumment?.author.id === Number(userData.id)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
-  useEffect(() => {}, [commentList]);
+  const handleNotification = (commentAuthorName: string, type: number) => {
+    console.log("enviando notificação");
+    // @ts-expect-error
+    socket.emit("sendNotification", {
+      senderName: userData.name,
+      receiverName: commentAuthorName,
+      type,
+    });
+  };
 
   useEffect(() => {
     void getTopicByCredentials();
+    //@ts-expect-error
+    setSocket(io("http://localhost:3333"));
   }, [currentPage, limit, total, liked]);
 
   return (
@@ -289,107 +244,35 @@ const TopicPage = () => {
                 <CommentsLists>
                   {commentList.map((comment, index) => {
                     return (
-                      <Comment key={index} socket={socket} user={user}>
-                        <div
-                          style={{
-                            display: "flex",
-                            gap: "14px",
+                      <div
+                        key={index}
+                        style={{ display: "flex", flexDirection: "column" }}
+                      >
+                        <CustomComment
+                          userIsAuthor={Boolean(
+                            currentUserIsAuthor(comment.id)
+                          )}
+                          key={index}
+                          body={comment.body}
+                          authorAvatar={comment.author.avatar.path}
+                          authorName={comment.author.name}
+                          onClick={() => {
+                            void deleteComment(
+                              Number(group_id),
+                              Number(topic_id),
+                              comment.id
+                            );
                           }}
-                        >
-                          <AuthorAvatar
-                            src={
-                              comment.author.avatar?.path
-                                ? comment.author.avatar.path
-                                : ""
-                            }
-                          />
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              justifyContent: "space-between",
-                            }}
-                          >
-                            <CommentAuthor>{comment.author.name}</CommentAuthor>
-                            <CommentDate>
-                              {format(
-                                new Date(
-                                  comment.createdAt
-                                    ? comment.createdAt
-                                    : new Date()
-                                ),
-                                "'dia' dd 'de' MMMM', às ' HH:mm'h'",
-                                { locale: ptBR }
-                              )}
-                            </CommentDate>
-                          </div>
-                        </div>
-
-                        <div
-                          style={{
-                            display: "flex",
-                            gap: "8px",
+                        />
+                        <Like
+                          hasLike={Boolean(commentHasLike(comment.id))}
+                          onClickParent={async () => {
+                            await updateLike(comment.id);
+                            handleNotification(comment.author.name, 1);
                           }}
-                        >
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "flex-end",
-                            }}
-                          >
-                            <CommentContent
-                              dangerouslySetInnerHTML={{
-                                __html: DOMPurify.sanitize(comment.body),
-                              }}
-                            />
-                            <CommentDetailsWrapper>
-                              <div className="likeWrapper">
-                                <Like
-                                  hasLike={Boolean(commentHasLike(comment.id))}
-                                  onClickParent={async () => {
-                                    await updateLike(comment.id);
-                                  }}
-                                  likeAmount={comment.commentLikes.length}
-                                />
-                              </div>
-                            </CommentDetailsWrapper>
-                          </div>
-
-                          {
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: "flex-start",
-                                gap: "6px",
-                              }}
-                            >
-                              <Button
-                                width="60px"
-                                height="32px"
-                                customColor="cadetblue"
-                              >
-                                Editar
-                              </Button>
-                              <Button
-                                width="60px"
-                                height="32px"
-                                customColor="crimson"
-                                onClick={() => {
-                                  void deleteComment(
-                                    Number(group_id),
-                                    Number(topic_id),
-                                    comment.id
-                                  );
-                                }}
-                              >
-                                Deletar
-                              </Button>
-                            </div>
-                          }
-                        </div>
-                      </Comment>
+                          likeAmount={comment.commentLikes.length}
+                        />
+                      </div>
                     );
                   })}
                   {commentBoxOpenned && <TextEditor onChange={changeComment} />}

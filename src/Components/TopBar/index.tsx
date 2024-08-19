@@ -7,24 +7,40 @@ import { io } from "socket.io-client";
 import defaultProfilePic from "../../assets/images/default-profile-pic.png";
 
 import { AsyncLogoutFn } from "../../Contexts/AuthContext/middlewares";
-import { NavBar } from "../../Pages/Group/styles";
 
 interface IinputProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const TopBar = ({ onChange }: IinputProps) => {
-  // const [socket, setSocket] = useState<any>(null);
-  const [notifications, setNotifications] = useState<any>([]);
-  const [user, setUser] = useState({});
+  const [socket, setSocket] = useState(null);
+  const [notifications, setNotifications] = useState([]);
 
   const { dispatch, userData } = useAuth();
   useEffect(() => {}, [userData]);
-  // useEffect(() => {
-  //   setSocket(io("http://localhost:3333", { transports: ["websocket"] }));
 
-  //   setUser(userData);
-  // }, []);
+  useEffect(() => {
+    // @ts-expect-error
+    setSocket(io("http://localhost:3333"));
+  }, []);
+
+  useEffect(() => {
+    if (socket) {
+      // @ts-expect-error
+      socket.on("getNotification", (data: any) => {
+        // @ts-expect-error
+        setNotifications((prev) => [...prev, data]);
+      });
+    }
+    console.log(notifications);
+  }, [socket]);
+
+  useEffect(() => {
+    if (socket) {
+      // @ts-expect-error
+      socket.emit("newUser", userData);
+    }
+  }, [socket, userData]);
 
   // useEffect(() => {
   //   socket?.emit("newUser", userData);
@@ -36,7 +52,7 @@ const TopBar = ({ onChange }: IinputProps) => {
   //   });
   // }, [socket]);
 
-  //console.log(notifications);
+  // console.log(notifications);
   // useEffect(() => {
   //   if (socket) {
   //     socket?.emit("newUser", user);
